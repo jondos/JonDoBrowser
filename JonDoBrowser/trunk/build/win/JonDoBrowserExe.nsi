@@ -19,11 +19,13 @@
 ;along with this program; if not, write to the Free Software
 ;Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
+#TODO: We have change the JonDoFoxPortableSettings.ini in this installer to
+#JonDoBrowser.ini and make sure that the proper directories are existing.
 !define NAME "JonDoBrowser"
 !define APPNAME "${NAME}"
 !define PORTABLEAPPNAME "${NAME}"
-!define VER "2.1.0.0"
-!define WEBSITE "anonymous-proxy-servers.net/de/jondofox"
+!define VER "0.0.1.0"
+!define WEBSITE "anonymous-proxy-servers.net/en/jondobrowser"
 !define DEFAULTEXE "firefox.exe"
 !define DEFAULTAPPDIR "firefox"
 !define LICENSEVERSION "3"
