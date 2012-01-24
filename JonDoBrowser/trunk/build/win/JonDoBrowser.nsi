@@ -59,7 +59,7 @@ Var extensionGUID
 Var profileExtensionPath
 
 !define NAME "JonDoBrowser"
-!define VERSION "0.1.0.0"
+!define VERSION "0.0.1.0"
 !define INSTALLERCOMMENTS "For additional details, visit anonymous-proxy-servers.net"
 !define INSTALLERADDITIONALTRADEMARKS "PortableApps.com is a Trademark of Rare Ideas, LLC. JonDo is a trademark of JonDos GmbH. Firefox is a Trademark of the Mozilla Foundation. " ;end this entry with a period and a space if used 
 !define INSTALLERLEGALCOPYRIGHT "JonDos GmbH"
@@ -255,10 +255,10 @@ Section JFPortable
 
   ${If} $LANGUAGE == "1031" 
     File "/oname=prefs.js" "..\..\..\full\profile\prefs_browser_de.js"   
-    File "/oname=places.sqlite" "..\..\..\full\profile\places.sqlite_de"
+    File "/oname=bookmarks.html" "..\..\..\full\profile\bookmarks_de.html"
   ${ElseIf} $LANGUAGE == "1033"
     File "/oname=prefs.js" "..\..\..\full\profile\prefs_browser_en.js"
-    File "/oname=places.sqlite" "..\..\..\full\profile\places.sqlite_en"
+    File "/oname=bookmarks.html" "..\..\..\full\profile\bookmarks_en.html"
   ${EndIf}  
 
   # The search plugins...
