@@ -1,8 +1,13 @@
 #!/bin/bash
 
 # This script fetches the latest sources of a Firefox release and verifies them.
+
+# The first grep makes sure we really get the latest firefox version and not
+# someting else of the html page. The second grep finally extracts the latest
+# version.
 version=$(wget -qO - http://releases.mozilla.org/pub/mozilla.org/firefox/releases/latest/source | \
-  grep -Eom 1 '[0-9]+\.[0-9]\.[0-9]' | tail -n1)
+  grep -Eom 1 'firefox-[0-9]{2}\.[0-9](\.[0-9]).source.tar.bz2' | tail -n1 |\
+   grep -Eom 1 '[0-9]{2}\.[0-9](\.[0-9])')
 
 #TODO: Mitigation of downgrade attacks
 if [ "$version" = "" ]; then
@@ -32,12 +37,22 @@ echo "Checking the signature..."
 # gpg prints the verification success message to stderr
 sigkey=$(gpg --verify firefox-$version.source.tar.bz2.asc 2>&1 | \
   grep -Eom 1 '([A-Z0-9]{4}\s*){10}' | tr -d ' ')
-# TODO: Is it enough to check just the main key??
-if [ "$sigkey" = "9D03193D6BDC541BD796C4E47F4D66451EBCAB3A" ]; then
+
+if [ "$sigkey" = "247CA658AA95F6171EB0F13EA7D75CC7C52175E2" ]; then
   echo "Successful verification!"
 fi
 
 mv firefox-$version.source.tar.bz2 ../../build_env && cd ../../build_env
 tar -xjvf firefox-$version.source.tar.bz2
 
+echo
 echo "Patching JonDoBrowser..."
+
+svn co https://svn.jondos.de/svnpub/JonDoBrowser/trunk/build/patches \
+  1>/dev/null
+cp patches/*.patch mozilla-release/ && cd mozilla-release
+
+# Essentially the patch-any-src.sh from the Torproject
+for i in *patch; do patch -tp1 <$i || exit 1; done
+
+exit 0
