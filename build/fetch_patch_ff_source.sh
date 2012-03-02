@@ -94,7 +94,7 @@ for platform in $platforms; do
   if [ "$xpiHash1" = "$xpiHash2" ]; then
     echo "Verified SHA1 hash..."
   else
-    echo "Wrong SHA1 hash of ${platform}_${xpiLang}.xpi" 
+    echo "Wrong SHA1 hash of ${platform}_${xpiLang}.xpi, removing it" 
     rm ${platform}_${xpiLang}.xpi
   fi
 done
