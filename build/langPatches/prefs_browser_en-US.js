@@ -51,7 +51,7 @@ user_pref("browser.search.useDBForOrder", true);
 user_pref("browser.sessionstore.enabled", false);
 user_pref("browser.sessionstore.resume_from_crash", false);
 user_pref("browser.shell.checkDefaultBrowser", false);
-user_pref("browser.startup.homepage", "http://anonymous-proxy-servers.net/en/");
+user_pref("browser.startup.homepage", "http://anonymous-proxy-servers.net/");
 user_pref("browser.startup.homepage_override.mstone", "rv:9.0");
 user_pref("browser.startup.page", 0);
 user_pref("browser.throbber.url", "http://www.mozilla.org/");
