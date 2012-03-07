@@ -15,6 +15,8 @@ releasePath=http://releases.mozilla.org/pub/mozilla.org/firefox/releases/latest/
 # The first grep makes sure we really get the latest firefox version and not
 # someting else of the html page. The second grep finally extracts the latest
 # version.
+# When we are using 'wget' in this script we retry three times if necessary
+# as some mirrors of releases.mozilla.org seem to be not reachable at times...
 version=$(wget -t 3 -qO - ${releasePath}source | \
   grep -Eom 1 'firefox-[0-9]{2}\.[0-9](\.[0-9]).source.tar.bz2' | tail -n1 | \
    grep -Eom 1 '[0-9]{2}\.[0-9](\.[0-9])')
