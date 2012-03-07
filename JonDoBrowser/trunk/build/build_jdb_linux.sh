@@ -163,8 +163,23 @@ for i in *patch; do patch -tp1 <$i || exit 1; done
 
 echo "Building Firefox..."
 svn cat $svn_browser/.mozconfig_linux-i686 > .mozconfig
-#./configure && make -f client.mk build
-#echo "Creating the final packages..."
-#cd obj-$system && make package 
-#mv dist/firefox-[0-9][0-9].[0-9]*.tar.bz2 ../../../
-#cd ../../../ && tar -xjvf firefox-[0-9][0-9].[0-9]*.tar.bz2 
+make -f client.mk build
+
+echo "Creating the final packages..."
+cd linux_build && make package 
+mv dist/firefox-${version}.tar.bz2 ../../../tmp
+cd ../../../tmp && tar -xjvf firefox-${version}.tar.bz2 
+
+for lang in $langs; do
+  cp firefox/* JonDoBrowser-$lang/App/Firefox
+  tar -cf JonDoBrowser-$lang.tar JonDoBrowser-$lang
+  bzip2 -z9 JonDoBrowser-$lang.tar
+  mv JonDoBrowser-$lang.tar.bz2 ../
+done
+
+#Cleanup
+echo "Cleaning up everything..."
+cd ../
+rm -rf tmp && rm -rf build
+
+exit 0
