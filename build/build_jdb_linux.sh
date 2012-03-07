@@ -42,11 +42,14 @@ prepareProfiles() {
     profileDir=JonDoBrowser-$lang/Data/profile/
     mkdir -p JonDoBrowser-$lang/App/Firefox
     mkdir JonDoBrowser-$lang/Data
+    # We do not need ProfileSwitcher in our JonDoBrowser, thus removing it.
+    rm -rf profile/extensions/\{fa8476cf-a98c-4e08-99b4-65a69cb4b7d4\} 
     cp -rf profile JonDoBrowser-$lang/Data
     svn cat $svn_browser/build/langPatches/prefs_browser_$lang.js > \
       ${profileDir}prefs.js
     svn cat $svn_browser/start-jondobrowser.sh > \
       JonDoBrowser-$lang/start-jondobrowser.sh
+    chmod +x start-jondobrowser.sh
     mv -f ${profileDir}places.sqlite_$lang ${profileDir}places.sqlite
     # Cruft from the old JonDoFox-Profile...
     rm -f ${profileDir}prefs_portable*
@@ -167,11 +170,11 @@ make -f client.mk build
 
 echo "Creating the final packages..."
 cd linux_build && make package 
-mv dist/firefox-${version}.tar.bz2 ../../../tmp
-cd ../../../tmp && tar -xjvf firefox-${version}.tar.bz2 
+mv dist/firefox-${version}.en-US.linux-i686.tar.bz2 ../../../tmp
+cd ../../../tmp && tar -xjvf firefox-${version}.en-US.linux-i686.tar.bz2 
 
 for lang in $langs; do
-  cp firefox/* JonDoBrowser-$lang/App/Firefox
+  cp -rf firefox/* JonDoBrowser-$lang/App/Firefox
   tar -cf JonDoBrowser-$lang.tar JonDoBrowser-$lang
   bzip2 -z9 JonDoBrowser-$lang.tar
   mv JonDoBrowser-$lang.tar.bz2 ../
