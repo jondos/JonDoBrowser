@@ -41,26 +41,26 @@ prepareProfiles() {
     local profileDir
     # TODO: Maybe we should include the JDB version in the directory name.
     # Something like JonDoBrowser-x.x.x-lang
-    profileDir=JonDoBrowser-$lang/Data/profile/
+    profileDir=JonDoBrowser-$lang/Data/profile
     mkdir -p JonDoBrowser-$lang/App/Firefox
-    mkdir JonDoBrowser-$lang/Data
+    mkdir -p JonDoBrowser-$lang/Data/plugins
     # We do not need ProfileSwitcher in our JonDoBrowser, thus removing it.
     rm -rf profile/extensions/\{fa8476cf-a98c-4e08-99b4-65a69cb4b7d4\} 
     cp -rf profile JonDoBrowser-$lang/Data
     svn cat $svn_browser/build/langPatches/prefs_browser_$lang.js > \
-      ${profileDir}prefs.js
+      ${profileDir}/prefs.js
     svn cat $svn_browser/start-jondobrowser.sh > \
       JonDoBrowser-$lang/start-jondobrowser.sh
     chmod +x start-jondobrowser.sh
-    mv -f ${profileDir}places.sqlite_$lang ${profileDir}places.sqlite
+    mv -f ${profileDir}/places.sqlite_$lang ${profileDir}/places.sqlite
     # Cruft from the old JonDoFox-Profile...
-    rm -f ${profileDir}prefs_portable*
-    rm -f ${profileDir}places.sqlite_*
-    rm -f ${profileDir}bookmarks*
+    rm -f ${profileDir}/prefs_portable*
+    rm -f ${profileDir}/places.sqlite_*
+    rm -f ${profileDir}/bookmarks*
     # Copying the language xpi to get other language strings than the en-US
     # ones.
     if [ "$lang" = "de" ]; then
-      cp -f linux-i686_de.xpi ${profileDir}extensions/langpack-de@firefox.mozilla.org.xpi
+      cp -f linux-i686_de.xpi ${profileDir}/extensions/langpack-de@firefox.mozilla.org.xpi
     fi
   done    
 }
