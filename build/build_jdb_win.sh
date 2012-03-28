@@ -2,7 +2,7 @@
 
 cd jdbBuild/mozilla-release
 python -OO build/pymake/make.py -f client.mk
-cd win32-build
+cd win32_build
 python -OO ../build/pymake/make.py package
 cd dist
 mv firefox*.zip ../../../
