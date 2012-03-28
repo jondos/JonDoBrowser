@@ -7,5 +7,5 @@ python -OO ../build/pymake/make.py package
 cd dist
 mv firefox*.zip ../../../
 cd ../../
-rm -rf win32-build
+rm -rf win32_build
 cd ..
