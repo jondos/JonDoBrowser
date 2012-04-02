@@ -1,0 +1,3 @@
+mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/linux_build
+
+ac_add_options --disable-crashreporter
