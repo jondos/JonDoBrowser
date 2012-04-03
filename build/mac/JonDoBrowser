@@ -5,4 +5,4 @@ home="${0%%Contents/MacOS/JonDoBrowser}"
 export home
 
 echo "Launching JonDoBrowser from $home"
-${home}/Contents/MacOS/Firefox.app/Contents/MacOS/firefox-bin -profile "${home}/Library/Application Support/Firefox/Profiles/profile"
+${home}/Contents/MacOS/Firefox.app/Contents/MacOS/firefox-bin -profile "${home}/Library/Application Support/Firefox/Profiles/profile" -no-remote
