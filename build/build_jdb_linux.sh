@@ -9,7 +9,7 @@ svn_browser=https://svn.jondos.de/svnpub/JonDoBrowser/trunk
 langs="en de"
 # We only need the german language pack currently as english is the default
 xpiLang=de
-platforms="linux-i686 mac win32"
+platforms="linux-i686 mac"
 mozKey=247CA658AA95F6171EB0F13EA7D75CC7C52175E2 
 releasePath=http://releases.mozilla.org/pub/mozilla.org/firefox/releases/latest/
 # The first grep makes sure we really get the latest firefox version and not
@@ -34,24 +34,25 @@ gpgVerification() {
   fi 
 }
 
-prepareProfiles() {
-  echo "Creating language specific profiles..."
+prepareLinuxProfiles() {
+  echo "Creating language specific Linux profiles..."
+  local profileDir
+  local jdbPlatform="JonDoBrowser-linux"
 
   for lang in $langs; do
-    local profileDir
     # TODO: Maybe we should include the JDB version in the directory name.
-    # Something like JonDoBrowser-x.x.x-lang
-    profileDir=JonDoBrowser-$lang/Data/profile
-    mkdir -p JonDoBrowser-$lang/App/Firefox
-    mkdir -p JonDoBrowser-$lang/Data/plugins
+    # Something like JonDoBrowser-linux-x.x.x-lang
+    profileDir=${jdbPlatform}-$lang/Data/profile
+    mkdir -p ${jdbPlatform}-$lang/App/Firefox
+    mkdir -p ${jdbPlatform}-$lang/Data/plugins
     # We do not need ProfileSwitcher in our JonDoBrowser, thus removing it.
     rm -rf profile/extensions/\{fa8476cf-a98c-4e08-99b4-65a69cb4b7d4\} 
-    cp -rf profile JonDoBrowser-$lang/Data
+    cp -rf profile ${jdbPlatform}-$lang/Data
     svn cat $svn_browser/build/langPatches/prefs_browser_$lang.js > \
       ${profileDir}/prefs.js
     svn cat $svn_browser/start-jondobrowser.sh > \
-      JonDoBrowser-$lang/start-jondobrowser.sh
-    chmod +x start-jondobrowser.sh
+      ${jdbPlatform}-$lang/start-jondobrowser.sh
+    chmod +x ${jdbPlatform}-$lang/start-jondobrowser.sh
     mv -f ${profileDir}/places.sqlite_$lang ${profileDir}/places.sqlite
     # Cruft from the old JonDoFox-Profile...
     rm -f ${profileDir}/prefs_portable*
@@ -61,6 +62,43 @@ prepareProfiles() {
     # ones.
     if [ "$lang" = "de" ]; then
       cp -f linux-i686_de.xpi ${profileDir}/extensions/langpack-de@firefox.mozilla.org.xpi
+    fi
+  done    
+}
+
+prepareMacProfiles() {
+  echo "Creating language specific Mac profiles..."
+  local appDir
+  local dataDir
+  local profileDir
+  local jdbPlatform="JonDoBrowser-mac"
+
+  for lang in $langs; do
+    appDir=$jdbPlatform-$lang/Contents/MacOS
+    dataDir=$appDir/Firefox.app/Contents/MacOS/Data
+    profileDir=$jdbPlatform-$lang/Library/Application Support/Firefox/Profile
+    # TODO: Maybe we should include the JDB version in the directory name.
+    # Something like JonDoBrowser-x.x.x-lang
+    mkdir -p $appDir/Firefox.app/Contents/Resources
+    mkdir -p $dataDir/profile
+    mkdir $dataDir/plugins
+    mkdir -p ${profileDir}
+    cp -rf profile ${profileDir}
+    svn cat $svn_browser/build/langPatches/prefs_browser_$lang.js > \
+      ${profileDir}/prefs.js
+    mv -f ${profileDir}/places.sqlite_$lang ${profileDir}/places.sqlite
+    # Cruft from the old JonDoFox-Profile...
+    rm -f ${profileDir}/prefs_portable*
+    rm -f ${profileDir}/places.sqlite_*
+    rm -f ${profileDir}/bookmarks*
+    svn cat $svn_browser/build/mac/JonDoBrowser > \
+      $appDir/JonDoBrowser
+    chmod +x $appDir/JonDoBrowser
+    svn cat $svn_browser/build/mac/Info.plist > $jdbPlatform/Contents/Info.plist
+    # Copying the language xpi to get other language strings than the en-US
+    # ones.
+    if [ "$lang" = "de" ]; then
+      cp -f mac_de.xpi ${profileDir}/extensions/langpack-de@firefox.mozilla.org.xpi
     fi
   done    
 }
@@ -142,7 +180,8 @@ echo "Setting up the JonDoBrowser profiles..."
 echo "Fetching sources..."
 svn export $svn_profile
 
-prepareProfiles 
+prepareLinuxProfiles
+prepareMacProfiles
 
 cd ..
 
@@ -167,7 +206,7 @@ cp patches/*.patch mozilla-release/ && cd mozilla-release
 for i in *patch; do patch -tp1 <$i || exit 1; done
 
 echo "Building Firefox..."
-svn cat $svn_browser/.mozconfig_linux-i686 > .mozconfig
+svn cat $svn_browser/build/.mozconfig_linux-i686 > .mozconfig
 make -f client.mk build
 
 echo "Creating the final packages..."
