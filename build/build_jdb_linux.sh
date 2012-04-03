@@ -32,7 +32,7 @@ gpgVerification() {
   else
     echo "Wrong signature, aborting..."
     exit 1
-  fi
+  fi 
 }
 
 prepareLinuxProfiles() {
@@ -47,7 +47,7 @@ prepareLinuxProfiles() {
     mkdir -p $jdbPlatform-$lang/App/Firefox
     mkdir -p $jdbPlatform-$lang/Data/plugins
     # We do not need ProfileSwitcher in our JonDoBrowser, thus removing it.
-    rm -rf profile/extensions/\{fa8476cf-a98c-4e08-99b4-65a69cb4b7d4\}
+    rm -rf profile/extensions/\{fa8476cf-a98c-4e08-99b4-65a69cb4b7d4\} 
     cp -rf profile $jdbPlatform-$lang/Data
     svn cat $svn_browser/build/langPatches/prefs_browser_$lang.js > \
       $profileDir/prefs.js
@@ -64,7 +64,7 @@ prepareLinuxProfiles() {
     if [ "$lang" = "de" ]; then
       cp -f linux-i686_de.xpi $profileDir/extensions/langpack-de@firefox.mozilla.org.xpi
     fi
-  done
+  done    
 }
 
 prepareMacProfiles() {
@@ -102,7 +102,7 @@ prepareMacProfiles() {
     if [ "$lang" = "de" ]; then
       cp -f mac_de.xpi "$profileDir"/extensions/langpack-de@firefox.mozilla.org.xpi
     fi
-  done
+  done    
 }
 
 if [ ! -d "tmp" ]; then
@@ -158,20 +158,20 @@ gpgVerification SHA1SUMS.asc
 echo "Retrieving the language pack(s) and verifying them..."
 
 for platform in $platforms; do
-  wget -t 3 -O $platform_$xpiLang.xpi $releasePath/$platform/xpi/$xpiLang.xpi
+  wget -t 3 -O ${platform}_$xpiLang.xpi $releasePath/$platform/xpi/$xpiLang.xpi 
   if [ ! $? -eq 0 ]; then
     echo "Error while retrieving the $xpiLang language pack for"
-    echo "${platform}, continuing without it..."
+    echo "$platform, continuing without it..."
     continue
   fi 
   xpiHash1=$(grep -E "$platform/xpi/$xpiLang.xpi" SHA1SUMS | \
     grep -Eo "[a-z0-9]{40}")
-  xpiHash2=$(sha1sum $platform_$xpiLang.xpi | grep -Eo "[a-z0-9]{40}")
+  xpiHash2=$(sha1sum ${platform}_$xpiLang.xpi | grep -Eo "[a-z0-9]{40}") 
   if [ "$xpiHash1" = "$xpiHash2" ]; then
     echo "Verified SHA1 hash..."
   else
-    echo "Wrong SHA1 hash of $platform_$xpiLang.xpi, removing it"
-    rm $platform_$xpiLang.xpi
+    echo "Wrong SHA1 hash of ${platform}_$xpiLang.xpi, removing it" 
+    rm ${platform}_$xpiLang.xpi
     #TODO: Should we exit here?
   fi
 done
@@ -212,9 +212,9 @@ svn cat $svn_browser/build/.mozconfig_linux-i686 > .mozconfig
 make -f client.mk build
 
 echo "Creating the final packages..."
-cd linux_build && make package
+cd linux_build && make package 
 mv dist/firefox-$version.en-US.linux-i686.tar.bz2 ../../../tmp
-cd ../../../tmp && tar -xjvf firefox-$version.en-US.linux-i686.tar.bz2
+cd ../../../tmp && tar -xjvf firefox-$version.en-US.linux-i686.tar.bz2 
 
 for lang in $langs; do
   cp -rf firefox/* JonDoBrowser-linux-$lang/App/Firefox
