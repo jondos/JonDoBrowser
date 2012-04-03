@@ -11,15 +11,16 @@ langs="en de"
 xpiLang=de
 platforms="linux-i686 mac"
 mozKey=247CA658AA95F6171EB0F13EA7D75CC7C52175E2 
-releasePath=http://releases.mozilla.org/pub/mozilla.org/firefox/releases/latest/
+releasePath=http://releases.mozilla.org/pub/mozilla.org/firefox/releases/latest
 # The first grep makes sure we really get the latest firefox version and not
 # someting else of the html page. The second grep finally extracts the latest
 # version.
 # When we are using 'wget' in this script we retry three times if necessary
 # as some mirrors of releases.mozilla.org seem to be not reachable at times...
-version=$(wget -t 3 -qO - ${releasePath}source | \
-  grep -Eom 1 'firefox-[0-9]{2}\.[0-9](\.[0-9]).source.tar.bz2' | tail -n1 | \
-   grep -Eom 1 '[0-9]{2}\.[0-9](\.[0-9])')
+echo "Getting the latest Firefox source version..."
+version=$(wget -t 3 -qO - $releasePath/source | \
+  grep -Eom 1 'firefox-[0-9]{2}\.[0-9](\.[0-9])*.source.tar.bz2' | tail -n1 | \
+   grep -Eom 1 '[0-9]{2}\.[0-9](\.[0-9])*')
 
 gpgVerification() {
   file=$1
@@ -31,39 +32,39 @@ gpgVerification() {
   else
     echo "Wrong signature, aborting..."
     exit 1
-  fi 
+  fi
 }
 
 prepareLinuxProfiles() {
   echo "Creating language specific Linux profiles..."
   local profileDir
-  local jdbPlatform="JonDoBrowser-linux"
+  local jdbPlatform=JonDoBrowser-linux
 
   for lang in $langs; do
     # TODO: Maybe we should include the JDB version in the directory name.
     # Something like JonDoBrowser-linux-x.x.x-lang
-    profileDir=${jdbPlatform}-$lang/Data/profile
-    mkdir -p ${jdbPlatform}-$lang/App/Firefox
-    mkdir -p ${jdbPlatform}-$lang/Data/plugins
+    profileDir=$jdbPlatform-$lang/Data/profile
+    mkdir -p $jdbPlatform-$lang/App/Firefox
+    mkdir -p $jdbPlatform-$lang/Data/plugins
     # We do not need ProfileSwitcher in our JonDoBrowser, thus removing it.
-    rm -rf profile/extensions/\{fa8476cf-a98c-4e08-99b4-65a69cb4b7d4\} 
-    cp -rf profile ${jdbPlatform}-$lang/Data
+    rm -rf profile/extensions/\{fa8476cf-a98c-4e08-99b4-65a69cb4b7d4\}
+    cp -rf profile $jdbPlatform-$lang/Data
     svn cat $svn_browser/build/langPatches/prefs_browser_$lang.js > \
-      ${profileDir}/prefs.js
+      $profileDir/prefs.js
     svn cat $svn_browser/start-jondobrowser.sh > \
-      ${jdbPlatform}-$lang/start-jondobrowser.sh
-    chmod +x ${jdbPlatform}-$lang/start-jondobrowser.sh
-    mv -f ${profileDir}/places.sqlite_$lang ${profileDir}/places.sqlite
+      $jdbPlatform-$lang/start-jondobrowser.sh
+    chmod +x $jdbPlatform-$lang/start-jondobrowser.sh
+    mv -f $profileDir/places.sqlite_$lang $profileDir/places.sqlite
     # Cruft from the old JonDoFox-Profile...
-    rm -f ${profileDir}/prefs_portable*
-    rm -f ${profileDir}/places.sqlite_*
-    rm -f ${profileDir}/bookmarks*
+    rm -f $profileDir/prefs_portable*
+    rm -f $profileDir/places.sqlite_*
+    rm -f $profileDir/bookmarks*
     # Copying the language xpi to get other language strings than the en-US
     # ones.
     if [ "$lang" = "de" ]; then
-      cp -f linux-i686_de.xpi ${profileDir}/extensions/langpack-de@firefox.mozilla.org.xpi
+      cp -f linux-i686_de.xpi $profileDir/extensions/langpack-de@firefox.mozilla.org.xpi
     fi
-  done    
+  done
 }
 
 prepareMacProfiles() {
@@ -76,31 +77,32 @@ prepareMacProfiles() {
   for lang in $langs; do
     appDir=$jdbPlatform-$lang/Contents/MacOS
     dataDir=$appDir/Firefox.app/Contents/MacOS/Data
-    profileDir=$jdbPlatform-$lang/Library/Application Support/Firefox/Profile
+    profileDir=$jdbPlatform-$lang/Library/Application\ Support/Firefox/Profile/profile
     # TODO: Maybe we should include the JDB version in the directory name.
     # Something like JonDoBrowser-x.x.x-lang
     mkdir -p $appDir/Firefox.app/Contents/Resources
     mkdir -p $dataDir/profile
     mkdir $dataDir/plugins
-    mkdir -p ${profileDir}
-    cp -rf profile ${profileDir}
+    mkdir -p "$profileDir"
+    cp -rf profile/* "$profileDir"
     svn cat $svn_browser/build/langPatches/prefs_browser_$lang.js > \
-      ${profileDir}/prefs.js
-    mv -f ${profileDir}/places.sqlite_$lang ${profileDir}/places.sqlite
+      "$profileDir"/prefs.js
+    mv -f "$profileDir"/places.sqlite_$lang "$profileDir"/places.sqlite
     # Cruft from the old JonDoFox-Profile...
-    rm -f ${profileDir}/prefs_portable*
-    rm -f ${profileDir}/places.sqlite_*
-    rm -f ${profileDir}/bookmarks*
+    rm -f "$profileDir"/prefs_portable*
+    rm -f "$profileDir"/places.sqlite_*
+    rm -f "$profileDir"/bookmarks*
     svn cat $svn_browser/build/mac/JonDoBrowser > \
       $appDir/JonDoBrowser
     chmod +x $appDir/JonDoBrowser
-    svn cat $svn_browser/build/mac/Info.plist > $jdbPlatform/Contents/Info.plist
+    svn cat $svn_browser/build/mac/Info.plist > \
+      $jdbPlatform-$lang/Contents/Info.plist
     # Copying the language xpi to get other language strings than the en-US
     # ones.
     if [ "$lang" = "de" ]; then
-      cp -f mac_de.xpi ${profileDir}/extensions/langpack-de@firefox.mozilla.org.xpi
+      cp -f mac_de.xpi "$profileDir"/extensions/langpack-de@firefox.mozilla.org.xpi
     fi
-  done    
+  done
 }
 
 if [ ! -d "tmp" ]; then
@@ -114,7 +116,7 @@ if [ "$version" = "" ]; then
   exit 1
 elif [ ! -e "firefox-$version.source.tar.bz2" ]; then
   echo "Getting the latest Firefox sources ..."
-  wget -t 3 ${releasePath}source/firefox-$version.source.tar.bz2
+  wget -t 3 $releasePath/source/firefox-$version.source.tar.bz2
   if [ ! $? -eq 0 ]; then
     echo "Error while retrieving the Firefox sources, exiting..."
     exit 1
@@ -123,7 +125,7 @@ fi
 
 if [ ! -e "firefox-$version.source.tar.bz2.asc" ]; then
   echo "Getting the signature..."
-  wget -t 3 ${releasePath}source/firefox-$version.source.tar.bz2.asc
+  wget -t 3 $releasePath/source/firefox-$version.source.tar.bz2.asc
   if [ ! $? -eq 0 ]; then
     echo "Error while retrieving the signature, exiting..."
     exit 1
@@ -139,13 +141,13 @@ gpgVerification firefox-$version.source.tar.bz2.asc
 echo "Gettings the necessary language packs..."
 echo "Fetching and verifying the SHA1SUMS file..."
 
-wget -t 3 ${releasePath}SHA1SUMS
+wget -t 3 $releasePath/SHA1SUMS
 if [ ! $? -eq 0 ]; then
   echo "Error while retrieving SHA1SUMS, exiting..."
   exit 1
 fi
 
-wget -t 3 ${releasePath}SHA1SUMS.asc
+wget -t 3 $releasePath/SHA1SUMS.asc
 if [ ! $? -eq 0 ]; then
   echo "Error while retrieving the SHA1SUMS signature, exiting..."
   exit 1
@@ -156,21 +158,21 @@ gpgVerification SHA1SUMS.asc
 echo "Retrieving the language pack(s) and verifying them..."
 
 for platform in $platforms; do
-  wget -t 3 -O ${platform}_${xpiLang}.xpi ${releasePath}${platform}/xpi/$xpiLang.xpi 
+  wget -t 3 -O $platform_$xpiLang.xpi $releasePath/$platform/xpi/$xpiLang.xpi
   if [ ! $? -eq 0 ]; then
     echo "Error while retrieving the $xpiLang language pack for"
     echo "${platform}, continuing without it..."
-    #continue
+    continue
   fi 
-  xpiHash1=$(grep -E "\./$platform/xpi/$xpiLang.xpi" SHA1SUMS | \
+  xpiHash1=$(grep -E "$platform/xpi/$xpiLang.xpi" SHA1SUMS | \
     grep -Eo "[a-z0-9]{40}")
-  xpiHash2=$(sha1sum ${platform}_${xpiLang}.xpi | grep -Eo "[a-z0-9]{40}") 
-  echo "$platformHash"
+  xpiHash2=$(sha1sum $platform_$xpiLang.xpi | grep -Eo "[a-z0-9]{40}")
   if [ "$xpiHash1" = "$xpiHash2" ]; then
     echo "Verified SHA1 hash..."
   else
-    echo "Wrong SHA1 hash of ${platform}_${xpiLang}.xpi, removing it" 
-    rm ${platform}_${xpiLang}.xpi
+    echo "Wrong SHA1 hash of $platform_$xpiLang.xpi, removing it"
+    rm $platform_$xpiLang.xpi
+    #TODO: Should we exit here?
   fi
 done
 
@@ -187,7 +189,7 @@ cd ..
 
 # Now, extracting, patching and building Firefox...
 if [ ! -d "build" ]; then
-  mkdir build 
+  mkdir build
 fi
 
 cd build && cp ../tmp/firefox-$version.source.tar.bz2 .
@@ -210,15 +212,15 @@ svn cat $svn_browser/build/.mozconfig_linux-i686 > .mozconfig
 make -f client.mk build
 
 echo "Creating the final packages..."
-cd linux_build && make package 
-mv dist/firefox-${version}.en-US.linux-i686.tar.bz2 ../../../tmp
-cd ../../../tmp && tar -xjvf firefox-${version}.en-US.linux-i686.tar.bz2 
+cd linux_build && make package
+mv dist/firefox-$version.en-US.linux-i686.tar.bz2 ../../../tmp
+cd ../../../tmp && tar -xjvf firefox-$version.en-US.linux-i686.tar.bz2
 
 for lang in $langs; do
-  cp -rf firefox/* JonDoBrowser-$lang/App/Firefox
-  tar -cf JonDoBrowser-$lang.tar JonDoBrowser-$lang
-  bzip2 -z9 JonDoBrowser-$lang.tar
-  mv JonDoBrowser-$lang.tar.bz2 ../
+  cp -rf firefox/* JonDoBrowser-linux-$lang/App/Firefox
+  tar -cf JonDoBrowser-linux-$lang.tar JonDoBrowser-linux-$lang
+  bzip2 -z9 JonDoBrowser-linux-$lang.tar
+  mv JonDoBrowser-linux-$lang.tar.bz2 ../
 done
 
 #Cleanup
@@ -226,4 +228,4 @@ echo "Cleaning up everything..."
 cd ../
 rm -rf tmp && rm -rf build
 
-exit 0
+exit

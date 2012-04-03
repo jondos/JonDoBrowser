@@ -1,1 +1,1 @@
-./App/Firefox/firefox -profile ./Data/profile
+./App/Firefox/firefox -profile ./Data/profile -no-remote
