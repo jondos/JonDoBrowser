@@ -77,7 +77,7 @@ prepareMacProfiles() {
   for lang in $langs; do
     appDir=$jdbPlatform-$lang/Contents/MacOS
     dataDir=$appDir/Firefox.app/Contents/MacOS/Data
-    profileDir=$jdbPlatform-$lang/Library/Application\ Support/Firefox/Profile/profile
+    profileDir=$jdbPlatform-$lang/Library/Application\ Support/Firefox/Profiles/profile
     # TODO: Maybe we should include the JDB version in the directory name.
     # Something like JonDoBrowser-x.x.x-lang
     mkdir -p $appDir/Firefox.app/Contents/Resources
