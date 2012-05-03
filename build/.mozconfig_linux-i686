@@ -1,8 +1,9 @@
 mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/linux_build
 mk_add_options MOZ_MAKE_FLAGS="-j8"
 
-export CFLAGS="-Wformat -Wformat-security -D_FORTIFY_SOURCE=2 -fstack-protector-all -fPIE -pie"
-export CXXFLAGS="${CFLAGS}"
-export LDFLAGS="-z relro -z now"
+CFLAGS="-Wformat -Wformat-security -D_FORTIFY_SOURCE=2 -fstack-protector-all -fPIE -pie"
+CXXFLAGS="${CFLAGS}"
+LDFLAGS="-z relro -z now"
 
 ac_add_options --disable-crashreporter
+ac_add_options --enable-optimize
