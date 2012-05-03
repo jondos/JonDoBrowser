@@ -1,4 +1,11 @@
 mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/win32_build
 mk_add_options MOZ_MAKE_FLAGS="-j8"
 
+# As we are releasing official builds with VS2010 there is no need to add
+# linker flags like DYNAMICBASE or NXCOMPAT as they are on by default. We do
+# not need the GS compiler flag either as this is on by default as well.
+# TODO: That leaves the SAFESEH flag. This may or may get not used depending on
+# the circumstances.
+
 ac_add_options --disable-crashreporter
+ac_add_options --enable-optimize
