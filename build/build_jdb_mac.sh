@@ -1,19 +1,17 @@
 #!/bin/bash
 svnDir=https://svn.jondos.de/svnpub/JonDoBrowser/trunk/build
-langs="en de"
+langs="en, de"
 title="JonDoBrowser"
 size="200000"
 source="JDB"
 backgroundPictureName="background.png"
 
 generateDmgImage() {
-  # TODO: LICENSE
-  # Function for creating JonDoBrowser dmg files on Mac OS X.
+  # Function for creating JonDoBrowser dmg on Mac OS X.
   # Originally by Arturo Filasto' 2011 for the TorBrowserBundle.
   #
   # To make this work you need to set the $source and $backgroundPictureName
-  # The $source directory should contain the .background directory with the
-  # background image inside.
+  # The $source directory should contain the .background directory with the# background image inside
   #
   # based on:
   # http://stackoverflow.com/questions/96882/how-do-i-create-a-nice-looking-dmg-for-mac-os-x-using-command-line-tools
@@ -28,8 +26,6 @@ generateDmgImage() {
   # TODO Geko: Why does the backslash as a line delimiter not work but result in an error?
   device=$(hdiutil attach -readwrite -noverify -noautoopen "JDB.temp.dmg" | egrep '^/dev/' | sed 1q | awk '{print $1}')
 
-  # TODO The dmg image creation is giving errors in lines 48 and 51. Needs to
-  # get fixed with the background imgage...
   echo '
     tell application "Finder"
       tell disk "'${title}'"
@@ -43,15 +39,11 @@ generateDmgImage() {
            set icon size of theViewOptions to 100
            set background picture of theViewOptions to file ".background:'${backgroundPictureName}'"
            make new alias file at container window to POSIX file "/Applications" with properties {name:"Applications"}
+           set position of item "'${applicationName}'" of container window to {120, 160}
            set position of item "Applications" of container window to {380, 160} 
-           close
-           open
-           set position of item "JonDoBrowser.app" of container window to {120, 160}
-           close
-           open
-           set position of item "JonDoBrowser.app" of container window to {120, 160}
            update without registering applications
            delay 5
+           eject
        end tell
      end tell
   ' | osascript
@@ -76,15 +68,12 @@ for lang in $langs; do
   # Preparing everything for generating the dmg image...
   if [ ! -d $source ]; then
     mkdir $source
-    cd $source && mkdir .background     
-    # TODO: We need to get that out of the repo first...
-    cp ../background.png .background
-    cd ..
+    cd $source && mkdir .background && cd .background
+    svn cat $svnDir/mac/background.png > ${backgroundPictureName}
+    cd ../..
   fi
   mv JonDoBrowser-mac-$lang.app $source/
   generateDmgImage $lang
   rm -rf $source/JonDoBrowser-mac-$lang.app
 done
-
 rm -rf $source
-#rm -rf build/mozilla-release
