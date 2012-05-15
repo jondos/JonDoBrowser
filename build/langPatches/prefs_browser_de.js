@@ -11,6 +11,7 @@
 
 user_pref("accessibility.typeaheadfind.flashBar", 0);
 user_pref("app.update.auto", false);
+user_pref("app.update.enabled", false);
 user_pref("app.update.lastUpdateTime.addon-background-update-timer", 1250693570);
 user_pref("app.update.lastUpdateTime.background-update-timer", 1250693570);
 user_pref("app.update.lastUpdateTime.blocklist-background-update-timer", 1250693570);
