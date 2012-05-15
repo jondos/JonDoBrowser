@@ -108,6 +108,7 @@ prepareMacProfiles() {
     # TODO: Maybe we should include the JDB version in the directory name.
     # Something like JonDoBrowser-x.x.x-lang
     mkdir -p $appDir/Firefox.app/Contents/Resources
+    mkdir $jdbPlatform-$lang/Contents/Resources
     mkdir -p $dataDir/profile
     mkdir $dataDir/plugins
     mkdir -p "$profileDir"
@@ -124,6 +125,8 @@ prepareMacProfiles() {
     chmod +x $appDir/JonDoBrowser
     svn cat $svnBrowser/build/mac/Info.plist > \
       $jdbPlatform-$lang/Contents/Info.plist
+    svn cat $svnBrowser/build/mac/jondobrowser.icns > \
+      $jdbPlatform-$lang/Contents/Resources/jondobrowser.icns
     # Copying the language xpi to get other language strings than the en-US
     # ones.
     if [ "$lang" = "de" ]; then
