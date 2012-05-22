@@ -213,7 +213,7 @@ echo "Fetching sources..."
 svn export $svnProfile
 
 prepareLinuxProfiles
-prepareMacProfiles
+#prepareMacProfiles
 
 cd ..
 
