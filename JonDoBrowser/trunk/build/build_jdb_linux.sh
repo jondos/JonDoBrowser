@@ -260,4 +260,4 @@ echo "Cleaning up everything..."
 cd ../
 rm -rf tmp && rm -rf build
 
-exit
+exit 0
