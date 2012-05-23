@@ -36,7 +36,9 @@ svnBrowser=https://svn.jondos.de/svnpub/JonDoBrowser/trunk
 langs="en de"
 # We only need the german language pack currently as english is the default
 xpiLang=de
-platforms="linux-i686 mac"
+# Allwoing 32bit and 64bit JonDoBrowser builds
+linuxPlatform="linux-$(uname -m)"
+platforms="${liunxPlatform} mac"
 mozKey=247CA658AA95F6171EB0F13EA7D75CC7C52175E2 
 releasePath=http://releases.mozilla.org/pub/mozilla.org/firefox/releases/latest
 # The first grep makes sure we really get the latest firefox version and not
@@ -89,7 +91,7 @@ prepareLinuxProfiles() {
     # Copying the language xpi to get other language strings than the en-US
     # ones.
     if [ "$lang" = "de" ]; then
-      cp -f linux-i686_de.xpi $profileDir/extensions/langpack-de@firefox.mozilla.org.xpi
+      cp -f ${linuxPlatform}_de.xpi $profileDir/extensions/langpack-de@firefox.mozilla.org.xpi
     fi
   done    
 }
@@ -245,8 +247,8 @@ make -f client.mk build
 
 echo "Creating the final packages..."
 cd linux_build && make package 
-mv dist/firefox-$version.en-US.linux-i686.tar.bz2 ../../../tmp
-cd ../../../tmp && tar -xjvf firefox-$version.en-US.linux-i686.tar.bz2 
+mv dist/firefox-$version.en-US.linux-${linuxPlatform}.tar.bz2 ../../../tmp
+cd ../../../tmp && tar -xjvf firefox-$version.en-US.linux-${linuxPlatform}.tar.bz2 
 
 for lang in $langs; do
   cp -rf firefox/* JonDoBrowser-linux-$lang/App/Firefox
