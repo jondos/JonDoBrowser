@@ -36,7 +36,7 @@ svnBrowser=https://svn.jondos.de/svnpub/JonDoBrowser/trunk
 langs="en de"
 # We only need the german language pack currently as english is the default
 xpiLang=de
-# Allwoing 32bit and 64bit JonDoBrowser builds
+# Allowing 32bit and 64bit JonDoBrowser builds
 linuxPlatform="linux-$(uname -m)"
 platforms="${liunxPlatform} mac"
 mozKey=247CA658AA95F6171EB0F13EA7D75CC7C52175E2 
@@ -247,8 +247,8 @@ make -f client.mk build
 
 echo "Creating the final packages..."
 cd linux_build && make package 
-mv dist/firefox-$version.en-US.linux-${linuxPlatform}.tar.bz2 ../../../tmp
-cd ../../../tmp && tar -xjvf firefox-$version.en-US.linux-${linuxPlatform}.tar.bz2 
+mv dist/firefox-$version.en-US.${linuxPlatform}.tar.bz2 ../../../tmp
+cd ../../../tmp && tar -xjvf firefox-$version.en-US.${linuxPlatform}.tar.bz2 
 
 for lang in $langs; do
   cp -rf firefox/* JonDoBrowser-linux-$lang/App/Firefox
