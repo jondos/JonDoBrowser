@@ -2,9 +2,9 @@ mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/linux_build
 mk_add_options MOZ_MAKE_FLAGS="-j8"
 
 # TODO: Can we remove the buffer size if we have -all?
-#CFLAGS="-Wformat -Wformat-security -D_FORTIFY_SOURCE=2 -fstack-protector-all --param ssp-buffer-size=1 -fPIE -pie"
-#CXXFLAGS="${CFLAGS}"
-#LDFLAGS="-z relro -z now"
+CFLAGS="-Wformat -Wformat-security -D_FORTIFY_SOURCE=2 -fstack-protector-all --param ssp-buffer-size=1 -fPIE -pie"
+CXXFLAGS="${CFLAGS}"
+LDFLAGS="-z relro -z now"
 
 ac_add_options --disable-crashreporter
 ac_add_options --enable-optimize
