@@ -39,8 +39,8 @@ generateDmgImage() {
            set icon size of theViewOptions to 100
            set background picture of theViewOptions to file ".background:'${backgroundPictureName}'"
            make new alias file at container window to POSIX file "/Applications" with properties {name:"Applications"}
-           set position of item "'${applicationName}'" of container window to {120, 160}
-           set position of item "Applications" of container window to {380, 160} 
+           set position of item "'${applicationName}'" of container window to {120, 130}
+           set position of item "Applications" of container window to {380, 130} 
            update without registering applications
            delay 5
            eject
@@ -69,7 +69,7 @@ for lang in $langs; do
   if [ ! -d $source ]; then
     mkdir $source
     cd $source && mkdir .background && cd .background
-    svn cat $svnDir/mac/background.png > ${backgroundPictureName}
+    svn cat $svnDir/mac/background-$lang.png > ${backgroundPictureName}
     cd ../..
   fi
   mv JonDoBrowser-mac-$lang.app $source/
