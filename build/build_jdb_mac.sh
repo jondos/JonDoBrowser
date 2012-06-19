@@ -33,10 +33,10 @@ generateDmgImage() {
            set current view of container window to icon view
            set toolbar visible of container window to false
            set statusbar visible of container window to false
-           set the bounds of container window to {400, 100, 885, 430}
+           set the bounds of container window to {400, 100, 885, 450}
            set theViewOptions to the icon view options of container window
            set arrangement of theViewOptions to not arranged
-           set icon size of theViewOptions to 100
+           set icon size of theViewOptions to 128
            set background picture of theViewOptions to file ".background:'${backgroundPictureName}'"
            make new alias file at container window to POSIX file "/Applications" with properties {name:"Applications"}
            set position of item "'${applicationName}'" of container window to {120, 130}
@@ -74,6 +74,5 @@ for lang in $langs; do
   fi
   mv JonDoBrowser-mac-$lang.app $source/
   generateDmgImage $lang
-  rm -rf $source/JonDoBrowser-mac-$lang.app
+  rm -rf $source
 done
-rm -rf $source
