@@ -226,7 +226,6 @@ fi
 
 cd build && cp ../tmp/firefox-$version.source.tar.bz2 .
 tar -xjvf firefox-$version.source.tar.bz2
-
 echo
 echo "Patching JonDoBrowser..."
 
@@ -234,16 +233,16 @@ if [ ! -d "patches" ]; then
   svn export https://svn.jondos.de/svnpub/JonDoBrowser/trunk/build/patches \
     1>/dev/null
 fi
+
 cp patches/*.patch mozilla-release/ && cd mozilla-release
+svn cat $svnBrowser/build/.mozconfig_linux-i686 > .mozconfig
+svn export $svnBrowser/build/branding/jondobrowser browser/branding/jondobrowser
 
 # Essentially the patch-any-src.sh from the Tor Project
 for i in *patch; do patch -tp1 <$i || exit 1; done
 
 #TODO: Code for copying the Mac stuff to the Mac build server...
-
 echo "Building JonDoBrowser..."
-svn cat $svnBrowser/build/.mozconfig_linux-i686 > .mozconfig
-svn export $svnBrowser/build/branding/jondobrowser browser/branding/jondobrowser
 make -f client.mk build
 
 echo "Creating the final packages..."
