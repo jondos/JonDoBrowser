@@ -38,7 +38,7 @@ langs="en de"
 xpiLang=de
 # Allowing 32bit and 64bit JonDoBrowser builds
 linuxPlatform="linux-$(uname -m)"
-platforms="${liunxPlatform} mac"
+platforms="${linuxPlatform} mac"
 mozKey=247CA658AA95F6171EB0F13EA7D75CC7C52175E2 
 releasePath=http://releases.mozilla.org/pub/mozilla.org/firefox/releases/latest
 # The first grep makes sure we really get the latest firefox version and not
