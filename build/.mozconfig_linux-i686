@@ -1,6 +1,6 @@
 mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/linux_build
 mk_add_options MOZ_MAKE_FLAGS="-j8"
-mk_add_options BUILD_OFFICIAL=1
+#mk_add_options BUILD_OFFICIAL=1
 
 # TODO: Can we remove the buffer size if we have -all?
 CFLAGS="-Wformat -Wformat-security -D_FORTIFY_SOURCE=2 -fstack-protector-all --param ssp-buffer-size=1 -fPIE -pie"
@@ -9,4 +9,5 @@ LDFLAGS="-z relro -z now"
 
 ac_add_options --disable-crashreporter
 ac_add_options --enable-optimize
-ac_add_options --enable-official-branding
+#ac_add_options --enable-official-branding
+ac_add_options --with-branding-dir=$(pwd)/browser/branding/jondobrowser
