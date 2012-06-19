@@ -219,7 +219,7 @@ prepareLinuxProfiles
 
 cd ..
 
-# Now, extracting, patching and building Firefox...
+# Now, extracting, patching, rebranding and building JonDoBrowser...
 if [ ! -d "build" ]; then
   mkdir build
 fi
@@ -241,8 +241,9 @@ for i in *patch; do patch -tp1 <$i || exit 1; done
 
 #TODO: Code for copying the Mac stuff to the Mac build server...
 
-echo "Building Firefox..."
+echo "Building JonDoBrowser..."
 svn cat $svnBrowser/build/.mozconfig_linux-i686 > .mozconfig
+svn export $svnBrowser/build/branding/jondobrowser browser/branding/jondobrowser
 make -f client.mk build
 
 echo "Creating the final packages..."
