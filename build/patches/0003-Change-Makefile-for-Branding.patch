@@ -1,0 +1,15 @@
+--- makefiles.sh	2012-06-19 18:03:09.000552663 +0200
++++ makefiles_jondobrowser.sh	2012-06-19 18:02:06.780551820 +0200
+@@ -85,9 +85,9 @@
+ browser/locales/Makefile
+ browser/modules/Makefile
+ browser/themes/Makefile
+-$MOZ_BRANDING_DIRECTORY/Makefile
+-$MOZ_BRANDING_DIRECTORY/content/Makefile
+-$MOZ_BRANDING_DIRECTORY/locales/Makefile
++browser/branding/jondobrowser/Makefile
++browser/branding/jondobrowser/content/Makefile
++browser/branding/jondobrowser/locales/Makefile
+ toolkit/locales/Makefile
+ extensions/spellcheck/locales/Makefile
+ intl/locales/Makefile
