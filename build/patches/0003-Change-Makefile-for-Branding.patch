@@ -1,5 +1,5 @@
---- makefiles.sh	2012-06-19 18:03:09.000552663 +0200
-+++ makefiles_jondobrowser.sh	2012-06-19 18:02:06.780551820 +0200
+--- /browser/makefiles.sh	2012-06-19 18:03:09.000552663 +0200
++++ /browser/makefiles.sh	2012-06-19 18:02:06.780551820 +0200
 @@ -85,9 +85,9 @@
  browser/locales/Makefile
  browser/modules/Makefile
