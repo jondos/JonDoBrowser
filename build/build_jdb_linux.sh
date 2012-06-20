@@ -206,8 +206,10 @@ for platform in $platforms; do
     fi
     unzip -d xpi_helper ${platform}_$xpiLang.xpi
     cd xpi_helper
-    svn cat https://svn.jondos.de/svnpub/JonDoBrowser/trunk/build/patches/xpi/0004-XPI-branding.patch > XPI.patch
-    patch -tp1 XPI.patch 
+    echo "Getting the xpi patches..."
+    svn cat $svnBrowser/build/patches/xpi/0004-XPI-Branding.patch > XPI.patch
+    echo "Patching the xpi..."
+    patch -tp1 < XPI.patch 
     rm XPI.patch
     zip -r ${platform}_$xpiLang.xpi *
     mv ${platform}_$xpiLang.xpi ../
