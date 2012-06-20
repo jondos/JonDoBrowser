@@ -1,19 +1,6 @@
 This patch does some basic renaming of Firefox to JonDoBrowser. The rest of the
 branding is done by images and icons.
----
- browser/branding/official/configure.sh             |    2 +-
- browser/branding/official/locales/en-US/brand.dtd  |    6 +++---
- .../official/locales/en-US/brand.properties        |    6 +++---
- 3 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/browser/branding/official/configure.sh b/browser/branding/official/configure.sh
-index 4d3d297..e9b3738 100644
---- a/browser/branding/official/configure.sh
-+++ b/browser/branding/official/configure.sh
-@@ -1,2 +1,2 @@
--MOZ_APP_DISPLAYNAME=Firefox
-+MOZ_APP_DISPLAYNAME=JonDoBrowser
- MOZ_UA_BUILDID=20100101
 diff --git a/browser/branding/official/locales/en-US/brand.dtd b/browser/branding/official/locales/en-US/brand.dtd
 index 142d79b..c137e04 100644
 --- a/browser/branding/official/locales/en-US/brand.dtd
