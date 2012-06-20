@@ -200,11 +200,18 @@ for platform in $platforms; do
     grep -Eo "[a-z0-9]{40}")
   xpiHash2=$(sha1sum ${platform}_$xpiLang.xpi | grep -Eo "[a-z0-9]{40}") 
   if [ "$xpiHash1" = "$xpiHash2" ]; then
-    echo "Verified SHA1 hash and patching the xpi now..."
+    echo "Verified SHA1 hash..."
     if [ ! -d xpi_helper ]; then
       mkdir xpi_helper
-    ]
-    unzip -d 
+    fi
+    unzip -d xpi_helper ${platform}_$xpiLang.xpi
+    cd xpi_helper
+    svn cat https://svn.jondos.de/svnpub/JonDoBrowser/trunk/build/patches/xpi/0004-XPI-branding.patch > XPI.patch
+    patch -tp1 XPI.patch 
+    rm XPI.patch
+    zip -r ${platform}_$xpiLang.xpi *
+    mv ${platform}_$xpiLang.xpi ../
+    rm -rf * && cd ..
   else
     echo "Wrong SHA1 hash of ${platform}_$xpiLang.xpi, removing it" 
     rm ${platform}_$xpiLang.xpi
