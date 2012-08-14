@@ -93,6 +93,9 @@ prepareLinuxProfiles() {
     if [ "$lang" = "de" ]; then
       cp -f ${linuxPlatform}_de.xpi $profileDir/extensions/langpack-de@firefox.mozilla.org.xpi
     fi
+    # Patching the profile xpi to be optimized for JDB, sigh...
+    svn export $svnBrowser/build/patches/xpi/jondofox.xpi | \
+      unzip -d $profileDir/extensions/\{437be45a-4114-11dd-b9ab-71d256d89593\} -o
   done    
 }
 
