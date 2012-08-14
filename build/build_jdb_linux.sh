@@ -67,6 +67,7 @@ gpgVerification() {
 prepareProfile() {
   echo "Fetching sources..."
   svn export $svnProfile
+  svn export $svnBrowser/build/patches/xpi/0004-XPI-Branding.patch XPI.patch
   for lang in $langs; do
     svn export $svnBrowser/build/langPatches/prefs_browser_$lang.js
   done
@@ -103,6 +104,7 @@ prepareLinuxProfiles() {
     cp -f prefs_browser_$lang.js $profileDir/prefs.js
     cp start-jondobrowser.sh $jdbPlatform-$lang
     mv -f $profileDir/places.sqlite_$lang $profileDir/places.sqlite
+    rm -f $profileDir/places.sqlite_*
     # Copying the language xpi to get other language strings than the en-US
     # ones.
     if [ "$lang" = "de" ]; then
@@ -132,6 +134,7 @@ prepareMacProfiles() {
     cp -rf profile/* "$profileDir"
     cp -f prefs_browser_$lang.js "$profileDir"/prefs.js
     mv -f "$profileDir"/places.sqlite_$lang "$profileDir"/places.sqlite
+    rm -f "$profileDir"/places.sqlite_*
     cp JonDoBrowser $appDir
     cp Info.plist $jdbPlatform-$lang/Contents
     cp jondobrowser.icns $jdbPlatform-$lang/Contents/Resources
@@ -141,6 +144,13 @@ prepareMacProfiles() {
       cp -f mac_de.xpi "$profileDir"/extensions/langpack-de@firefox.mozilla.org.xpi
     fi
   done
+}
+
+cleanup() {
+  #Cleanup
+  echo "Cleaning up everything..."
+  rm -rf tmp && rm -rf build
+  exit 0
 }
 
 if [ ! -d "tmp" ]; then
@@ -212,18 +222,17 @@ for platform in $platforms; do
     fi
     unzip -d xpi_helper ${platform}_$xpiLang.xpi
     cd xpi_helper
-    echo "Getting the xpi patches..."
-    svn cat $svnBrowser/build/patches/xpi/0004-XPI-Branding.patch > XPI.patch
+    # TODO: That is german only! If we start to support other languages besides
+    # enlish and german we have to create language specific patches!
     echo "Patching the xpi..."
-    patch -tp1 < XPI.patch 
-    rm XPI.patch
+    patch -tp1 < ../XPI.patch 
     zip -r ${platform}_$xpiLang.xpi *
     mv ${platform}_$xpiLang.xpi ../
     rm -rf * && cd ..
   else
     echo "Wrong SHA1 hash of ${platform}_$xpiLang.xpi, removing it" 
     rm ${platform}_$xpiLang.xpi
-    #TODO: Should we exit here?
+    exit 1
   fi
 done
 
@@ -273,9 +282,6 @@ for lang in $langs; do
   mv JonDoBrowser-linux-$lang.tar.bz2 ../
 done
 
-#Cleanup
-echo "Cleaning up everything..."
-cd ../
-rm -rf tmp && rm -rf build
+cd ..
 
 exit 0
