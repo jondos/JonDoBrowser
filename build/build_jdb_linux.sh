@@ -64,6 +64,30 @@ gpgVerification() {
   fi 
 }
 
+prepareProfile() {
+  echo "Fetching sources..."
+  svn export $svnProfile
+  for lang in $langs; do
+    svn export $svnBrowser/build/langPatches/prefs_browser_$lang.js
+  done
+  svn export $svnBrowser/start-jondobrowser.sh
+  chmod +x start-jondobrowser.sh
+  svn export $svnBrowser/build/mac/JonDoBrowser
+  chmod +x JonDoBrowser
+  svn export $svnBrowser/build/patches/xpi/jondofox.xpi
+  svn export $svnBrowser/build/mac/Info.plist
+  svn export $svnBrowser/build/mac/jondobrowser.icns
+
+  echo "Preparing the profile..."
+  # We do not need ProfileSwitcher in our JonDoBrowser, thus removing it.
+  rm -rf profile/extensions/\{fa8476cf-a98c-4e08-99b4-65a69cb4b7d4\}
+  # Patching the profile xpi to be optimized for JDB, sigh...
+  unzip -d profile/extensions/\{437be45a-4114-11dd-b9ab-71d256d89593\} -o jondofox.xpi 
+  # Cruft from the old JonDoFox-Profile...
+  rm -f profile/prefs_portable*
+  rm -f profile/bookmarks* 
+}
+
 prepareLinuxProfiles() {
   echo "Creating language specific Linux profiles..."
   local profileDir
@@ -75,28 +99,16 @@ prepareLinuxProfiles() {
     profileDir=$jdbPlatform-$lang/Data/profile
     mkdir -p $jdbPlatform-$lang/App/Firefox
     mkdir -p $jdbPlatform-$lang/Data/plugins
-    # We do not need ProfileSwitcher in our JonDoBrowser, thus removing it.
-    rm -rf profile/extensions/\{fa8476cf-a98c-4e08-99b4-65a69cb4b7d4\} 
     cp -rf profile $jdbPlatform-$lang/Data
-    svn cat $svnBrowser/build/langPatches/prefs_browser_$lang.js > \
-      $profileDir/prefs.js
-    svn cat $svnBrowser/start-jondobrowser.sh > \
-      $jdbPlatform-$lang/start-jondobrowser.sh
-    chmod +x $jdbPlatform-$lang/start-jondobrowser.sh
+    cp -f prefs_browser_$lang.js $profileDir/prefs.js
+    cp start-jondobrowser.sh $jdbPlatform-$lang
     mv -f $profileDir/places.sqlite_$lang $profileDir/places.sqlite
-    # Cruft from the old JonDoFox-Profile...
-    rm -f $profileDir/prefs_portable*
-    rm -f $profileDir/places.sqlite_*
-    rm -f $profileDir/bookmarks*
     # Copying the language xpi to get other language strings than the en-US
     # ones.
     if [ "$lang" = "de" ]; then
       cp -f ${linuxPlatform}_de.xpi $profileDir/extensions/langpack-de@firefox.mozilla.org.xpi
     fi
-    # Patching the profile xpi to be optimized for JDB, sigh...
-    svn export $svnBrowser/build/patches/xpi/jondofox.xpi | \
-      unzip -d $profileDir/extensions/\{437be45a-4114-11dd-b9ab-71d256d89593\} -o
-  done    
+  done
 }
 
 prepareMacProfiles() {
@@ -118,26 +130,17 @@ prepareMacProfiles() {
     mkdir $dataDir/plugins
     mkdir -p "$profileDir"
     cp -rf profile/* "$profileDir"
-    svn cat $svnBrowser/build/langPatches/prefs_browser_$lang.js > \
-      "$profileDir"/prefs.js
+    cp -f prefs_browser_$lang.js "$profileDir"/prefs.js
     mv -f "$profileDir"/places.sqlite_$lang "$profileDir"/places.sqlite
-    # Cruft from the old JonDoFox-Profile...
-    rm -f "$profileDir"/prefs_portable*
-    rm -f "$profileDir"/places.sqlite_*
-    rm -f "$profileDir"/bookmarks*
-    svn cat $svnBrowser/build/mac/JonDoBrowser > \
-      $appDir/JonDoBrowser
-    chmod +x $appDir/JonDoBrowser
-    svn cat $svnBrowser/build/mac/Info.plist > \
-      $jdbPlatform-$lang/Contents/Info.plist
-    svn cat $svnBrowser/build/mac/jondobrowser.icns > \
-      $jdbPlatform-$lang/Contents/Resources/jondobrowser.icns
+    cp JonDoBrowser $appDir
+    cp Info.plist $jdbPlatform-$lang/Contents
+    cp jondobrowser.icns $jdbPlatform-$lang/Contents/Resources
     # Copying the language xpi to get other language strings than the en-US
     # ones.
     if [ "$lang" = "de" ]; then
       cp -f mac_de.xpi "$profileDir"/extensions/langpack-de@firefox.mozilla.org.xpi
     fi
-  done    
+  done
 }
 
 if [ ! -d "tmp" ]; then
@@ -225,11 +228,8 @@ for platform in $platforms; do
 done
 
 # Now, we set up the JonDoBrowser profiles
-
 echo "Setting up the JonDoBrowser profiles..."
-echo "Fetching sources..."
-svn export $svnProfile
-
+prepareProfile
 prepareLinuxProfiles
 #prepareMacProfiles
 
