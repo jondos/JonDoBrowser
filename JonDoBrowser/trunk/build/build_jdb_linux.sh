@@ -39,7 +39,7 @@ xpiLang=de
 # Allowing 32bit and 64bit JonDoBrowser builds
 linuxPlatform="linux-$(uname -m)"
 platforms="${linuxPlatform} mac"
-version="0.1"
+jdbVersion="0.1"
 mozKey=247CA658AA95F6171EB0F13EA7D75CC7C52175E2 
 releasePath=http://releases.mozilla.org/pub/mozilla.org/firefox/releases/latest
 # The first grep makes sure we really get the latest firefox version and not
@@ -48,7 +48,7 @@ releasePath=http://releases.mozilla.org/pub/mozilla.org/firefox/releases/latest
 # When we are using 'wget' in this script we retry three times if necessary
 # as some mirrors of releases.mozilla.org seem to be not reachable at times...
 echo "Getting the latest Firefox source version..."
-version=$(wget -t 3 -qO - $releasePath/source | \
+ffVersion=$(wget -t 3 -qO - $releasePath/source | \
   grep -Eom 1 'firefox-[0-9]{2}\.[0-9](\.[0-9])*.source.tar.bz2' | tail -n1 | \
    grep -Eom 1 '[0-9]{2}\.[0-9](\.[0-9])*')
 
@@ -95,7 +95,7 @@ prepareLinuxProfiles() {
   local profileDir
 
   for lang in $langs; do
-    local jdbDir=JonDoBrowser-$linuxPlatform-$version-$lang 
+    local jdbDir=JonDoBrowser-$linuxPlatform-$jdbVersion-$lang 
     profileDir=$jdbDir/Data/profile
     mkdir -p $jdbDir/App/Firefox
     mkdir -p $jdbDir/Data/plugins
@@ -158,21 +158,21 @@ fi
 cd tmp
 
 #TODO: Mitigation of downgrade attacks
-if [ "$version" = "" ]; then
+if [ "$ffVersion" = "" ]; then
   echo "We got no version extracted, thus exiting..."
   exit 1
-elif [ ! -e "firefox-$version.source.tar.bz2" ]; then
+elif [ ! -e "firefox-$ffVersion.source.tar.bz2" ]; then
   echo "Getting the latest Firefox sources ..."
-  wget -t 3 $releasePath/source/firefox-$version.source.tar.bz2
+  wget -t 3 $releasePath/source/firefox-$ffVersion.source.tar.bz2
   if [ ! $? -eq 0 ]; then
     echo "Error while retrieving the Firefox sources, exiting..."
     exit 1
   fi
 fi
 
-if [ ! -e "firefox-$version.source.tar.bz2.asc" ]; then
+if [ ! -e "firefox-$ffVersion.source.tar.bz2.asc" ]; then
   echo "Getting the signature..."
-  wget -t 3 $releasePath/source/firefox-$version.source.tar.bz2.asc
+  wget -t 3 $releasePath/source/firefox-$ffVersion.source.tar.bz2.asc
   if [ ! $? -eq 0 ]; then
     echo "Error while retrieving the signature, exiting..."
     exit 1
@@ -183,7 +183,7 @@ echo "Checking the signature of the sources..."
 # TODO: Implement a more generic routine her assuming the user has not yet
 # imported the Firefox key
 # gpg prints the verification success message to stderr
-gpgVerification firefox-$version.source.tar.bz2.asc
+gpgVerification firefox-$ffVersion.source.tar.bz2.asc
 
 echo "Gettings the necessary language packs..."
 echo "Fetching and verifying the SHA1SUMS file..."
@@ -248,8 +248,8 @@ if [ ! -d "build" ]; then
   mkdir build
 fi
 
-cd build && cp ../tmp/firefox-$version.source.tar.bz2 .
-tar -xjvf firefox-$version.source.tar.bz2
+cd build && cp ../tmp/firefox-$ffVersion.source.tar.bz2 .
+tar -xjvf firefox-$ffVersion.source.tar.bz2
 echo
 echo "Patching JonDoBrowser..."
 
@@ -271,11 +271,11 @@ make -f client.mk build
 
 echo "Creating the final packages..."
 cd linux_build && make package 
-mv dist/firefox-$version.en-US.${linuxPlatform}.tar.bz2 ../../../tmp
-cd ../../../tmp && tar -xjvf firefox-$version.en-US.${linuxPlatform}.tar.bz2 
+mv dist/firefox-$ffVersion.en-US.${linuxPlatform}.tar.bz2 ../../../tmp
+cd ../../../tmp && tar -xjvf firefox-$ffVersion.en-US.${linuxPlatform}.tar.bz2
 
 for lang in $langs; do
-  local jdbDir=JonDoBrowser-$linuxPlatform-$version-$lang
+  local jdbDir=JonDoBrowser-$linuxPlatform-$jdbVersion-$lang
   cp -rf firefox/* $jdbDir/App/Firefox
   tar -cf $jdbDir.tar $jdbDir
   bzip2 -z9 $jdbDir.tar
