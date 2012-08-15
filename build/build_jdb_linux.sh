@@ -39,6 +39,7 @@ xpiLang=de
 # Allowing 32bit and 64bit JonDoBrowser builds
 linuxPlatform="linux-$(uname -m)"
 platforms="${linuxPlatform} mac"
+version="0.1"
 mozKey=247CA658AA95F6171EB0F13EA7D75CC7C52175E2 
 releasePath=http://releases.mozilla.org/pub/mozilla.org/firefox/releases/latest
 # The first grep makes sure we really get the latest firefox version and not
@@ -92,17 +93,15 @@ prepareProfile() {
 prepareLinuxProfiles() {
   echo "Creating language specific Linux profiles..."
   local profileDir
-  local jdbPlatform=JonDoBrowser-linux
 
   for lang in $langs; do
-    # TODO: Maybe we should include the JDB version in the directory name.
-    # Something like JonDoBrowser-linux-x.x.x-lang
-    profileDir=$jdbPlatform-$lang/Data/profile
-    mkdir -p $jdbPlatform-$lang/App/Firefox
-    mkdir -p $jdbPlatform-$lang/Data/plugins
-    cp -rf profile $jdbPlatform-$lang/Data
+    local jdbDir=JonDoBrowser-$linuxPlatform-$version-$lang 
+    profileDir=$jdbDir/Data/profile
+    mkdir -p $jdbDir/App/Firefox
+    mkdir -p $jdbDir/Data/plugins
+    cp -rf profile $jdbDir/Data
     cp -f prefs_browser_$lang.js $profileDir/prefs.js
-    cp start-jondobrowser.sh $jdbPlatform-$lang
+    cp start-jondobrowser.sh $jdbDir
     mv -f $profileDir/places.sqlite_$lang $profileDir/places.sqlite
     rm -f $profileDir/places.sqlite_*
     # Copying the language xpi to get other language strings than the en-US
@@ -276,10 +275,11 @@ mv dist/firefox-$version.en-US.${linuxPlatform}.tar.bz2 ../../../tmp
 cd ../../../tmp && tar -xjvf firefox-$version.en-US.${linuxPlatform}.tar.bz2 
 
 for lang in $langs; do
-  cp -rf firefox/* JonDoBrowser-linux-$lang/App/Firefox
-  tar -cf JonDoBrowser-linux-$lang.tar JonDoBrowser-linux-$lang
-  bzip2 -z9 JonDoBrowser-linux-$lang.tar
-  mv JonDoBrowser-linux-$lang.tar.bz2 ../
+  local jdbDir=JonDoBrowser-$linuxPlatform-$version-$lang
+  cp -rf firefox/* $jdbDir/App/Firefox
+  tar -cf $jdbDir.tar $jdbDir
+  bzip2 -z9 $jdbDir.tar
+  mv $jdbDir.tar.bz2 ../
 done
 
 cd ..
