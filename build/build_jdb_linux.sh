@@ -42,28 +42,6 @@ platforms="${linuxPlatform} mac"
 jdbVersion="0.1"
 mozKey=247CA658AA95F6171EB0F13EA7D75CC7C52175E2 
 releasePath=http://releases.mozilla.org/pub/mozilla.org/firefox/releases/latest
-# The first grep makes sure we really get the latest firefox version and not
-# someting else of the html page. The second grep finally extracts the latest
-# version.
-# When we are using 'wget' in this script we retry three times if necessary
-# as some mirrors of releases.mozilla.org seem to be not reachable at times...
-echo "Getting the latest Firefox source version..."
-ffVersion=$(wget -t 3 -qO - $releasePath/source | \
-  grep -Eom 1 'firefox-[0-9]{2}\.[0-9](\.[0-9])*.source.tar.bz2' | tail -n1 | \
-   grep -Eom 1 '[0-9]{2}\.[0-9](\.[0-9])*')
-
-gpgVerification() {
-  file=$1
-  sigKey=$(gpg --verify $1 2>&1 | \
-    grep -Eom 2 '([A-Z0-9]{4}\s*){10}' | tail -n1 | tr -d ' ')
-
-  if [ "$sigKey" = "$mozKey" ]; then
-    echo "Successful verification!"
-  else
-    echo "Wrong signature, aborting..."
-    exit 1
-  fi 
-}
 
 prepareProfile() {
   echo "Fetching sources..."
@@ -93,9 +71,10 @@ prepareProfile() {
 prepareLinuxProfiles() {
   echo "Creating language specific Linux profiles..."
   local profileDir
+  local jdbDir
 
   for lang in $langs; do
-    local jdbDir=JonDoBrowser-$linuxPlatform-$jdbVersion-$lang 
+    jdbDir=JonDoBrowser-$linuxPlatform-$jdbVersion-$lang 
     profileDir=$jdbDir/Data/profile
     mkdir -p $jdbDir/App/Firefox
     mkdir -p $jdbDir/Data/plugins
@@ -144,10 +123,53 @@ prepareMacProfiles() {
 }
 
 cleanup() {
-  #Cleanup
+  #Cleanup: Imitating make...
   echo "Cleaning up everything..."
   rm -rf tmp && rm -rf build
   exit 0
+}
+
+OPTSTR="ch"
+getopts "${OPTSTR}" CMD_OPT
+while [ $? -eq 0 ];
+do
+  case ${CMD_OPT} in
+    c) cleanup;;
+    h) echo '' 
+       echo 'JonDoBrowser Build Script 1.0 (2012 Copyright (c) JonDos GmbH)'
+       echo "usage: $0 [options]"
+       echo ''
+       echo 'Possible options are:'
+       echo '-c removes old build cruft.'
+       echo '-h prints this help text.'
+       echo ''
+       exit 0
+       ;;
+  esac
+  getopts "${OPTSTR}" CMD_OPT
+done
+
+# The first grep makes sure we really get the latest firefox version and not
+# someting else of the html page. The second grep finally extracts the latest
+# version.
+# When we are using 'wget' in this script we retry three times if necessary
+# as some mirrors of releases.mozilla.org seem to be not reachable at times...
+echo "Getting the latest Firefox source version..."
+ffVersion=$(wget -t 3 -qO - $releasePath/source | \
+  grep -Eom 1 'firefox-[0-9]{2}\.[0-9](\.[0-9])*.source.tar.bz2' | tail -n1 | \
+   grep -Eom 1 '[0-9]{2}\.[0-9](\.[0-9])*')
+
+gpgVerification() {
+  file=$1
+  sigKey=$(gpg --verify $1 2>&1 | \
+    grep -Eom 2 '([A-Z0-9]{4}\s*){10}' | tail -n1 | tr -d ' ')
+
+  if [ "$sigKey" = "$mozKey" ]; then
+    echo "Successful verification!"
+  else
+    echo "Wrong signature, aborting..."
+    exit 1
+  fi 
 }
 
 if [ ! -d "tmp" ]; then
@@ -273,7 +295,7 @@ mv dist/firefox-$ffVersion.en-US.${linuxPlatform}.tar.bz2 ../../../tmp
 cd ../../../tmp && tar -xjvf firefox-$ffVersion.en-US.${linuxPlatform}.tar.bz2
 
 for lang in $langs; do
-  local jdbDir=JonDoBrowser-$linuxPlatform-$jdbVersion-$lang
+  jdbDir=JonDoBrowser-$linuxPlatform-$jdbVersion-$lang
   cp -rf firefox/* $jdbDir/App/Firefox
   tar -cf $jdbDir.tar $jdbDir
   bzip2 -z9 $jdbDir.tar
