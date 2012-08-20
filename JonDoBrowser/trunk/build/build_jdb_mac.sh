@@ -7,8 +7,6 @@ langs="en de"
 xpiLang=de
 platforms="mac"
 jdbVersion="0.1"
-mozKey=247CA658AA95F6171EB0F13EA7D75CC7C52175E2 
-releasePath=http://releases.mozilla.org/pub/mozilla.org/firefox/releases/latest
 langs="en de"
 title="JonDoBrowser"
 size="200000"
@@ -113,6 +111,7 @@ prepareMacProfiles() {
     cp jondobrowser.icns $jdbPlatform-$lang/Contents/Resources
     # Copying the language xpi to get other language strings than the en-US
     # ones.
+    # TODO: We need to get that copied from the Linux machine first...
     if [ "$lang" = "de" ]; then
       cp -f mac_de.xpi "$profileDir"/extensions/langpack-de@firefox.mozilla.org.xpi
     fi
@@ -146,111 +145,7 @@ do
   getopts "${OPTSTR}" CMD_OPT
 done
 
-# The first grep makes sure we really get the latest firefox version and not
-# someting else of the html page. The second grep finally extracts the latest
-# version.
-# When we are using 'wget' in this script we retry three times if necessary
-# as some mirrors of releases.mozilla.org seem to be not reachable at times...
-echo "Getting the latest Firefox source version..."
-ffVersion=$(wget -t 3 -qO - $releasePath/source | \
-  grep -Eom 1 'firefox-[0-9]{2}\.[0-9](\.[0-9])*.source.tar.bz2' | tail -n1 | \
-   grep -Eom 1 '[0-9]{2}\.[0-9](\.[0-9])*')
-
-gpgVerification() {
-  file=$1
-  sigKey=$(gpg --verify $1 2>&1 | \
-    grep -Eom 2 '([A-Z0-9]{4}\s*){10}' | tail -n1 | tr -d ' ')
-
-  if [ "$sigKey" = "$mozKey" ]; then
-    echo "Successful verification!"
-  else
-    echo "Wrong signature, aborting..."
-    exit 1
-  fi 
-}
-
-if [ ! -d "tmp" ]; then
-  mkdir tmp
-fi
-cd tmp
-
-#TODO: Mitigation of downgrade attacks
-if [ "$ffVersion" = "" ]; then
-  echo "We got no version extracted, thus exiting..."
-  exit 1
-elif [ ! -e "firefox-$ffVersion.source.tar.bz2" ]; then
-  echo "Getting the latest Firefox sources ..."
-  wget -t 3 $releasePath/source/firefox-$ffVersion.source.tar.bz2
-  if [ ! $? -eq 0 ]; then
-    echo "Error while retrieving the Firefox sources, exiting..."
-    exit 1
-  fi
-fi
-
-if [ ! -e "firefox-$ffVersion.source.tar.bz2.asc" ]; then
-  echo "Getting the signature..."
-  wget -t 3 $releasePath/source/firefox-$ffVersion.source.tar.bz2.asc
-  if [ ! $? -eq 0 ]; then
-    echo "Error while retrieving the signature, exiting..."
-    exit 1
-  fi
-fi
-
-echo "Checking the signature of the sources..."
-# TODO: Implement a more generic routine her assuming the user has not yet
-# imported the Firefox key
-# gpg prints the verification success message to stderr
-gpgVerification firefox-$ffVersion.source.tar.bz2.asc
-
-echo "Gettings the necessary language packs..."
-echo "Fetching and verifying the SHA1SUMS file..."
-
-wget -t 3 $releasePath/SHA1SUMS
-if [ ! $? -eq 0 ]; then
-  echo "Error while retrieving SHA1SUMS, exiting..."
-  exit 1
-fi
-
-wget -t 3 $releasePath/SHA1SUMS.asc
-if [ ! $? -eq 0 ]; then
-  echo "Error while retrieving the SHA1SUMS signature, exiting..."
-  exit 1
-fi
-
-gpgVerification SHA1SUMS.asc
-
-echo "Retrieving the language pack(s) and verifying them..."
-
-for platform in $platforms; do
-  wget -t 3 -O ${platform}_$xpiLang.xpi $releasePath/$platform/xpi/$xpiLang.xpi 
-  if [ ! $? -eq 0 ]; then
-    echo "Error while retrieving the $xpiLang language pack for"
-    echo "$platform, continuing without it..."
-    continue
-  fi 
-  xpiHash1=$(grep -E "$platform/xpi/$xpiLang.xpi" SHA1SUMS | \
-    grep -Eo "[a-z0-9]{40}")
-  xpiHash2=$(sha1sum ${platform}_$xpiLang.xpi | grep -Eo "[a-z0-9]{40}") 
-  if [ "$xpiHash1" = "$xpiHash2" ]; then
-    echo "Verified SHA1 hash..."
-    if [ ! -d xpi_helper ]; then
-      mkdir xpi_helper
-    fi
-    unzip -d xpi_helper ${platform}_$xpiLang.xpi
-    cd xpi_helper
-    # TODO: That is german only! If we start to support other languages besides
-    # enlish and german we have to create language specific patches!
-    echo "Patching the xpi..."
-    patch -tp1 < ../XPI.patch 
-    zip -r ${platform}_$xpiLang.xpi *
-    mv ${platform}_$xpiLang.xpi ../
-    rm -rf * && cd ..
-  else
-    echo "Wrong SHA1 hash of ${platform}_$xpiLang.xpi, removing it" 
-    rm ${platform}_$xpiLang.xpi
-    exit 1
-  fi
-done
+mkdir tmp && cd tmp
 
 echo "Setting up the JonDoBrowser profiles..."
 prepareProfile
@@ -263,6 +158,7 @@ if [ ! -d "build" ]; then
   mkdir build
 fi
 
+# Assuming we got the verified FF source copied to tmp first...
 cd build && cp ../tmp/firefox-$ffVersion.source.tar.bz2 .
 tar -xjvf firefox-$ffVersion.source.tar.bz2
 echo
