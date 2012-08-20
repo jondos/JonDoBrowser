@@ -38,7 +38,7 @@ langs="en de"
 xpiLang=de
 # Allowing 32bit and 64bit JonDoBrowser builds
 linuxPlatform="linux-$(uname -m)"
-platforms="${linuxPlatform} mac"
+platforms="${linuxPlatform}"
 jdbVersion="0.1"
 mozKey=247CA658AA95F6171EB0F13EA7D75CC7C52175E2 
 releasePath=http://releases.mozilla.org/pub/mozilla.org/firefox/releases/latest
@@ -52,11 +52,7 @@ prepareProfile() {
   done
   svn export $svnBrowser/start-jondobrowser.sh
   chmod +x start-jondobrowser.sh
-  svn export $svnBrowser/build/mac/JonDoBrowser
-  chmod +x JonDoBrowser
   svn export $svnBrowser/build/patches/xpi/jondofox.xpi
-  svn export $svnBrowser/build/mac/Info.plist
-  svn export $svnBrowser/build/mac/jondobrowser.icns
 
   echo "Preparing the profile..."
   # We do not need ProfileSwitcher in our JonDoBrowser, thus removing it.
@@ -87,37 +83,6 @@ prepareLinuxProfiles() {
     # ones.
     if [ "$lang" = "de" ]; then
       cp -f ${linuxPlatform}_de.xpi $profileDir/extensions/langpack-de@firefox.mozilla.org.xpi
-    fi
-  done
-}
-
-prepareMacProfiles() {
-  echo "Creating language specific Mac profiles..."
-  local appDir
-  local dataDir
-  local profileDir
-  local jdbPlatform="JonDoBrowser-mac"
-
-  for lang in $langs; do
-    appDir=$jdbPlatform-$lang/Contents/MacOS
-    dataDir=$appDir/Firefox.app/Contents/MacOS/Data
-    profileDir=$jdbPlatform-$lang/Library/Application\ Support/Firefox/Profiles/profile
-    mkdir -p $appDir/Firefox.app/Contents/Resources
-    mkdir $jdbPlatform-$lang/Contents/Resources
-    mkdir -p $dataDir/profile
-    mkdir $dataDir/plugins
-    mkdir -p "$profileDir"
-    cp -rf profile/* "$profileDir"
-    cp -f prefs_browser_$lang.js "$profileDir"/prefs.js
-    mv -f "$profileDir"/places.sqlite_$lang "$profileDir"/places.sqlite
-    rm -f "$profileDir"/places.sqlite_*
-    cp JonDoBrowser $appDir
-    cp Info.plist $jdbPlatform-$lang/Contents
-    cp jondobrowser.icns $jdbPlatform-$lang/Contents/Resources
-    # Copying the language xpi to get other language strings than the en-US
-    # ones.
-    if [ "$lang" = "de" ]; then
-      cp -f mac_de.xpi "$profileDir"/extensions/langpack-de@firefox.mozilla.org.xpi
     fi
   done
 }
@@ -259,7 +224,6 @@ done
 echo "Setting up the JonDoBrowser profiles..."
 prepareProfile
 prepareLinuxProfiles
-#prepareMacProfiles
 
 cd ..
 
@@ -279,17 +243,18 @@ if [ ! -d "patches" ]; then
 fi
 
 cp patches/*.patch mozilla-release/ && cd mozilla-release
-svn cat $svnBrowser/build/.mozconfig_$linuxPlatform > .mozconfig
+
 if [ "$linuxPlatform" == "linux-x86_64" ]; then
   svn export $svnBrowser/build/patches/os/PIE-64bit-Linux.patch
 fi
+
 svn export $svnBrowser/build/branding/jondobrowser browser/branding/jondobrowser
 
 # Essentially the patch-any-src.sh from the Tor Project
 for i in *patch; do patch -tp1 <$i || exit 1; done
 
-#TODO: Code for copying the Mac stuff to the Mac build server...
 echo "Building JonDoBrowser..."
+svn cat $svnBrowser/build/.mozconfig_$linuxPlatform > .mozconfig
 make -f client.mk build
 
 echo "Creating the final packages..."
