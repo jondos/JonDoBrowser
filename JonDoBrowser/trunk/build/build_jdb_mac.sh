@@ -145,7 +145,8 @@ do
   getopts "${OPTSTR}" CMD_OPT
 done
 
-mkdir tmp && cd tmp
+# In tmp there have to be the FF source and the mac lang xpi.
+cd tmp
 
 echo "Setting up the JonDoBrowser profiles..."
 prepareProfile
