@@ -1,6 +1,15 @@
 #!/bin/bash
-svnDir=https://svn.jondos.de/svnpub/JonDoBrowser/trunk/build
-langs="en, de"
+
+svnProfile=https://svn.jondos.de/svnpub/JonDoFox_Profile/trunk/full/profile
+svnBrowser=https://svn.jondos.de/svnpub/JonDoBrowser/trunk
+langs="en de"
+# We only need the german language pack currently as english is the default
+xpiLang=de
+platforms="mac"
+jdbVersion="0.1"
+mozKey=247CA658AA95F6171EB0F13EA7D75CC7C52175E2 
+releasePath=http://releases.mozilla.org/pub/mozilla.org/firefox/releases/latest
+langs="en de"
 title="JonDoBrowser"
 size="200000"
 source="JDB"
@@ -56,10 +65,226 @@ generateDmgImage() {
   rm "$source.temp.dmg"
 }
 
-svn cat $svnDir/.mozconfig_mac > build/mozilla-release/.mozconfig
+prepareProfile() {
+  echo "Fetching sources..."
+  svn export $svnProfile
+  svn export $svnBrowser/build/patches/xpi/XPI-Branding.patch XPI.patch
+  for lang in $langs; do
+    svn export $svnBrowser/build/langPatches/prefs_browser_$lang.js
+  done
+  svn export $svnBrowser/build/mac/JonDoBrowser
+  chmod +x JonDoBrowser
+  svn export $svnBrowser/build/patches/xpi/jondofox.xpi
+  svn export $svnBrowser/build/mac/Info.plist
+  svn export $svnBrowser/build/mac/jondobrowser.icns
 
-cd build/mozilla-release
+  echo "Preparing the profile..."
+  # We do not need ProfileSwitcher in our JonDoBrowser, thus removing it.
+  rm -rf profile/extensions/\{fa8476cf-a98c-4e08-99b4-65a69cb4b7d4\}
+  # Patching the profile xpi to be optimized for JDB, sigh...
+  unzip -d profile/extensions/\{437be45a-4114-11dd-b9ab-71d256d89593\} -o jondofox.xpi 
+  # Cruft from the old JonDoFox-Profile...
+  rm -f profile/prefs_portable*
+  rm -f profile/bookmarks* 
+}
+
+prepareMacProfiles() {
+  echo "Creating language specific Mac profiles..."
+  local appDir
+  local dataDir
+  local profileDir
+  local jdbPlatform="JonDoBrowser-mac"
+
+  for lang in $langs; do
+    appDir=$jdbPlatform-$lang/Contents/MacOS
+    dataDir=$appDir/Firefox.app/Contents/MacOS/Data
+    profileDir=$jdbPlatform-$lang/Library/Application\ Support/Firefox/Profiles/profile
+    mkdir -p $appDir/Firefox.app/Contents/Resources
+    mkdir $jdbPlatform-$lang/Contents/Resources
+    mkdir -p $dataDir/profile
+    mkdir $dataDir/plugins
+    mkdir -p "$profileDir"
+    cp -rf profile/* "$profileDir"
+    cp -f prefs_browser_$lang.js "$profileDir"/prefs.js
+    mv -f "$profileDir"/places.sqlite_$lang "$profileDir"/places.sqlite
+    rm -f "$profileDir"/places.sqlite_*
+    cp JonDoBrowser $appDir
+    cp Info.plist $jdbPlatform-$lang/Contents
+    cp jondobrowser.icns $jdbPlatform-$lang/Contents/Resources
+    # Copying the language xpi to get other language strings than the en-US
+    # ones.
+    if [ "$lang" = "de" ]; then
+      cp -f mac_de.xpi "$profileDir"/extensions/langpack-de@firefox.mozilla.org.xpi
+    fi
+  done
+}
+
+cleanup() {
+  #Cleanup: Imitating make...
+  echo "Cleaning up everything..."
+  rm -rf tmp && rm -rf build
+  exit 0
+}
+
+OPTSTR="ch"
+getopts "${OPTSTR}" CMD_OPT
+while [ $? -eq 0 ];
+do
+  case ${CMD_OPT} in
+    c) cleanup;;
+    h) echo '' 
+       echo 'JonDoBrowser Build Script 1.0 (2012 Copyright (c) JonDos GmbH)'
+       echo "usage: $0 [options]"
+       echo ''
+       echo 'Possible options are:'
+       echo '-c removes old build cruft.'
+       echo '-h prints this help text.'
+       echo ''
+       exit 0
+       ;;
+  esac
+  getopts "${OPTSTR}" CMD_OPT
+done
+
+# The first grep makes sure we really get the latest firefox version and not
+# someting else of the html page. The second grep finally extracts the latest
+# version.
+# When we are using 'wget' in this script we retry three times if necessary
+# as some mirrors of releases.mozilla.org seem to be not reachable at times...
+echo "Getting the latest Firefox source version..."
+ffVersion=$(wget -t 3 -qO - $releasePath/source | \
+  grep -Eom 1 'firefox-[0-9]{2}\.[0-9](\.[0-9])*.source.tar.bz2' | tail -n1 | \
+   grep -Eom 1 '[0-9]{2}\.[0-9](\.[0-9])*')
+
+gpgVerification() {
+  file=$1
+  sigKey=$(gpg --verify $1 2>&1 | \
+    grep -Eom 2 '([A-Z0-9]{4}\s*){10}' | tail -n1 | tr -d ' ')
+
+  if [ "$sigKey" = "$mozKey" ]; then
+    echo "Successful verification!"
+  else
+    echo "Wrong signature, aborting..."
+    exit 1
+  fi 
+}
+
+if [ ! -d "tmp" ]; then
+  mkdir tmp
+fi
+cd tmp
+
+#TODO: Mitigation of downgrade attacks
+if [ "$ffVersion" = "" ]; then
+  echo "We got no version extracted, thus exiting..."
+  exit 1
+elif [ ! -e "firefox-$ffVersion.source.tar.bz2" ]; then
+  echo "Getting the latest Firefox sources ..."
+  wget -t 3 $releasePath/source/firefox-$ffVersion.source.tar.bz2
+  if [ ! $? -eq 0 ]; then
+    echo "Error while retrieving the Firefox sources, exiting..."
+    exit 1
+  fi
+fi
+
+if [ ! -e "firefox-$ffVersion.source.tar.bz2.asc" ]; then
+  echo "Getting the signature..."
+  wget -t 3 $releasePath/source/firefox-$ffVersion.source.tar.bz2.asc
+  if [ ! $? -eq 0 ]; then
+    echo "Error while retrieving the signature, exiting..."
+    exit 1
+  fi
+fi
+
+echo "Checking the signature of the sources..."
+# TODO: Implement a more generic routine her assuming the user has not yet
+# imported the Firefox key
+# gpg prints the verification success message to stderr
+gpgVerification firefox-$ffVersion.source.tar.bz2.asc
+
+echo "Gettings the necessary language packs..."
+echo "Fetching and verifying the SHA1SUMS file..."
+
+wget -t 3 $releasePath/SHA1SUMS
+if [ ! $? -eq 0 ]; then
+  echo "Error while retrieving SHA1SUMS, exiting..."
+  exit 1
+fi
+
+wget -t 3 $releasePath/SHA1SUMS.asc
+if [ ! $? -eq 0 ]; then
+  echo "Error while retrieving the SHA1SUMS signature, exiting..."
+  exit 1
+fi
+
+gpgVerification SHA1SUMS.asc
+
+echo "Retrieving the language pack(s) and verifying them..."
+
+for platform in $platforms; do
+  wget -t 3 -O ${platform}_$xpiLang.xpi $releasePath/$platform/xpi/$xpiLang.xpi 
+  if [ ! $? -eq 0 ]; then
+    echo "Error while retrieving the $xpiLang language pack for"
+    echo "$platform, continuing without it..."
+    continue
+  fi 
+  xpiHash1=$(grep -E "$platform/xpi/$xpiLang.xpi" SHA1SUMS | \
+    grep -Eo "[a-z0-9]{40}")
+  xpiHash2=$(sha1sum ${platform}_$xpiLang.xpi | grep -Eo "[a-z0-9]{40}") 
+  if [ "$xpiHash1" = "$xpiHash2" ]; then
+    echo "Verified SHA1 hash..."
+    if [ ! -d xpi_helper ]; then
+      mkdir xpi_helper
+    fi
+    unzip -d xpi_helper ${platform}_$xpiLang.xpi
+    cd xpi_helper
+    # TODO: That is german only! If we start to support other languages besides
+    # enlish and german we have to create language specific patches!
+    echo "Patching the xpi..."
+    patch -tp1 < ../XPI.patch 
+    zip -r ${platform}_$xpiLang.xpi *
+    mv ${platform}_$xpiLang.xpi ../
+    rm -rf * && cd ..
+  else
+    echo "Wrong SHA1 hash of ${platform}_$xpiLang.xpi, removing it" 
+    rm ${platform}_$xpiLang.xpi
+    exit 1
+  fi
+done
+
+echo "Setting up the JonDoBrowser profiles..."
+prepareProfile
+prepareMacProfiles
+
+cd ..
+
+# Now, extracting, patching, rebranding and building JonDoBrowser...
+if [ ! -d "build" ]; then
+  mkdir build
+fi
+
+cd build && cp ../tmp/firefox-$ffVersion.source.tar.bz2 .
+tar -xjvf firefox-$ffVersion.source.tar.bz2
+echo
+echo "Patching JonDoBrowser..."
+
+if [ ! -d "patches" ]; then
+  svn export https://svn.jondos.de/svnpub/JonDoBrowser/trunk/build/patches \
+    1>/dev/null
+fi
+
+cp patches/*.patch mozilla-release/ && cd mozilla-release
+
+svn export $svnBrowser/build/branding/jondobrowser browser/branding/jondobrowser
+
+# Essentially the patch-any-src.sh from the Tor Project
+for i in *patch; do patch -tp1 <$i || exit 1; done
+
+echo "Building JonDoBrowser..."
+svn cat $svnBrowser/build/.mozconfig_mac > build/mozilla-release/.mozconfig
 make -f client.mk build
+
+echo "Creating the final packages..."
 cd ../..
 for lang in $langs; do
   appDir=JonDoBrowser-mac-$lang/Contents/MacOS
@@ -69,7 +294,7 @@ for lang in $langs; do
   if [ ! -d $source ]; then
     mkdir $source
     cd $source && mkdir .background && cd .background
-    svn cat $svnDir/mac/background-$lang.png > ${backgroundPictureName}
+    svn cat $svnBrowser/build/mac/background-$lang.png > ${backgroundPictureName}
     cd ../..
   fi
   mv JonDoBrowser-mac-$lang.app $source/
