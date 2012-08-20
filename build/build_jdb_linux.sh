@@ -46,7 +46,7 @@ releasePath=http://releases.mozilla.org/pub/mozilla.org/firefox/releases/latest
 prepareProfile() {
   echo "Fetching sources..."
   svn export $svnProfile
-  svn export $svnBrowser/build/patches/xpi/0004-XPI-Branding.patch XPI.patch
+  svn export $svnBrowser/build/patches/xpi/XPI-Branding.patch XPI.patch
   for lang in $langs; do
     svn export $svnBrowser/build/langPatches/prefs_browser_$lang.js
   done
@@ -279,7 +279,10 @@ if [ ! -d "patches" ]; then
 fi
 
 cp patches/*.patch mozilla-release/ && cd mozilla-release
-svn cat $svnBrowser/build/.mozconfig_linux-i686 > .mozconfig
+svn cat $svnBrowser/build/.mozconfig_$linuxPlatform > .mozconfig
+if [ "$linuxPlatform" == "linux-x86_64" ]; then
+  svn export $svnBrowser/build/patches/os/PIE-64bit-Linux.patch
+fi
 svn export $svnBrowser/build/branding/jondobrowser browser/branding/jondobrowser
 
 # Essentially the patch-any-src.sh from the Tor Project
