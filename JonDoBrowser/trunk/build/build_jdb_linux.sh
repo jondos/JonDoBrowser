@@ -187,6 +187,9 @@ fi
 
 gpgVerification SHA1SUMS.asc
 
+echo "Retrieving commonly used resources preparing the profiles..."
+prepareProfile
+
 echo "Retrieving the language pack(s) and verifying them..."
 
 for platform in $platforms; do
@@ -222,7 +225,6 @@ done
 
 # Now, we set up the JonDoBrowser profiles
 echo "Setting up the JonDoBrowser profiles..."
-prepareProfile
 prepareLinuxProfiles
 
 cd ..
