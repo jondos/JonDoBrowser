@@ -80,7 +80,7 @@ user_pref("extensions.adblockplus.savestats", false);
 user_pref("extensions.enabledScopes", 1);
 user_pref("extensions.jondofox.last_version", "");
 user_pref("extensions.jondofox.new_profile", false);
-user_pref("extensions.jondofox.browser_version", "0.0.1");
+user_pref("extensions.jondofox.browser_version", "0.1");
 user_pref("extensions.jondofox.set_referrer", true);
 user_pref("extensions.lastAppVersion", "14.0.1");
 user_pref("extensions.secureLogin@blueimp.net.javascriptProtection", true);

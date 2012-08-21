@@ -14,7 +14,7 @@ echo
 echo "Patching JonDoBrowser..."
 
 if [ ! -d "patches" ]; then
-  svn export $svnBrowser/trunk/build/patches 1>/dev/null
+  svn export $svnBrowser/build/patches 1>/dev/null
 fi
 
 cp patches/*.patch mozilla-release/ && cd mozilla-release
@@ -25,7 +25,7 @@ svn export $svnBrowser/build/branding/jondobrowser browser/branding/jondobrowser
 for i in *patch; do patch -tp1 <$i || exit 1; done
 
 echo "Building JonDoBrowser..."
-svn cat $svnBrowser/build/.mozconfig_win > .mozconfig
+svn cat $svnBrowser/build/.mozconfig_win32 > .mozconfig
 
 python build/pymake/make.py -f client.mk
 cd win32_build
