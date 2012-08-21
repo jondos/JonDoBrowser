@@ -125,7 +125,6 @@ ffVersion=$(wget -t 3 -qO - $releasePath/source | \
    grep -Eom 1 '[0-9]{2}\.[0-9](\.[0-9])*')
 
 gpgVerification() {
-  file=$1
   sigKey=$(gpg --verify $1 2>&1 | \
     grep -Eom 2 '([A-Z0-9]{4}\s*){10}' | tail -n1 | tr -d ' ')
 
