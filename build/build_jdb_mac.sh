@@ -24,7 +24,8 @@ generateDmgImage() {
   # http://stackoverflow.com/questions/96882/how-do-i-create-a-nice-looking-dmg-for-mac-os-x-using-command-line-tools
   # Adapted for JonDoBrowser's needs by Georg Koppen, JonDos GmbH 2012.
 
-  applicationName="JonDoBrowser-mac-$jdbVersion-$1.app"
+  # We want to have just "JonDoBrowser" shown. 
+  applicationName="JonDoBrowser.app"
   finalDMGName="JonDoBrowser-mac-$jdbVersion-$1.dmg"
   # TODO GeKo: Why does the backslash as a line delimiter not work but result in an error?
   # UDBZ?
