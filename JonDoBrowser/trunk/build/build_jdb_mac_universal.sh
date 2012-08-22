@@ -178,7 +178,7 @@ svn export $svnBrowser/build/branding/jondobrowser browser/branding/jondobrowser
 for i in *patch; do patch -tp1 <$i || exit 1; done
 
 echo "Building JonDoBrowser..."
-svn cat $svnBrowser/build/.mozconfig_mac > .mozconfig
+svn cat $svnBrowser/build/.mozconfig_mac_universal > .mozconfig
 make -f client.mk build
 
 echo "Creating the final packages..."
@@ -186,7 +186,7 @@ cd ../..
 for lang in $langs; do
   jdbDir=JonDoBrowser-mac-$jdbVersion-$lang
   cp -rf tmp/$jdbDir .
-  cp -rf build/mozilla-release/mac_build/dist/JonDoBrowser.app/* $jdbDir/Contents/MacOS/Firefox.app
+  cp -rf build/mozilla-release/mac_build/i386/dist/universal/firefox/JonDoBrowser.app/* $jdbDir/Contents/MacOS/Firefox.app
   mv $jdbDir $jdbDir.app
   # Preparing everything for generating the dmg image...
   if [ ! -d $source ]; then
