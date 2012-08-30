@@ -39,6 +39,7 @@ xpiLang=de
 # Allowing 32bit and 64bit JonDoBrowser builds
 linuxPlatform="linux-$(uname -m)"
 platforms="${linuxPlatform} mac win32"
+jdbDir="JonDoBrowser"
 jdbVersion="0.1"
 mozKey=247CA658AA95F6171EB0F13EA7D75CC7C52175E2 
 releasePath=http://releases.mozilla.org/pub/mozilla.org/firefox/releases/latest
@@ -67,10 +68,8 @@ prepareProfile() {
 prepareLinuxProfiles() {
   echo "Creating language specific Linux profiles..."
   local profileDir
-  local jdbDir
 
   for lang in $langs; do
-    jdbDir=JonDoBrowser-$linuxPlatform-$jdbVersion-$lang 
     profileDir=$jdbDir/Data/profile
     mkdir -p $jdbDir/App/Firefox
     mkdir -p $jdbDir/Data/plugins
@@ -264,11 +263,11 @@ mv dist/firefox-$ffVersion.en-US.${linuxPlatform}.tar.bz2 ../../../tmp
 cd ../../../tmp && tar -xjvf firefox-$ffVersion.en-US.${linuxPlatform}.tar.bz2
 
 for lang in $langs; do
-  jdbDir=JonDoBrowser-$linuxPlatform-$jdbVersion-$lang
+  jdbFinal=JonDoBrowser-$linuxPlatform-$jdbVersion-$lang
   cp -rf firefox/* $jdbDir/App/Firefox
-  tar -cf $jdbDir.tar $jdbDir
-  bzip2 -z9 $jdbDir.tar
-  mv $jdbDir.tar.bz2 ../
+  tar -cf $jdbFinal.tar $jdbDir
+  bzip2 -z9 $jdbFinal.tar
+  mv $jdbFinal ../
 done
 
 cd ..
