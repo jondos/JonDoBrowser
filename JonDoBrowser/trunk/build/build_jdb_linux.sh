@@ -198,7 +198,7 @@ for platform in $platforms; do
     continue
   fi 
   xpiHash1=$(grep -E "$platform/xpi/$xpiLang.xpi" SHA1SUMS | \
-    grep -Eo "[a-z0-9]{40}")
+    grep -Eom 1 "[a-z0-9]{40}")
   xpiHash2=$(sha1sum ${platform}_$xpiLang.xpi | grep -Eo "[a-z0-9]{40}") 
   if [ "$xpiHash1" = "$xpiHash2" ]; then
     echo "Verified SHA1 hash..."
