@@ -1,7 +1,7 @@
-diff -r 2c818c135442 browser/app/Makefile.in
---- a/browser/app/Makefile.in	Mon Aug 06 16:04:30 2012 -0700
-+++ b/browser/app/Makefile.in	Mon Aug 20 17:35:55 2012 +0200
-@@ -145,16 +145,19 @@ ifndef GNU_CC #{
+diff -r 28af55043104 browser/app/Makefile.in
+--- a/browser/app/Makefile.in	Fri Aug 24 12:03:18 2012 -0700
++++ b/browser/app/Makefile.in	Fri Aug 31 08:37:20 2012 +0200
+@@ -112,16 +112,19 @@ ifndef GNU_CC #{
  LDFLAGS += /HEAP:0x40000
  ifeq ($(OS_TEST),x86_64) #{
  # set stack to 2MB on x64 build.  See bug 582910
@@ -10,7 +10,7 @@ diff -r 2c818c135442 browser/app/Makefile.in
  endif #}
  endif #}
  
-+CXXFLAGS += -fPIE
++CXXFLGS += -fPIE
 +LDFLAGS += -pie
 +
  ifneq (,$(filter-out OS2 WINNT,$(OS_ARCH)))

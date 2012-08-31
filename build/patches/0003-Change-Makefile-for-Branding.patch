@@ -1,6 +1,12 @@
---- /browser/makefiles.sh	2012-06-19 18:03:09.000552663 +0200
-+++ /browser/makefiles.sh	2012-06-19 18:02:06.780551820 +0200
-@@ -85,9 +85,9 @@
+diff -r 28af55043104 browser/makefiles.sh
+--- a/browser/makefiles.sh	Fri Aug 24 12:03:18 2012 -0700
++++ b/browser/makefiles.sh	Fri Aug 31 08:35:06 2012 +0200
+@@ -50,19 +50,19 @@ browser/devtools/webconsole/Makefile
+ browser/extensions/Makefile
+ browser/fuel/Makefile
+ browser/fuel/public/Makefile
+ browser/fuel/src/Makefile
+ browser/installer/Makefile
  browser/locales/Makefile
  browser/modules/Makefile
  browser/themes/Makefile
@@ -9,7 +15,12 @@
 -$MOZ_BRANDING_DIRECTORY/locales/Makefile
 +browser/branding/jondobrowser/Makefile
 +browser/branding/jondobrowser/content/Makefile
-+browser/branding/jondobrowser/locales/Makefile
++browser/branding/jondobrowser/locale/Makefile
  toolkit/locales/Makefile
  extensions/spellcheck/locales/Makefile
  intl/locales/Makefile
+ netwerk/locales/Makefile
+ dom/locales/Makefile
+ security/manager/locales/Makefile
+ "
+ 
