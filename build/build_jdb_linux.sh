@@ -267,7 +267,7 @@ for lang in $langs; do
   cp -rf firefox/* $jdbDir/App/Firefox
   tar -cf $jdbFinal.tar $jdbDir
   bzip2 -z9 $jdbFinal.tar
-  mv $jdbFinal ../
+  mv $jdbFinal.tar.bz2 ../
 done
 
 cd ..
