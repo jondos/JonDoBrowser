@@ -188,7 +188,7 @@ for lang in $langs; do
   jdbDir=JonDoBrowser-mac-$jdbVersion-$lang
   cp -rf tmp/$jdbDir .
   cp -rf build/mozilla-release/mac_build/dist/JonDoBrowser.app/* $jdbDir/Contents/MacOS/Firefox.app
-  mv $jdbDir $jdbDir.app
+  mv $jdbDir JonDoBrowser.app
   # Preparing everything for generating the dmg image...
   if [ ! -d $source ]; then
     mkdir $source
@@ -196,7 +196,7 @@ for lang in $langs; do
     svn cat $svnBrowser/build/mac/background-$lang.png > ${backgroundPictureName}
     cd ../..
   fi
-  mv $jdbDir.app $source/
+  mv JonDoBrowser.app $source/
   generateDmgImage $lang
   rm -rf $source
 done
