@@ -70,12 +70,12 @@ prepareLinuxProfiles() {
   local profileDir
 
   for lang in $langs; do
-    profileDir=$jdbDir/Data/profile
-    mkdir -p $jdbDir/App/Firefox
-    mkdir -p $jdbDir/Data/plugins
-    cp -rf profile $jdbDir/Data
+    profileDir=$jdbDir-$lang/Data/profile
+    mkdir -p $jdbDir-$lang/App/Firefox
+    mkdir -p $jdbDir-$lang/Data/plugins
+    cp -rf profile $jdbDir-$lang/Data
     cp -f prefs_browser_$lang.js $profileDir/prefs.js
-    cp start-jondobrowser.sh $jdbDir
+    cp start-jondobrowser.sh $jdbDir-$lang
     mv -f $profileDir/places.sqlite_$lang $profileDir/places.sqlite
     rm -f $profileDir/places.sqlite_*
     # Copying the language xpi to get other language strings than the en-US
@@ -264,10 +264,12 @@ cd ../../../tmp && tar -xjvf firefox-$ffVersion.en-US.${linuxPlatform}.tar.bz2
 
 for lang in $langs; do
   jdbFinal=JonDoBrowser-$linuxPlatform-$jdbVersion-$lang
-  cp -rf firefox/* $jdbDir/App/Firefox
+  cp -rf firefox/* $jdbDir-$lang/App/Firefox
+  mv $jdbDir-$lang $jdbDir
   tar -cf $jdbFinal.tar $jdbDir
   bzip2 -z9 $jdbFinal.tar
   mv $jdbFinal.tar.bz2 ../
+  rm -rf $jdbDir
 done
 
 cd ..
