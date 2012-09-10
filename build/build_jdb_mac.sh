@@ -49,6 +49,8 @@ generateDmgImage() {
            make new alias file at container window to POSIX file "/Applications" with properties {name:"Applications"}
            set position of item "'${applicationName}'" of container window to {100, 120}
            set position of item "Applications" of container window to {375, 120} 
+           close
+           open
            update without registering applications
            delay 5
            eject
