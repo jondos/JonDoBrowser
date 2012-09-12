@@ -19,8 +19,6 @@
 ;along with this program; if not, write to the Free Software
 ;Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-#TODO: We have change the JonDoFoxPortableSettings.ini in this installer to
-#JonDoBrowser.ini and make sure that the proper directories are existing.
 !define NAME "JonDoBrowser"
 !define APPNAME "${NAME}"
 !define PORTABLEAPPNAME "${NAME}"
@@ -124,15 +122,15 @@ Function .onInit
 	StrCmp "$0" "SHOWLICENSE" CheckWhatToShow LicenseDone
 
 	CheckWhatToShow:
-		IfFileExists "$EXEDIR\Data\settings\JonDoFoxPortableSettings.ini" "" ShowBoth
-			ReadINIStr $0 "$EXEDIR\Data\settings\JonDoFoxPortableSettings.ini" "JonDoFoxPortableSettings" "AgreedToLicense"
+		IfFileExists "$EXEDIR\Data\settings\JonDoBrowserSettings.ini" "" ShowBoth
+			ReadINIStr $0 "$EXEDIR\Data\settings\JonDoBrowserSettings.ini" "JonDoBrowserSettings" "AgreedToLicense"
 			StrCmp $0 "${LICENSEVERSION}" "" ShowBoth
-	
+
 	;ShowOptionsOnly:
 		StrCpy $SHOWOPTIONS "true"
 		StrCpy $SHOWLICENSE "false"
-		Goto onInitDone	
-	
+		Goto onInitDone
+
 	ShowBoth:
 		StrCpy $SHOWOPTIONS "true"
 		StrCpy $SHOWLICENSE "true"
@@ -141,7 +139,6 @@ Function .onInit
 	LicenseDone:
 		SetSilent silent
 		Goto onInitDone
-
 	onInitDone:
 FunctionEnd
 
@@ -182,7 +179,6 @@ Section "Main"
 		StrCmp $PLUGINSDIRECTORY "$EXEDIR\Data\plugins" "" EndINI
 		StrCmp $SETTINGSDIRECTORY "$EXEDIR\Data\settings" "" EndINI
 		StrCpy $ISDEFAULTDIRECTORY "true"
-	
 	EndINI:
 		IfFileExists "$PROGRAMDIRECTORY\$PROGRAMEXECUTABLE" FoundProgramEXE NoProgramEXE
 
@@ -203,7 +199,6 @@ Section "Main"
 			StrCpy $SETTINGSDIRECTORY "$EXEDIR\Data\settings"
 			StrCpy $ISDEFAULTDIRECTORY "true"
 			Goto FoundProgramEXE
-	
 	CheckPortableProgramDIR:
 			IfFileExists "$EXEDIR\${NAME}\App\${DEFAULTAPPDIR}\${DEFAULTEXE}" "" NoProgramEXE
 			StrCpy $PROGRAMDIRECTORY "$EXEDIR\${NAME}\App\${DEFAULTAPPDIR}"
@@ -237,18 +232,18 @@ Section "Main"
 				Goto RunProgram
 
 	WarnAnotherInstance:
-		MessageBox MB_YESNO|MB_ICONINFORMATION `$(LauncherAlreadyRunning)` IDNO "" IDYES KeepLoadingFirefox	
-		Abort
+		MessageBox MB_YESNO|MB_ICONINFORMATION `$(LauncherAlreadyRunning)` IDNO "" IDYES KeepLoadingFirefox
+               Abort
 
 	KeepLoadingFirefox:
 		KillProcDLL::KillProc "firefox.exe" ;Kill firefox		
-		Pop $R0 
-		Sleep 1000		
+		Pop $R0
+		Sleep 1000
 		StrCmp $R0 "603" ProfileWork ;someone has closed Firefox meanwhile...
     StrCmp $R0 "0"  ProfileWork
     MessageBox MB_OK `$(LauncherCouldNotCloseRunning)`
-    Abort	
-    
+    Abort
+
 	CheckForCrashReports:
 		IfFileExists "$APPDATA\Mozilla\Firefox\Crash Reports\*.*" "" CheckForExtensionsDirectory
 			Rename "$APPDATA\Mozilla\Firefox\Crash Reports" "$APPDATA\Mozilla\Firefox\Crash Reports-BackupByFirefoxPortable"
@@ -260,13 +255,11 @@ Section "Main"
 			Rename "$APPDATA\Mozilla\Extensions" "$APPDATA\Mozilla\Extensions-BackupByFirefoxPortable"
 			StrCpy $EXTENSIONSDIREXISTS "true"
 			StrCpy $WAITFORPROGRAM "true"
-	
 	ProfileWork:
 		;=== Check for an existing profile
 		IfFileExists "$PROFILEDIRECTORY\prefs.js" ProfileFound
 			;=== No profile was found
 			StrCmp $ISDEFAULTDIRECTORY "true" CopyDefaultProfile CreateProfile
-	
 	CopyDefaultProfile:
 		CreateDirectory "$EXEDIR\Data"
 		CreateDirectory "$EXEDIR\Data\plugins"
@@ -275,28 +268,26 @@ Section "Main"
 		CopyFiles /SILENT $EXEDIR\App\DefaultData\plugins\*.* $EXEDIR\Data\plugins
 		CopyFiles /SILENT $EXEDIR\App\DefaultData\profile\*.* $EXEDIR\Data\profile
 		GoTo ProfileFound
-	
 	CreateProfile:
 		IfFileExists "$PROFILEDIRECTORY\*.*" ProfileFound
 		CreateDirectory "$PROFILEDIRECTORY"
 
 	ProfileFound:
-		IfFileExists "$SETTINGSDIRECTORY\JonDoFoxPortableSettings.ini" SettingsFound
+		IfFileExists "$SETTINGSDIRECTORY\JonDoBrowserSettings.ini" SettingsFound
 			CreateDirectory "$SETTINGSDIRECTORY"
-			FileOpen $R0 "$SETTINGSDIRECTORY\JonDoFoxPortableSettings.ini" w
+			FileOpen $R0 "$SETTINGSDIRECTORY\JonDoBrowserSettings.ini" w
 			FileClose $R0
-			WriteINIStr "$SETTINGSDIRECTORY\JonDoFoxPortableSettings.ini" "JonDoFoxPortableSettings" "LastProfileDirectory" "NONE"
+			WriteINIStr "$SETTINGSDIRECTORY\JonDoBrowserSettings.ini" "JonDoBrowserSettings" "LastProfileDirectory" "NONE"
 
 	SettingsFound:
 		StrCmp $SHOWLICENSE "true" WriteSettingsOut
 		StrCmp $SHOWOPTIONS "true" WriteSettingsOut CheckForLicense
 
 	WriteSettingsOut:
-		WriteINIStr "$SETTINGSDIRECTORY\JonDoFoxPortableSettings.ini" "JonDoFoxPortableSettings" "AgreedToLicense" "${LICENSEVERSION}"
+		WriteINIStr "$SETTINGSDIRECTORY\JonDoBrowserSettings.ini" "JonDoBrowserSettings" "AgreedToLicense" "${LICENSEVERSION}"
                 Goto TheEnd
-	
 	CheckForLicense:
-		ReadINIStr $0 "$SETTINGSDIRECTORY\JonDoFoxPortableSettings.ini" "JonDoFoxPortableSettings" "AgreedToLicense"
+		ReadINIStr $0 "$SETTINGSDIRECTORY\JonDoBrowserSettings.ini" "JonDoBrowserSettings" "AgreedToLicense"
 		StrCmp $0 "${LICENSEVERSION}" "" RelaunchWithLicense
 		StrCmp $0 "" RelaunchWithLicense
 		Goto LicenseAgreedTo
@@ -304,9 +295,8 @@ Section "Main"
 	RelaunchWithLicense:
 		System::Call 'kernel32::GetModuleFileNameA(i 0, t .R0, i 1024) i r1'
 		ExecWait `$R0 SHOWLICENSE`
-		ReadINIStr $0 "$SETTINGSDIRECTORY\JonDoFoxPortableSettings.ini" "JonDoFoxPortableSettings" "AgreedToLicense"
+		ReadINIStr $0 "$SETTINGSDIRECTORY\JonDoBrowserSettings.ini" "JonDoBrowserSettings" "AgreedToLicense"
 		StrCmp $0 "${LICENSEVERSION}" LicenseAgreedTo TheEnd
-	
 	LicenseAgreedTo:
 		;=== Check for read/write
 		StrCmp $RUNLOCALLY "true" DisplaySplash
@@ -322,11 +312,9 @@ Section "Main"
 		StrCpy $RUNLOCALLY "true"
 		StrCpy $WAITFORPROGRAM "true"
 		Goto DisplaySplash
-	
 	WriteSuccessful:
 		FileClose $R0
 		Delete "$PROFILEDIRECTORY\writetest.temp"
-	
 	DisplaySplash:
 		StrCmp $DISABLESPLASHSCREEN "true" SkipSplashScreen
 			;=== Show the splash screen before processing the files
@@ -354,7 +342,6 @@ Section "Main"
 		StrCmp $PROFILEDIRECTORY $LASTPROFILEDIRECTORY "" RememberProfilePath
 			StrCmp $DISABLEINTELLIGENTSTART "true" RememberProfilePath
 				StrCpy $SKIPCOMPREGFIX "true"
-	
 	RememberProfilePath:
 		WriteINIStr "$SETTINGSDIRECTORY\${NAME}Settings.ini" "${NAME}Settings" "LastProfileDirectory" "$PROFILEDIRECTORY"
 
@@ -364,11 +351,9 @@ Section "Main"
 		StrCpy $2 $LASTPROFILEDIRECTORY 1 ;Last drive letter
 		StrCpy $3 $PROFILEDIRECTORY 1 ;Current drive letter
 		StrCmp $2 $3 FixPrefsJsPart2 ;If no change, move on
-		
 		;=== Replace drive letters without impacting other instances of the letter in prefs.js
 		${ReplaceInFileCS} "$PROFILEDIRECTORY\prefs.js" `file:///$2` `file:///$3`
 		${ReplaceInFileCS} "$PROFILEDIRECTORY\prefs.js" `", "$2:\\` `", "$3:\\`
-	
 	FixPrefsJsPart2:
 		;=== Be sure the default browser check is disabled
 		FileOpen $0 "$PROFILEDIRECTORY\prefs.js" a
@@ -384,7 +369,7 @@ Section "Main"
 		FileWriteByte $0 "10"
 
 	FixPrefsJsClose:
-		FileClose $0 
+		FileClose $0
 
 	FixMimeTypes:
 		IfFileExists "$PROFILEDIRECTORY\mimeTypes.rdf" "" RunProgram
@@ -399,7 +384,6 @@ Section "Main"
 		StrCpy $1 '$1\' ;current PortableApps directory
 		StrCmp $0 $1 RunProgram
 		${ReplaceInFile} "$PROFILEDIRECTORY\mimeTypes.rdf" $0 $1
-	
 	RunProgram:
 		StrCmp $SKIPCOMPREGFIX "true" GetPassedParameters
 
@@ -442,13 +426,11 @@ Section "Main"
 	CheckRunning:
 		Sleep 2000
 		StrCmp $ALLOWMULTIPLEINSTANCES "true" CheckIfRemoveLocalFiles
-		FindProcDLL::FindProc "firefox.exe"                  
+		FindProcDLL::FindProc "firefox.exe"
 		StrCmp $R0 "1" CheckRunning CleanupRunLocally
-	
 	StartProgramAndExit:
 		Exec $EXECSTRING
 		Goto TheEnd
-	
 	CleanupRunLocally:
 		StrCmp $RUNLOCALLY "true" "" CheckIfRemoveLocalFiles
 		RMDir /r "$TEMP\${NAME}\"
@@ -462,12 +444,10 @@ Section "Main"
 		StrCmp $ALLOWMULTIPLEINSTANCES "true" RemoveLocalFiles2
 		RMDir /r "$APPDATA\Mozilla\Firefox\Crash Reports\"
 		Rename "$APPDATA\Mozilla\Firefox\Crash Reports-BackupByFirefoxPortable" "$APPDATA\Mozilla\Firefox\Crash Reports"
-		
 	RemoveLocalFiles2:
 		StrCmp $ALLOWMULTIPLEINSTANCES "true" RemoveLocalFiles3
 		RMDir /r "$APPDATA\Mozilla\Extensions\"
 		Rename "$APPDATA\Mozilla\Extensions-BackupByFirefoxPortable" "$APPDATA\Mozilla\Extensions"
-		
 	RemoveLocalFiles3:
 		Delete "$APPDATA\Mozilla\Firefox\pluginreg.dat"
 		RMDir "$APPDATA\Mozilla\Firefox\" ;=== Will only delete if empty (no /r switch)
