@@ -58,6 +58,7 @@ Var varFoundPortableAppsPath
 Var extensionGUID
 Var profileExtensionPath
 
+!define JDB_VERSION "0.1"
 !define NAME "JonDoBrowser"
 !define VERSION "0.0.1.0"
 !define INSTALLERCOMMENTS "For additional details, visit anonymous-proxy-servers.net"
@@ -80,7 +81,7 @@ ShowInstDetails show
 
 ;=== Program Details
 Name "${NAME}"
-OutFile "..\..\..\${NAME}.paf.exe"
+OutFile "..\..\..\${NAME}-win-${JDB_VERSION}.paf.exe"
 InstallDir "\${NAME}"
 Caption "${NAME}"
 VIProductVersion "${VERSION}"
@@ -110,7 +111,6 @@ VIAddVersionKey JonDoBrowserInstallerVersion "${INSTALLERVERSION}"
 # MUI defines
 !define MUI_ICON "appicon.ico"
 
-!define MUI_CUSTOMFUNCTION_GUIINIT CustomGUIInit
 !define MUI_COMPONENTSPAGE_SMALLDESC
 
 ; MUI Settings / Icons
@@ -154,56 +154,22 @@ ReserveFile "${NSISDIR}\Plugins\BGImage.dll"
 !insertmacro MUI_LANGUAGE "English"
 
 /* In UAC_JonDo.nsh we have added some german language support. Because all
-the warnings and error messages which may occur during elevating were, of 
+the warnings and error messages which may occur during elevating were, of
 course, just in english. Well, and if we want language support we have to load
 the UAC_JonDo.nsh after we included the relevant language-macro. */
 
 !include UAC_JonDo.nsh
 
 Function .onInit
-  ${GetOptions} "$CMDLINE" "/DESTINATION=" $R0 
+  ${GetOptions} "$CMDLINE" "/DESTINATION=" $R0
   ${If} $R0 != ""
     StrCpy $INSTDIR "$R0${NAME}"
   ${Else}
     Call SearchPortableApps
     StrCpy $INSTDIR $varPortableAppsPath
   ${EndIf}
-  InitPluginsDir 
+  InitPluginsDir
   !insertmacro MUI_LANGDLL_DISPLAY
-FunctionEnd
-
-Function CustomGUIInit
-  Push $R1
-  Push $R2
-  BgImage::SetReturn /NOUNLOAD on
-  BgImage::SetBg /NOUNLOAD /GRADIENT 255 255 255 255 255 255
-  Pop $R1
-  Strcmp $R1 success 0 error
-  #TODO: We need a JonDoBrowser.bmp here
-  File /oname=$PLUGINSDIR\bgimage.bmp jondofox.bmp
-
-  System::call "user32::GetSystemMetrics(i 0)i.R1"
-  System::call "user32::GetSystemMetrics(i 1)i.R2"
-  IntOp $R1 $R1 - 800
-  IntOp $R1 $R1 / 2
-  IntOp $R2 $R2 - 799
-  IntOp $R2 $R2 / 2
-  BGImage::AddImage /NOUNLOAD $PLUGINSDIR\bgimage.bmp $R1 $R2
-  CreateFont $R1 "Times New Roman" 26 700 /ITALIC
-  BGImage::AddText /NOUNLOAD "$(^SetupCaption)" $R1 255 255 255 16 8 500 100
-  Pop $R1
-  Strcmp $R1 success 0 error
-  BGImage::Redraw /NOUNLOAD
-  Goto done
- error:
-  MessageBox MB_OK|MB_ICONSTOP $R1
- done:
-  Pop $R2
-  Pop $R1
-FunctionEnd
-
-Function .onGUIEnd
-  BGImage::Destroy
 FunctionEnd
 
 Function SearchPortableApps
@@ -214,14 +180,18 @@ Function SearchPortableApps
   Goto done
 
  DefaultDestination:
-  ${If} $PROFILE == ""
-    StrCpy $varPortableAppsPath "$PROGRAMFILES\${NAME}\"
+  ${If} $DESKTOP == ""
+    # No $DESKTOP check for $PROFILE...
+    ${If} $PROFILE == ""
+      StrCpy $varPortableAppsPath "$PROGRAMFILES\${NAME}\"
+    ${Else}
+      StrCpy $varPortableAppsPath "$PROFILE\${NAME}\"
+    ${Endif}
   ${Else}
-    StrCpy $varPortableAppsPath "$PROFILE\${NAME}\"
+    StrCpy $varPortableAppsPath "$DESKTOP\${NAME}\"
   ${EndIf}
  done:
 FunctionEnd
-
 
 Function GetDrivesCallBack
   ;=== Skip usual floppy letters
@@ -248,22 +218,21 @@ Section JFPortable
 
   # Copying the JonDoBrowser.ini in order to allow a desktop and
   # a portable Firefox running in parallel
-        
   File "JonDoBrowser.ini"
 
   SetOutPath $INSTDIR\Data\profile
 
-  ${If} $LANGUAGE == "1031" 
-    File "/oname=prefs.js" "..\..\..\full\profile\prefs_browser_de.js"   
-    File "/oname=bookmarks.html" "..\..\..\full\profile\bookmarks_de.html"
+  ${If} $LANGUAGE == "1031"
+    File "/oname=prefs.js" "..\..\..\full\profile\prefs_browser_de.js"
+    File "/oname=places.sqlite" "..\..\..\full\profile\places.sqlite_de"
   ${ElseIf} $LANGUAGE == "1033"
     File "/oname=prefs.js" "..\..\..\full\profile\prefs_browser_en.js"
-    File "/oname=bookmarks.html" "..\..\..\full\profile\bookmarks_en.html"
-  ${EndIf}  
+    File "/oname=places.sqlite" "..\..\..\full\profile\places.sqlite_en"
+  ${EndIf}
 
   # The search plugins...
 
-  SetOutPath $INSTDIR\Data\profile\searchplugins 
+  SetOutPath $INSTDIR\Data\profile\searchplugins
 
   File /x .svn "..\..\..\full\profile\searchplugins\*"
 
@@ -272,9 +241,8 @@ Section JFPortable
   StrCpy $profileExtensionPath "$INSTDIR\Data\profile\extensions"
 
   #Adblock
-  StrCpy $extensionGUID "{d10d0bf8-f5b5-c8b4-a8b2-2b9879e08c5d}"
-  SetOutPath "$profileExtensionPath\$extensionGUID"
-  File /r /x .svn "..\..\..\full\profile\extensions\{d10d0bf8-f5b5-c8b4-a8b2-2b9879e08c5d}\*.*"
+  SetOutPath "$profileExtensionPath"
+  File /r /x .svn "..\..\..\full\profile\extensions\{d10d0bf8-f5b5-c8b4-a8b2-2b9879e08c5d}.xpi"
 
   # CookieMonster
   StrCpy $extensionGUID "{45d8ff86-d909-11db-9705-005056c00008}"
@@ -285,38 +253,36 @@ Section JFPortable
   StrCpy $extensionGUID "https-everywhere@eff.org"
   SetOutPath "$profileExtensionPath\$extensionGUID"
   File /r /x .svn "..\..\..\full\profile\extensions\https-everywhere@eff.org\*.*"
-        
+
   # JonDoFox        
   StrCpy $extensionGUID "{437be45a-4114-11dd-b9ab-71d256d89593}"
   SetOutPath "$profileExtensionPath\$extensionGUID"
   File /r /x .svn "..\..\..\full\profile\extensions\{437be45a-4114-11dd-b9ab-71d256d89593}\*.*"
 
   # NoScript        
-  StrCpy $extensionGUID "{73a6fe31-595d-460b-a920-fcc0f8843232}"
-  SetOutPath "$profileExtensionPath\$extensionGUID"
-  File /r /x .svn "..\..\..\full\profile\extensions\{73a6fe31-595d-460b-a920-fcc0f8843232}\*.*"
+  SetOutPath "$profileExtensionPath"
+  File /r /x .svn "..\..\..\full\profile\extensions\{73a6fe31-595d-460b-a920-fcc0f8843232}.xpi"
 
   # UnPlug
   StrCpy $extensionGUID "unplug@compunach"
   SetOutPath "$profileExtensionPath\$extensionGUID"
   File /r /x .svn "..\..\..\full\profile\extensions\unplug@compunach\*.*"
-  
-  ${If} $LANGUAGE == "1031" 
+
+  ${If} $LANGUAGE == "1031"
     # German language strings
     StrCpy $extensionGUID "langpack-de@firefox.mozilla.org.xpi"
     SetOutPath "$profileExtensionPath"
     File /r /x .svn "..\..\..\full\profile\extensions\langpack-de@firefox.mozilla.org.xpi"
   ${EndIf}
-        
 SectionEnd
 
 LangString FF30Win9x ${LANG_ENGLISH} "This version of JonDoBrowser is not compatible with Win9x and WinME!"
 LangString FF30Win9x ${LANG_GERMAN} "Diese Version von JonDoBrowser ist nicht kompatibel mit Win9x und WinME!"
-LangString SelectJonDoBrowser ${LANG_GERMAN} "Wählen Sie den Ordner für JonDoBrowser." 
+LangString SelectJonDoBrowser ${LANG_GERMAN} "Wählen Sie den Ordner für JonDoBrowser."
 LangString SelectJonDoBrowser ${LANG_ENGLISH} "Select a JonDoBrowser folder."
 
 Function FinishedInstall
-
+  ExecShell "open" $INSTDIR
 FunctionEnd
 
 Function FinishRun
