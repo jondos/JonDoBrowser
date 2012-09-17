@@ -51,6 +51,7 @@ prepareProfile() {
   for lang in $langs; do
     svn export $svnBrowser/build/langPatches/prefs_browser_$lang.js
   done
+  svn export $svnBrowser/CHANGELOG
   svn export $svnBrowser/start-jondobrowser.sh
   chmod +x start-jondobrowser.sh
   svn export $svnBrowser/build/patches/xpi/jondofox.xpi
@@ -78,6 +79,7 @@ prepareLinuxProfiles() {
     cp -rf profile $jdbDir-$lang/Data
     cp -f prefs_browser_$lang.js $profileDir/prefs.js
     cp start-jondobrowser.sh $jdbDir-$lang
+    cp CHANGELOG $jdbDir-$lang
     mv -f $profileDir/places.sqlite_$lang $profileDir/places.sqlite
     rm -f $profileDir/places.sqlite_*
     # Copying the language xpi to get other language strings than the en-US

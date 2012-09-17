@@ -1,0 +1,8 @@
+Version 0.2 XXXX-XX-XX
+  * updated build scripts to include this CHANGELOG file into JonDoBrowser
+  * set "browser.newtab.url" to "about:blank"
+  * fixed bug in windows installer (german umlauts) 
+
+Version 0.1 2012-09-12
+
+ * initial release

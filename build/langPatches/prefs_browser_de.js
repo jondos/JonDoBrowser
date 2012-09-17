@@ -36,6 +36,7 @@ user_pref("browser.history_expire_days.mirror", 180);
 user_pref("browser.identity.ssl_domain_display", 2);
 user_pref("browser.microsummary.enabled", false);
 user_pref("browser.migration.version", 1);
+user_pref("browser.newtab.url", "about:blank");
 user_pref("browser.offline", false);
 user_pref("browser.places.importBookmarksHTML", false);
 user_pref("browser.places.importDefaults", false);

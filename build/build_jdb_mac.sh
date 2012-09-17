@@ -73,6 +73,7 @@ prepareProfile() {
   for lang in $langs; do
     svn export $svnBrowser/build/langPatches/prefs_browser_$lang.js
   done
+  svn export $svnBrowser/CHANGELOG
   svn export $svnBrowser/build/mac/JonDoBrowser
   chmod +x JonDoBrowser
   svn export $svnBrowser/build/patches/xpi/jondofox.xpi
@@ -112,6 +113,7 @@ prepareMacProfiles() {
     mv -f "$profileDir"/places.sqlite_$lang "$profileDir"/places.sqlite
     rm -f "$profileDir"/places.sqlite_*
     cp JonDoBrowser $appDir
+    cp CHANGELOG $appDir
     cp Info.plist $jdbDir/Contents
     cp jondobrowser.icns $jdbDir/Contents/Resources
     # Copying the language xpi to get other language strings than the en-US
