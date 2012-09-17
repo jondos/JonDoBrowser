@@ -13,5 +13,7 @@ ac_add_options --disable-tests
 
 # We don't want to have the crashreporter for privacy reasons
 ac_add_options --disable-crashreporter
+# No updater yet. Thus, we don't need to build it.
+ac_add_options --disable-updater
 ac_add_options --enable-optimize
 ac_add_options --with-branding=browser/branding/jondobrowser
