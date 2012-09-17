@@ -153,6 +153,10 @@ ReserveFile "${NSISDIR}\Plugins\BGImage.dll"
 !insertmacro MUI_LANGUAGE "German"
 !insertmacro MUI_LANGUAGE "English"
 
+# Inlcude the language strings
+!include JonDoBrowser-Lang-English.nsh
+!include JonDoBrowser-Lang-German.nsh
+
 /* In UAC_JonDo.nsh we have added some german language support. Because all
 the warnings and error messages which may occur during elevating were, of
 course, just in english. Well, and if we want language support we have to load
@@ -275,11 +279,6 @@ Section JFPortable
     File /r /x .svn "..\..\..\full\profile\extensions\langpack-de@firefox.mozilla.org.xpi"
   ${EndIf}
 SectionEnd
-
-LangString FF30Win9x ${LANG_ENGLISH} "This version of JonDoBrowser is not compatible with Win9x and WinME!"
-LangString FF30Win9x ${LANG_GERMAN} "Diese Version von JonDoBrowser ist nicht kompatibel mit Win9x und WinME!"
-LangString SelectJonDoBrowser ${LANG_GERMAN} "Wählen Sie den Ordner für JonDoBrowser."
-LangString SelectJonDoBrowser ${LANG_ENGLISH} "Select a JonDoBrowser folder."
 
 Function FinishedInstall
   ExecShell "open" $INSTDIR
