@@ -207,7 +207,7 @@ user_pref("pttl.save-with-UTF8", false);
 user_pref("reloadSearchPlugins", false);
 user_pref("security.disable_button.openCertManager", false);
 user_pref("security.disable_button.openDeviceManager", false);
-user_pref("security.warn_viewing_mixed", false);
+user_pref("security.ssl.enable_false_start", true);
 user_pref("signon.rememberSignons", false);
 user_pref("spellchecker.dictionary", "en-US");
 user_pref("toolkit.telemetry.prompted", 2);
