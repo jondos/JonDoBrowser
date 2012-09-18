@@ -5,7 +5,7 @@ svnBrowser=https://svn.jondos.de/svnpub/JonDoBrowser/trunk
 langs="en de"
 # We only need the german language pack currently as english is the default
 xpiLang=de
-macPlatform="mac-$(uname -m)"
+macPlatform=""
 platforms="mac"
 jdbVersion="0.1"
 title="JonDoBrowser"
@@ -151,6 +151,16 @@ do
   esac
   getopts "${OPTSTR}" CMD_OPT
 done
+
+# On which platform are we building? |uname -m| does not necessarily work as we
+# may have a 32Bit Kernel but build nevertheless 64Bit JonDoBrowsers. Testing
+# via |ioreg -l -p IODeviceTree | grep firmware-abi | grep -Eo 64| does not work
+# either. Assuming we have gcc available we borrow the test from config.guess.
+if gcc -E -dM -x c /dev/null | grep __LP64__>/dev/null 2>&1 ; then
+  macPlatform="mac-x86_64"
+else
+  macPlatform="mac-i386"
+fi
 
 # In tmp there have to be the FF source and the mac lang xpi.
 cd tmp
