@@ -1,6 +1,8 @@
 Version 0.2 XXXX-XX-XX
   * updated build scripts to include this CHANGELOG file into JonDoBrowser
+  * set security.ssl.enable_false_start to true
   * set "browser.newtab.url" to "about:blank"
+  * removed setting "security.warn_viewing_mixed" to "false"
   * fixed bug in windows installer (german umlauts) 
 
 Version 0.1 2012-09-12
