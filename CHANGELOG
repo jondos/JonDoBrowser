@@ -1,4 +1,5 @@
 Version 0.2 XXXX-XX-XX
+  * fixed glitch in Mac-Installer on OS X 10.6.8
   * updated build scripts to include this CHANGELOG file into JonDoBrowser
   * set security.ssl.enable_false_start to true
   * set "browser.newtab.url" to "about:blank"
