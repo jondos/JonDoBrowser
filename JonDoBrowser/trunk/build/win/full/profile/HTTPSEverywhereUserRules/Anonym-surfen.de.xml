@@ -1,0 +1,5 @@
+<ruleset name="Anonym-surfen.de">
+  <target host="anonym-surfen.de"/>
+  <target host="www.anonym-surfen.de"/>
+  <rule from="^http://(?:www\.)?anonym-surfen\.de/" to="https://anonym-surfen.de/"/>
+</ruleset>
