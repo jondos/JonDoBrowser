@@ -101,7 +101,6 @@ Var SKIPCOMPREGFIX
 Var EXECSTRING
 Var PROGRAMEXECUTABLE
 Var INIPATH
-Var DISABLESPLASHSCREEN
 Var DISABLEINTELLIGENTSTART
 Var LOCALHOMEPAGE
 Var ISDEFAULTDIRECTORY
@@ -165,7 +164,6 @@ Section "Main"
 		${ReadINIStrWithDefault} $SKIPCOMPREGFIX "$INIPATH\${NAME}.ini" "${NAME}" "SkipCompregFix" "false"
 		${ReadINIStrWithDefault} $PROGRAMEXECUTABLE "$INIPATH\${NAME}.ini" "${NAME}" "${APPNAME}Executable" "${DEFAULTEXE}"
 		${ReadINIStrWithDefault} $WAITFORPROGRAM "$INIPATH\${NAME}.ini" "${NAME}" "WaitFor${APPNAME}" "false"
-		${ReadINIStrWithDefault} $DISABLESPLASHSCREEN "$INIPATH\${NAME}.ini" "${NAME}" "DisableSplashScreen" "false"
 		${ReadINIStrWithDefault} $DISABLEINTELLIGENTSTART "$INIPATH\${NAME}.ini" "${NAME}" "DisableIntelligentStart" "false"
 		${ReadINIStrWithDefault} $LOCALHOMEPAGE "$INIPATH\${NAME}.ini" "${NAME}" "LocalHomepage" ""
 		${ReadINIStrWithDefault} $RUNLOCALLY "$INIPATH\${NAME}.ini" "${NAME}" "RunLocally" "false"
@@ -189,7 +187,6 @@ Section "Main"
 		StrCpy $SKIPCOMPREGFIX "false"
 		StrCpy $WAITFORPROGRAM "false"
 		StrCpy $PROGRAMEXECUTABLE "${DEFAULTEXE}"
-		StrCpy $DISABLESPLASHSCREEN "false"
 		StrCpy $DISABLEINTELLIGENTSTART "false"
 
 		IfFileExists "$EXEDIR\App\${DEFAULTAPPDIR}\${DEFAULTEXE}" "" CheckPortableProgramDIR
@@ -299,7 +296,7 @@ Section "Main"
 		StrCmp $0 "${LICENSEVERSION}" LicenseAgreedTo TheEnd
 	LicenseAgreedTo:
 		;=== Check for read/write
-		StrCmp $RUNLOCALLY "true" DisplaySplash
+		StrCmp $RUNLOCALLY "true" SkipSplashScreen
 		ClearErrors
 		FileOpen $R0 "$PROFILEDIRECTORY\writetest.temp" w
 		IfErrors "" WriteSuccessful
@@ -311,16 +308,10 @@ Section "Main"
 	SwitchToRunLocally:
 		StrCpy $RUNLOCALLY "true"
 		StrCpy $WAITFORPROGRAM "true"
-		Goto DisplaySplash
+		Goto SkipSplashScreen
 	WriteSuccessful:
 		FileClose $R0
 		Delete "$PROFILEDIRECTORY\writetest.temp"
-	DisplaySplash:
-		StrCmp $DISABLESPLASHSCREEN "true" SkipSplashScreen
-			;=== Show the splash screen before processing the files
-			InitPluginsDir
-			File /oname=$PLUGINSDIR\splash.jpg "${NAME}.jpg"
-			newadvsplash::show /NOUNLOAD 2000 0 0 -1 /L $PLUGINSDIR\splash.jpg
 
 	SkipSplashScreen:
 		;=== Run locally if needed (aka Portable Firefox Live)
