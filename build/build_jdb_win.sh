@@ -1,6 +1,8 @@
 #!/bin/bash
 
 svnBrowser=https://svn.jondos.de/svnpub/JonDoBrowser/trunk
+FFPath=profile/Firefox/App/firefox
+FFEnPath=profile/FirefoxByLanguage/enFirefoxPortablePatch/App/firefox
 
 # Now, extracting, patching, rebranding and building JonDoBrowser...
 if [ ! -d "build" ]; then
@@ -34,4 +36,27 @@ cd dist
 mv firefox*.zip ../../../
 cd ../../
 rm -rf win32_build
-cd ..
+cd ../../
+
+# Now preparing the installer
+echo "Now we gonna build the installer..."
+svn export $svnBrowser/build/win profile
+unzip -d profile/Firefox/App build/firefox*.zip
+
+# Moving language specific files...
+mkdir -p $FFEnPath
+mv $FFPath/omni.ja $FFEnPath
+mv $FFPath/dictionaries $FFEnPath
+rm -rf $FFPath/searchplugins
+
+# Building the files...
+cd profile/Firefox/Other/Source
+# TODO: Why don't we get a functional JonDoBrowser.exe if we build it with the
+# 2.46 NSIS shipped with Mozilla Build?
+echo "Building the JonDoBrowser installer"
+makensisu-2.46.exe JonDoBrowser.nsi
+cd ../../../../
+mv profile/JonDoBrowser*.exe .
+rm -rf profile
+
+exit 0
