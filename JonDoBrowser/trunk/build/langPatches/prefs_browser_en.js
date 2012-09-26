@@ -76,6 +76,7 @@ user_pref("extensions.autoDisableScopes", 14);
 user_pref("extensions.adblockplus.checkedadblockinstalled", true);
 user_pref("extensions.adblockplus.checkedtoolbar", true);
 user_pref("extensions.adblockplus.currentVersion", "2.1.2");
+user_pref("extensions.adblockplus.patternsbackups", 0);
 user_pref("extensions.adblockplus.showinstatusbar", false);
 user_pref("extensions.adblockplus.showintoolbar", true);
 user_pref("extensions.adblockplus.showsubscriptions", false);
