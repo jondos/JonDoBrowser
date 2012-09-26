@@ -61,8 +61,11 @@ prepareProfile() {
   rm -rf profile/extensions/\{fa8476cf-a98c-4e08-99b4-65a69cb4b7d4\}
   # Patching the profile xpi to be optimized for JDB, sigh...
   unzip -d profile/extensions/\{437be45a-4114-11dd-b9ab-71d256d89593\} -o jondofox.xpi 
-  # And removing the .xpi in the extensions folder...
-  rm profile/extensions/\{437be45a-4114-11dd-b9ab-71d256d89593\}.xpi
+  # And removing the .xpi in the extensions folder if it exists...
+  if [ -f "profile/extensions/\{437be45a-4114-11dd-b9ab-71d256d89593\}.xpi" ]
+  then
+    rm profile/extensions/\{437be45a-4114-11dd-b9ab-71d256d89593\}.xpi
+  fi
   # Cruft from the old JonDoFox-Profile...
   rm -f profile/prefs_portable*
   rm -f profile/bookmarks* 

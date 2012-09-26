@@ -14,14 +14,13 @@ source="JDB"
 backgroundPictureName="background.png"
 
 generateDmgImage() {
-  # Function for creating JonDoBrowser dmg on Mac OS X.
-  # Originally by Arturo Filasto' 2011 for the TorBrowserBundle.
-  #
+  # Function for creating JonDoBrowser dmg on Mac OS X based on:
+  # http://stackoverflow.com/questions/96882/how-do-i-create-a-nice-looking-
+  # dmg-for-mac-os-x-using-command-line-tools
+   
   # To make this work you need to set the $source and $backgroundPictureName
   # The $source directory should contain the .background directory with the# background image inside
   #
-  # based on:
-  # http://stackoverflow.com/questions/96882/how-do-i-create-a-nice-looking-dmg-for-mac-os-x-using-command-line-tools
   # Adapted for JonDoBrowser's needs by Georg Koppen, JonDos GmbH 2012.
 
   # We want to have just "JonDoBrowser" shown. 
@@ -85,8 +84,11 @@ prepareProfile() {
   rm -rf profile/extensions/\{fa8476cf-a98c-4e08-99b4-65a69cb4b7d4\}
   # Patching the profile xpi to be optimized for JDB, sigh...
   unzip -d profile/extensions/\{437be45a-4114-11dd-b9ab-71d256d89593\} -o jondofox.xpi 
-  # And removing the .xpi in the extensions folder...
-  rm profile/extensions/\{437be45a-4114-11dd-b9ab-71d256d89593\}.xpi
+  # And removing the .xpi in the extensions folder if it exists...
+  if [ -f "profile/extensions/\{437be45a-4114-11dd-b9ab-71d256d89593\}.xpi" ]
+  then
+    rm profile/extensions/\{437be45a-4114-11dd-b9ab-71d256d89593\}.xpi
+  fi
   # Cruft from the old JonDoFox-Profile...
   rm -f profile/prefs_portable*
   rm -f profile/bookmarks* 
@@ -216,3 +218,5 @@ for lang in $langs; do
   generateDmgImage $lang
   rm -rf $source
 done
+
+exit 0
