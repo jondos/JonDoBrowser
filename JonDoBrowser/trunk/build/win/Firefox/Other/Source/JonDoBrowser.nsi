@@ -62,7 +62,7 @@ Var profileExtensionPath
 !define NAME "JonDoBrowser"
 !define VERSION "0.0.1.0"
 !define INSTALLERCOMMENTS "For additional details, visit anonymous-proxy-servers.net"
-!define INSTALLERADDITIONALTRADEMARKS "PortableApps.com is a Trademark of Rare Ideas, LLC. JonDo is a trademark of JonDos GmbH. Firefox is a Trademark of the Mozilla Foundation. " ;end this entry with a period and a space if used 
+!define INSTALLERADDITIONALTRADEMARKS "PortableApps.com is a Trademark of Rare Ideas, LLC. JonDoBrowser is a trademark of JonDos GmbH. Firefox is a Trademark of the Mozilla Foundation. " ;end this entry with a period and a space if used 
 !define INSTALLERLEGALCOPYRIGHT "JonDos GmbH"
 !define INSTALLERVERSION "0.1"
 
@@ -113,33 +113,20 @@ VIAddVersionKey JonDoBrowserInstallerVersion "${INSTALLERVERSION}"
 
 !define MUI_COMPONENTSPAGE_SMALLDESC
 
-; MUI Settings / Icons
-;!define MUI_UNICON "${NSISDIR}\Contrib\Graphics\Icons\orange-uninstall.ico"
-
-; MUI Settings / Header
+# MUI Settings / Header
 !define MUI_HEADERIMAGE
 !define MUI_HEADERIMAGE_LEFT
 !define MUI_HEADERIMAGE_BITMAP "blau2.bmp"
-;!define MUI_HEADERIMAGE_UNBITMAP "${NSISDIR}\Contrib\Graphics\Header\orange-uninstall-r.bmp"
 
-; MUI Settings / Wizard
+# MUI Settings / Wizard
 !define MUI_WELCOMEFINISHPAGE_BITMAP "blau.bmp"
-;!define MUI_UNWELCOMEFINISHPAGE_BITMAP "${NSISDIR}\Contrib\Graphics\Wizard\orange-uninstall.bmp"
-
-# Reserved Files
-ReserveFile "${NSISDIR}\Plugins\BGImage.dll"
 
 # Installer pages
 !insertmacro MUI_PAGE_WELCOME
 
-#!define MUI_PAGE_CUSTOMFUNCTION_PRE dirPre
-#!define MUI_PAGE_CUSTOMFUNCTION_LEAVE dirPost
 !define MUI_DIRECTORYPAGE_TEXT_TOP $(SelectJonDoBrowser)
 !insertmacro MUI_PAGE_DIRECTORY
 
-#!define MUI_PAGE_CUSTOMFUNCTION_PRE instPre Otherwise the logic gets called
-#twice!!
-#!define MUI_PAGE_CUSTOMFUNCTION_LEAVE EditProfilesIni
 !insertmacro MUI_PAGE_INSTFILES
 
 
@@ -157,13 +144,6 @@ ReserveFile "${NSISDIR}\Plugins\BGImage.dll"
 !include JonDoBrowser-Lang-English.nsh
 !include JonDoBrowser-Lang-German.nsh
 
-/* In UAC_JonDo.nsh we have added some german language support. Because all
-the warnings and error messages which may occur during elevating were, of
-course, just in english. Well, and if we want language support we have to load
-the UAC_JonDo.nsh after we included the relevant language-macro. */
-
-!include UAC_JonDo.nsh
-
 Function .onInit
   ${GetOptions} "$CMDLINE" "/DESTINATION=" $R0
   ${If} $R0 != ""
@@ -172,7 +152,6 @@ Function .onInit
     Call SearchPortableApps
     StrCpy $INSTDIR $varPortableAppsPath
   ${EndIf}
-  InitPluginsDir
   !insertmacro MUI_LANGDLL_DISPLAY
 FunctionEnd
 
@@ -218,7 +197,11 @@ Section JFPortable
   SetOverwrite on
 
   File /r /x .svn /x Source "..\..\*.*"
-  File /r /x .svn "..\..\..\FirefoxByLanguage\enFirefoxPortablePatch\*.*"
+  ${If} $LANGUAGE == "1031"
+    File /r /x .svn "..\..\..\FirefoxByLanguage\deFirefoxPortablePatch\*.*"
+  ${ElseIF} $LANGUAGE == "1033"
+    File /r /x .svn "..\..\..\FirefoxByLanguage\enFirefoxPortablePatch\*.*"
+  ${EndIf}
 
   # Copying the JonDoBrowser.ini in order to allow a desktop and
   # a portable Firefox running in parallel
