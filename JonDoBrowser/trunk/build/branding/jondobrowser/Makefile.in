@@ -27,7 +27,7 @@ WINDOWS_BRANDING_FILES = \
 	wizWatermark.bmp \
 	newtab.ico \
 	newwindow.ico \
-	pbmode.ico
+	pbmode.ico \
 	$(NULL)
 
 OSX_BRANDING_FILES = \
