@@ -2,12 +2,14 @@ Version 0.2 XXXX-XX-XX
   * made caching preferences more coherent ("browser.cache.disk.enable",
     "browser.cache.offline.enable" and "browser.cache.disk_cache_ssl" are set
     to "false" now)
+  * set "security.ssl.enable_false_start" to "true" to speed up TLS handshakes
+  * set "extensions.adblockplus.patternsbackups" to "0" to avoid unnecessary
+    disk access (thanks to User Jon for pointing this out in the chat)
+  * set "security.warn_viewing_mixed" to "true"
+  * set "browser.newtab.url" to "about:blank"
+  * fixed bug in windows installer (german umlauts) 
   * fixed glitch in Mac-Installer on OS X 10.6.8
   * updated build scripts to include this CHANGELOG file into JonDoBrowser
-  * set security.ssl.enable_false_start to true
-  * set "browser.newtab.url" to "about:blank"
-  * removed setting "security.warn_viewing_mixed" to "false"
-  * fixed bug in windows installer (german umlauts) 
 
 Version 0.1 2012-09-12
 
