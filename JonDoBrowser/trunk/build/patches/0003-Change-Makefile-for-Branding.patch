@@ -15,7 +15,7 @@ diff -r 28af55043104 browser/makefiles.sh
 -$MOZ_BRANDING_DIRECTORY/locales/Makefile
 +browser/branding/jondobrowser/Makefile
 +browser/branding/jondobrowser/content/Makefile
-+browser/branding/jondobrowser/locale/Makefile
++browser/branding/jondobrowser/locales/Makefile
  toolkit/locales/Makefile
  extensions/spellcheck/locales/Makefile
  intl/locales/Makefile
@@ -23,4 +23,4 @@ diff -r 28af55043104 browser/makefiles.sh
  dom/locales/Makefile
  security/manager/locales/Makefile
  "
- 
+
