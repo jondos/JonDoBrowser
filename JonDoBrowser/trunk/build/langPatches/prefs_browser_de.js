@@ -160,6 +160,7 @@ user_pref("noscript.blockNSWB", true);
 user_pref("noscript.canonicalFQDN", false);
 user_pref("noscript.contentBlocker", true);
 user_pref("noscript.ctxMenu", false);
+user_pref("noscript.filterXExceptions", "^https?://([a-z]+)\\.google\\.(?:[a-z]{1,3}\\.)?[a-z]+/(?:search|custom|\\1)\\?\n^https?://([a-z]*)\\.?search\\.yahoo\\.com/search(?:\\?|/\\1\\b)\n^https?://[a-z]+\\.wikipedia\\.org/wiki/[^\"<>\\?%]+$\n^https?://translate\\.google\\.com/translate_t[^\"'<>\\?%]+$\n^https://secure\\.wikimedia\\.org/wikipedia/[a-z]+/wiki/[^\"<>\\?%]+$\n^https://www\\.cashu\\.com/cgi-bin/pcashu\\.cgi$");
 user_pref("noscript.forbidBookmarklets", true);
 user_pref("noscript.gtemp", "");
 user_pref("noscript.httpsForcedExceptions", "");
