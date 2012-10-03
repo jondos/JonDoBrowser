@@ -111,7 +111,18 @@ VIAddVersionKey JonDoBrowserInstallerVersion "${INSTALLERVERSION}"
 !insertmacro GetParent
 !insertmacro GetDrives
 !insertmacro GetParameters
-!insertmacro RelgotoPage_macro
+
+!macro RelGotoPage_macro
+  Function RelGotoPage
+    IntCmp $R9 0 0 Move Move
+    StrCmp $R9 "X" 0 Move
+    StrCpy $R9 "120"
+
+    Move:
+      SendMessage $HWNDPARENT "0x408" "$R9" ""
+  FunctionEnd
+!macroend
+!insertmacro RelGotoPage_macro
 
 # MUI defines
 !define MUI_ICON "appicon.ico"
@@ -129,10 +140,10 @@ VIAddVersionKey JonDoBrowserInstallerVersion "${INSTALLERVERSION}"
 # Installer pages
 !insertmacro MUI_PAGE_WELCOME
 
+!define MUI_PAGE_CUSTOMFUNCTION_LEAVE dirPost
 !define MUI_DIRECTORYPAGE_TEXT_TOP $(SelectJonDoBrowser)
 !insertmacro MUI_PAGE_DIRECTORY
 
-!define MUI_PAGE_CUSTOMFUNTION instPre
 !insertmacro MUI_PAGE_INSTFILES
 
 !define MUI_PAGE_CUSTOMFUNCTION_LEAVE FinishedInstall
@@ -149,17 +160,6 @@ VIAddVersionKey JonDoBrowserInstallerVersion "${INSTALLERVERSION}"
 !include JonDoBrowser-Lang-English.nsh
 !include JonDoBrowser-Lang-German.nsh
 
-!macro RelGotoPage_macro
-  Function RelGotoPage
-    IntCmp $R9 0 0 Move Move
-    StrCmp $R9 "X" 0 Move
-    StrCpy $R9 "120"
-
-    Move:
-      SendMessage $HWNDPARENT "0x408" "$R9" ""
-  FunctionEnd
-!macroend
-
 Function .onInit
   ${GetOptions} "$CMDLINE" "/DESTINATION=" $R0
   ${If} $R0 != ""
@@ -168,6 +168,7 @@ Function .onInit
     Call SearchPortableApps
     StrCpy $INSTDIR $varPortableAppsPath
   ${EndIf}
+  InitPluginsDir
   !insertmacro MUI_LANGDLL_DISPLAY
 FunctionEnd
 
@@ -205,13 +206,8 @@ Function GetDrivesCallBack
   Push $0
 FunctionEnd
 
-Function instPre
-  StrCpy $update "false"
-  IfFileExists $INSTDIR\JonDoBrowser.exe update install
-  update:
-    StrCpy $profilePath $INSTDIR\Data\profile
-    Call CheckFirefoxRunning
-    Call Update
+Function dirPost
+  Call instPre
 FunctionEnd
 
 Section JFPortable
@@ -288,16 +284,19 @@ Section JFPortable
   ${EndIf}
 SectionEnd
 
-Function CheckJonDoBrowserRunning                    # 3
-  Push $5
-  Push "JonDoBrowser.exe"
+Function CheckJonDoBrowserRunning
+  Push $R5
+  Push "firefox.exe"
   processwork::existsprocess
-  Pop $5
-  IntCmp $5 1 is1 done done
+  Pop $R5
+  MessageBox MB_OK $R5
+  IntCmp $R5 1 is1 done done
   is1:
+    # Okay, we know there is a Firefox running but is that really our process?
+    IfFileExists "$profilePath\parent.lock" 0 done
     MessageBox MB_ICONQUESTION|MB_YESNO $(JonDoBrowserDetected) IDYES quitFF IDNO Exit
     quitFF:
-      Push "JonDoBrowser.exe"
+      Push "firefox.exe"
       processwork::KillProcess
       Sleep 1000
     Exit:
@@ -308,12 +307,22 @@ Function CheckJonDoBrowserRunning                    # 3
   done:
 FunctionEnd
 
+Function instPre
+  StrCpy $update "false"
+  IfFileExists $INSTDIR\JonDoBrowser.exe update install
+  update:
+    StrCpy $profilePath $INSTDIR\Data\profile
+    Call CheckJonDoBrowserRunning
+    Call Update
+  install:
+FunctionEnd
+
 Function Update
   # BackupBookmarksCerts:
   MessageBox MB_ICONINFORMATION|MB_YESNO $(OverwriteProfile) IDYES updating IDNO Exit
   updating:
-    $update == "true"
-    nxs::Show /NOUNLOAD "Backup" /top $(BackupBookmarksCerts) /h 1 /can 0 /pos 0 /can 1 /marquee 40 /end
+    StrCpy $update "true"
+    nxs::Show /NOUNLOAD "Backup" /top "Bump" /sub $(BackupBookmarksCerts) /h 1 /can 0 /pos 0 /marquee 40 /end
     IfFileExists $profilePath\BookmarkBackup\*.* +5
     CreateDirectory $profilePath\BookmarkBackup
     IfErrors Error
@@ -405,8 +414,6 @@ Function Update
 
     nxs::Destroy
 
-    Call DeleteProfile
-
     Goto done
 
     Error:
@@ -415,7 +422,7 @@ Function Update
       Quit
 
   Exit:
-    # Back to folder-selection page. TODO: Is this "0" or "-1"?
+    # Back to folder-selection page.
     StrCpy $R9 "0"
     Call RelGotoPage
     Abort
