@@ -57,16 +57,20 @@ Var varPortableAppsPath
 Var varFoundPortableAppsPath
 Var extensionGUID
 Var profileExtensionPath
+Var profilePath
+Var update
+Var httpsForcedDomains
+Var httpsForcedDomainsExceptions
 
 !define JDB_VERSION "0.1"
 !define NAME "JonDoBrowser"
 !define VERSION "0.0.1.0"
 !define INSTALLERCOMMENTS "For additional details, visit anonymous-proxy-servers.net"
-!define INSTALLERADDITIONALTRADEMARKS "PortableApps.com is a Trademark of Rare Ideas, LLC. JonDoBrowser is a trademark of JonDos GmbH. Firefox is a Trademark of the Mozilla Foundation. " ;end this entry with a period and a space if used 
+!define INSTALLERADDITIONALTRADEMARKS "PortableApps.com is a Trademark of Rare Ideas, LLC. JonDoBrowser is a trademark of JonDos GmbH. Firefox is a Trademark of the Mozilla Foundation. " ;end this entry with a period and a space if used
 !define INSTALLERLEGALCOPYRIGHT "JonDos GmbH"
 !define INSTALLERVERSION "0.1"
 
-;=== Runtime Switches
+# Runtime Switches
 SetCompress Auto
 SetCompressor /SOLID lzma
 SetCompressorDictSize 32
@@ -79,7 +83,7 @@ RequestExecutionLevel user
 XPStyle on
 ShowInstDetails show
 
-;=== Program Details
+# Program Details
 Name "${NAME}"
 OutFile "..\..\..\${NAME}-win-${JDB_VERSION}.paf.exe"
 InstallDir "\${NAME}"
@@ -107,6 +111,7 @@ VIAddVersionKey JonDoBrowserInstallerVersion "${INSTALLERVERSION}"
 !insertmacro GetParent
 !insertmacro GetDrives
 !insertmacro GetParameters
+!insertmacro RelgotoPage_macro
 
 # MUI defines
 !define MUI_ICON "appicon.ico"
@@ -127,8 +132,8 @@ VIAddVersionKey JonDoBrowserInstallerVersion "${INSTALLERVERSION}"
 !define MUI_DIRECTORYPAGE_TEXT_TOP $(SelectJonDoBrowser)
 !insertmacro MUI_PAGE_DIRECTORY
 
+!define MUI_PAGE_CUSTOMFUNTION instPre
 !insertmacro MUI_PAGE_INSTFILES
-
 
 !define MUI_PAGE_CUSTOMFUNCTION_LEAVE FinishedInstall
 
@@ -143,6 +148,17 @@ VIAddVersionKey JonDoBrowserInstallerVersion "${INSTALLERVERSION}"
 # Inlcude the language strings
 !include JonDoBrowser-Lang-English.nsh
 !include JonDoBrowser-Lang-German.nsh
+
+!macro RelGotoPage_macro
+  Function RelGotoPage
+    IntCmp $R9 0 0 Move Move
+    StrCmp $R9 "X" 0 Move
+    StrCpy $R9 "120"
+
+    Move:
+      SendMessage $HWNDPARENT "0x408" "$R9" ""
+  FunctionEnd
+!macroend
 
 Function .onInit
   ${GetOptions} "$CMDLINE" "/DESTINATION=" $R0
@@ -177,7 +193,7 @@ Function SearchPortableApps
 FunctionEnd
 
 Function GetDrivesCallBack
-  ;=== Skip usual floppy letters
+  # Skip usual floppy letters
   StrCmp $8 "FDD" "" CheckForPortableAppsPath
   StrCmp $9 "A:\" End
   StrCmp $9 "B:\" End
@@ -187,6 +203,15 @@ Function GetDrivesCallBack
   StrCpy $varFoundPortableAppsPath "$9PortableApps"
  End:
   Push $0
+FunctionEnd
+
+Function instPre
+  StrCpy $update "false"
+  IfFileExists $INSTDIR\JonDoBrowser.exe update install
+  update:
+    StrCpy $profilePath $INSTDIR\Data\profile
+    Call CheckFirefoxRunning
+    Call Update
 FunctionEnd
 
 Section JFPortable
@@ -227,7 +252,7 @@ Section JFPortable
   # ===================
   StrCpy $profileExtensionPath "$INSTDIR\Data\profile\extensions"
 
-  #Adblock
+  # Adblock              
   SetOutPath "$profileExtensionPath"
   File /r /x .svn "..\..\..\full\profile\extensions\{d10d0bf8-f5b5-c8b4-a8b2-2b9879e08c5d}.xpi"
 
@@ -241,12 +266,12 @@ Section JFPortable
   SetOutPath "$profileExtensionPath\$extensionGUID"
   File /r /x .svn "..\..\..\full\profile\extensions\https-everywhere@eff.org\*.*"
 
-  # JonDoFox        
+  # JonDoFox
   StrCpy $extensionGUID "{437be45a-4114-11dd-b9ab-71d256d89593}"
   SetOutPath "$profileExtensionPath\$extensionGUID"
   File /r /x .svn "..\..\..\full\profile\extensions\{437be45a-4114-11dd-b9ab-71d256d89593}\*.*"
 
-  # NoScript        
+  # NoScript
   SetOutPath "$profileExtensionPath"
   File /r /x .svn "..\..\..\full\profile\extensions\{73a6fe31-595d-460b-a920-fcc0f8843232}.xpi"
 
@@ -263,7 +288,182 @@ Section JFPortable
   ${EndIf}
 SectionEnd
 
+Function CheckJonDoBrowserRunning                    # 3
+  Push $5
+  Push "JonDoBrowser.exe"
+  processwork::existsprocess
+  Pop $5
+  IntCmp $5 1 is1 done done
+  is1:
+    MessageBox MB_ICONQUESTION|MB_YESNO $(JonDoBrowserDetected) IDYES quitFF IDNO Exit
+    quitFF:
+      Push "JonDoBrowser.exe"
+      processwork::KillProcess
+      Sleep 1000
+    Exit:
+      MessageBox MB_ICONEXCLAMATION|MB_OK $(JonDoBrowserDeleteError)
+      StrCpy $R9 "-1"
+      Call RelGotoPage
+      Abort
+  done:
+FunctionEnd
+
+Function Update
+  # BackupBookmarksCerts:
+  MessageBox MB_ICONINFORMATION|MB_YESNO $(OverwriteProfile) IDYES updating IDNO Exit
+  updating:
+    $update == "true"
+    nxs::Show /NOUNLOAD "Backup" /top $(BackupBookmarksCerts) /h 1 /can 0 /pos 0 /can 1 /marquee 40 /end
+    IfFileExists $profilePath\BookmarkBackup\*.* +5
+    CreateDirectory $profilePath\BookmarkBackup
+    IfErrors Error
+    CreateDirectory $profilePath\BookmarkBackup\bookmarkbackups
+    IfErrors Error
+
+    nxs::Update /NOUNLOAD "Backup" /top $(BackupBookmarksCerts) /pos 10 /end
+    IfFileExists $profilePath\BookmarkBackup\bookmarkbackups\*.* +3
+    CreateDirectory $profilePath\BookmarkBackup\bookmarkbackups
+    IfErrors Error
+
+    nxs::Update /NOUNLOAD "Backup" /top $(BackupBookmarksCerts) /pos 20 /end
+    IfFileExists $profilePath\BookmarkBackup\bookmarkbackups\bookmarks.html 0 +2
+    Goto Error
+
+    nxs::Update /NOUNLOAD "Backup" /top $(BackupBookmarksCerts) /pos 30 /end
+    IfFileExists $profilePath\BookmarkBackup\bookmarkbackups\places.sqlite 0 +2
+    Goto Error
+
+    nxs::Update /NOUNLOAD "Backup" /top $(BackupBookmarksCerts) /pos 40 /end
+    IfFileExists $profilePath\bookmarks.html 0 +3
+    CopyFiles $profilePath\bookmarks.html $profilePath\BookmarkBackup
+    IfErrors Error
+
+    nxs::Update /NOUNLOAD "Backup" /top $(BackupBookmarksCerts) /pos 50 /end
+    IfFileExists $profilePath\places.sqlite 0 +3
+    CopyFiles $profilePath\places.sqlite $profilePath\BookmarkBackup
+    IfErrors Error
+
+    nxs::Update /NOUNLOAD "Backup" /top $(BackupBookmarksCerts) /pos 60 /end
+    IfFileExists $profilePath\bookmarkbackups\*.* 0 +3
+    CopyFiles $profilePath\bookmarkbackups\*.* $profilePath\BookmarkBackup\bookmarkbackups
+    IfErrors Error
+
+    nxs::Update /NOUNLOAD "Backup" /top $(BackupBookmarksCerts) /pos 70 /end
+    IfFileExists $TEMP\BookmarkBackup\*.* +3
+    CreateDirectory $TEMP\BookmarkBackup
+    IfErrors Error
+
+    nxs::Update /NOUNLOAD "Backup" /top $(BackupBookmarksCerts) /pos 80 /end
+    IfFileExists $profilePath\BookmarkBackup\*.* 0 +3
+    CopyFiles $profilePath\BookmarkBackup\*.* $TEMP\BookmarkBackup
+    IfErrors Error
+
+    nxs::Update /NOUNLOAD "Backup" /top $(BackupBookmarksCerts) /pos 90 /end
+    IfFileExists $profilePath\CertPatrol.sqlite 0 +3
+    CopyFiles $profilePath\CertPatrol.sqlite $TEMP
+    IfErrors Error
+
+    # Now, we parse the prefs.js to extract the forced https domains.
+    # and the accompanying exceptions. That is quite ugly but I did not find
+    # a better way.
+    IfFileExists $profilePath\prefs.js 0 done_httpsForcedBackup
+    FileOpen $0 $profilePath\prefs.js r
+    loop:
+      FileRead $0 $1
+      StrCpy $2 $1 32
+      StrCmp $2 'user_pref("noscript.httpsForced"' found notfound
+      notfound:
+        StrCpy $3 $1 42
+        StrCmp $3 'user_pref("noscript.httpsForcedExceptions"' found_Exceptions noExceptionsFound
+        Goto loop
+      found:
+        StrCpy $httpsForcedDomains $1
+        # Checking for httpsForcedExceptions as well
+        Goto loop
+        found_Exceptions:
+          StrCpy $httpsForcedDomainsExceptions $1
+          Goto done_httpsForcedbackup
+        noExceptionsFound:
+          StrCpy $3 $1 12
+          # We need some kind of stop here otherwise the installer would get
+          # stalled if there is no pref starting with
+          # 'user_pref("noscript.httpsForced"'. 
+          StrCmp $3 'user_pref("p' done_httpsForcedBackup loop
+    done_httpsForcedBackup:
+    IfErrors Error
+    FileClose $0
+
+    nxs::Update /NOUNLOAD "Backup" /top $(BackupBookmarksCerts) /pos 100 /end
+    IfFileExists $profilePath\NoScriptSTS.db 0 +3
+    CopyFiles $profilePath\NoScriptSTS.db $TEMP
+    IfErrors Error
+
+    IfFileExists $profilePath\HTTPSEverywhereUserRules\*.* 0 +4
+    CreateDirectory $TEMP\HTTPSEverywhereUserRules
+    CopyFiles $profilePath\HTTPSEverywhereUserRules\*.* $TEMP\HTTPSEverywhereUserRules
+    IfErrors Error
+
+    nxs::Destroy
+
+    Call DeleteProfile
+
+    Goto done
+
+    Error:
+      nxs::Destroy
+      MessageBox MB_ICONEXCLAMATION|MB_OK $(BackupError)
+      Quit
+
+  Exit:
+    # Back to folder-selection page. TODO: Is this "0" or "-1"?
+    StrCpy $R9 "0"
+    Call RelGotoPage
+    Abort
+  done:
+FunctionEnd
+
+Function RestoreBackup
+  ClearErrors
+  IfFileExists $TEMP\BookmarkBackup\*.* 0 +2
+  CopyFiles "$TEMP\BookmarkBackup\*.*" $profilePath
+  IfFileExists $TEMP\CertPatrol.sqlite 0 +2
+  CopyFiles "$TEMP\CertPatrol.sqlite" $profilePath
+  IfFileExists $TEMP\NoScriptSTS.db 0 +2
+  CopyFiles "$TEMP\NoScriptSTS.db" $profilePath
+  IfFileExists $TEMP\HTTPSEverywhereUserRules\*.* 0 +2
+  # We have a new profile here. Avoid overwriting new rules regarding
+  # our domains with old ones. As CopyFiles is overwriting files
+  # automatically we have to copy the new rules for our domain to the
+  # temp folder first, ugh.
+  CopyFiles $profilePath\HTTPSEverywhereUserRules\*.* "$TEMP\HTTPSEverywhereUserRules"
+  CopyFiles "$TEMP\HTTPSEverywhereUserRules\*.*" $profilePath\HTTPSEverywhereUserRules
+  # Adding the user chosen forced domains or exceptions
+  IfFileExists "$profilePath\prefs.js" 0 httpsForcedDone
+  StrCmp $httpsForcedDomains "" checkExceptions
+  FileOpen $0 "$profilePath\prefs.js" a
+  FileSeek $0 0 END
+  FileWrite $0 "$\r$\n"
+  FileWrite $0 $httpsForcedDomains
+  FileWrite $0 "$\r$\n"
+  FileClose $0
+  checkExceptions:
+    StrCmp $httpsForcedDomainsExceptions "" httpsForcedDone
+    FileOpen $0 "$profilePath\prefs.js" a
+    FileSeek $0 0 END
+    FileWrite $0 "$\r$\n"
+    FileWrite $0 $httpsForcedDomainsExceptions
+    FileWrite $0 "$\r$\n"
+    FileClose $0
+    httpsForcedDone:
+  IfErrors 0 done
+  MessageBox MB_ICONEXCLAMATION|MB_OK $(RestoreError)
+  done:
+FunctionEnd
+
 Function FinishedInstall
+  ${If} $update == "true"
+    Call RestoreBackup
+  ${EndIf}
   ExecShell "open" $INSTDIR
 FunctionEnd
 
