@@ -58,7 +58,7 @@ gpgVerification() {
 }
 
 # Setting the path to the GnuPG executable
-export PATH=$PATH:${GnuPGPath}
+export PATH=$PATH:$GnuPGPath
 
 OPTSTR="ch"
 getopts "${OPTSTR}" CMD_OPT
