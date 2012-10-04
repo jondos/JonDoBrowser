@@ -48,7 +48,6 @@ cleanup() {
 gpgVerification() {
   sigKey=$(gpg --verify $1 2>&1 | tail -n1 | tr -d ' ' | \
            sed 's/.*[^A-F0-9]\([A-F0-9]\{40\}\)/\1/g')
-
   if [ "$sigKey" = "$mozKey" ]; then
     echo "Successful verification!"
   else
@@ -87,8 +86,7 @@ done
 # as some mirrors of releases.mozilla.org seem to be not reachable at times...
 echo "Getting the latest Firefox source version..."
 ffVersion=$(wget -t 3 -qO - $releasePath/source | \
-  grep -E 'firefox-[0-9]{2}\.[0-9](\.[0-9])*.source.tar.bz2' | tail -n1 | \
-   sed 's/.*[^0-9]\([0-9]\{2\}\.[0-9]\.[0-9]\).*/\1/g')
+            sed 's/.*\([0-9]\{2\}\.[0-9]\(\.[0-9]\)*\).*/\1/g')
 
 if [ ! -d "tmp" ]; then
   mkdir tmp
