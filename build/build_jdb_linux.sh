@@ -127,7 +127,8 @@ done
 # as some mirrors of releases.mozilla.org seem to be not reachable at times...
 echo "Getting the latest Firefox source version..."
 ffVersion=$(wget -t 3 -qO - $releasePath/source | \
-            sed 's/.*[^0-9]\([0-9]\{2\}\.[0-9]\(\.[0-9]\)*\).*/\1/g')
+  grep -Eom 1 'firefox-[0-9]{2}\.[0-9](\.[0-9])*.source.tar.bz2' | tail -n1 | \
+   grep -Eom 1 '[0-9]{2}\.[0-9](\.[0-9])*')
 
 gpgVerification() {
   sigKey=$(gpg --verify $1 2>&1 | \
