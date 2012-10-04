@@ -41,7 +41,7 @@ linuxPlatform="linux-$(uname -m)"
 platforms="${linuxPlatform} mac win32"
 jdbDir="JonDoBrowser"
 jdbVersion="0.1"
-mozKey=247CA658AA95F6171EB0F13EA7D75CC7C52175E2 
+mozKey=247CA658AA95F6171EB0F13EA7D75CC7C52175E2
 releasePath=http://releases.mozilla.org/pub/mozilla.org/firefox/releases/latest
 
 prepareProfile() {
@@ -127,8 +127,7 @@ done
 # as some mirrors of releases.mozilla.org seem to be not reachable at times...
 echo "Getting the latest Firefox source version..."
 ffVersion=$(wget -t 3 -qO - $releasePath/source | \
-  grep -Eom 1 'firefox-[0-9]{2}\.[0-9](\.[0-9])*.source.tar.bz2' | tail -n1 | \
-   grep -Eom 1 '[0-9]{2}\.[0-9](\.[0-9])*')
+            sed 's/.*[^0-9]\([0-9]\{2\}\.[0-9]\(\.[0-9]\)*\).*/\1/g')
 
 gpgVerification() {
   sigKey=$(gpg --verify $1 2>&1 | \
@@ -265,7 +264,7 @@ svn cat $svnBrowser/build/.mozconfig_$linuxPlatform > .mozconfig
 make -f client.mk build
 
 echo "Creating the final packages..."
-cd linux_build && make package 
+cd linux_build && make package
 mv dist/firefox-$ffVersion.en-US.${linuxPlatform}.tar.bz2 ../../../tmp
 cd ../../../tmp && tar -xjvf firefox-$ffVersion.en-US.${linuxPlatform}.tar.bz2
 
