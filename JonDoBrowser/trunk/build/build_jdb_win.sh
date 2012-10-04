@@ -85,7 +85,11 @@ done
 # When we are using 'wget' in this script we retry three times if necessary
 # as some mirrors of releases.mozilla.org seem to be not reachable at times...
 echo "Getting the latest Firefox source version..."
+# The grep makes sure we narrow our search down and get in fact the proper
+# version string and not something else matching the RegEx used with sed...
 ffVersion=$(wget -t 3 -qO - $releasePath/source | \
+            grep -E 'firefox-[0-9]{2}\.[0-9](\.[0-9])*.source.tar.bz2' | \
+            tail -n1 | \
             sed 's/.*\([0-9]\{2\}\.[0-9]\(\.[0-9]\)*\).*/\1/g')
 
 if [ ! -d "tmp" ]; then
