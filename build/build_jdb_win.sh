@@ -32,11 +32,10 @@
 # built.
 
 svnBrowser=https://svn.jondos.de/svnpub/JonDoBrowser/trunk
-FFPath=profile/Firefox/App/firefox
-FFEnPath=profile/FirefoxByLanguage/enFirefoxPortablePatch/App/firefox
+ffPath=profile/Firefox/App/firefox
 mozKey=247CA658AA95F6171EB0F13EA7D75CC7C52175E2
 releasePath=http://releases.mozilla.org/pub/mozilla.org/firefox/releases/latest
-GnuPGPATH="/c/Programm Files (x86)/GNU/GnuPG/pub/"
+gpg="/c/Program Files (x86)/GNU/GnuPG/pub/gpg"
 
 cleanup() {
   #Cleanup: Imitating make...
@@ -46,7 +45,7 @@ cleanup() {
 }
 
 gpgVerification() {
-  sigKey=$(gpg --verify $1 2>&1 | tail -n1 | tr -d ' ' | \
+  sigKey=$("${gpg}" --verify $1 2>&1 | tail -n1 | tr -d ' ' | \
            sed 's/.*[^A-F0-9]\([A-F0-9]\{40\}\)/\1/g')
   if [ "$sigKey" = "$mozKey" ]; then
     echo "Successful verification!"
@@ -55,9 +54,6 @@ gpgVerification() {
     exit 1
   fi 
 }
-
-# Setting the path to the GnuPG executable
-export PATH=$PATH:$GnuPGPath
 
 OPTSTR="ch"
 getopts "${OPTSTR}" CMD_OPT
@@ -85,8 +81,6 @@ done
 # When we are using 'wget' in this script we retry three times if necessary
 # as some mirrors of releases.mozilla.org seem to be not reachable at times...
 echo "Getting the latest Firefox source version..."
-# The grep makes sure we narrow our search down and get in fact the proper
-# version string and not something else matching the RegEx used with sed...
 ffVersion=$(wget -t 3 -qO - $releasePath/source | \
             grep -E 'firefox-[0-9]{2}\.[0-9](\.[0-9])*.source.tar.bz2' | \
             tail -n1 | \
@@ -134,7 +128,7 @@ fi
 
 # Assuming we got the verified FF source copied to tmp first...
 cd build && cp ../tmp/firefox-$ffVersion.source.tar.bz2 .
-tar -xjvf firefox-*.source.tar.bz2
+tar -xjvf firefox-$ffVersion.source.tar.bz2
 echo
 echo "Patching JonDoBrowser..."
 
@@ -166,11 +160,8 @@ echo "Now we gonna build the installer..."
 svn export $svnBrowser/build/win profile
 unzip -d profile/Firefox/App build/firefox-$ffVersion.en-US.win32.zip
 
-# Moving language specific files...
-mkdir -p $FFEnPath
-mv $FFPath/omni.ja $FFEnPath
-mv $FFPath/dictionaries $FFEnPath
-rm -rf $FFPath/searchplugins
+# Removing unneccessary files...
+rm -rf $ffPath/searchplugins
 
 # Building the files...
 cd profile/Firefox/Other/Source
