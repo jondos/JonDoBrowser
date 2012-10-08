@@ -198,8 +198,8 @@ if [ "$ffVersion" = "" ]; then
   echo "We got no version extracted, thus exiting..."
   exit 1
 elif [ ! -e "firefox-$ffVersion.source.tar.bz2" ]; then
-  echo "Getting the latest Firefox sources ..."
-  curl --retry 3 $releasePath/source/firefox-$ffVersion.source.tar.bz2
+  echo "Getting the latest Firefox sources (version $ffVerion)..."
+  curl --retry 3 -O $releasePath/source/firefox-$ffVersion.source.tar.bz2
   if [ ! $? -eq 0 ]; then
     echo "Error while retrieving the Firefox sources, exiting..."
     exit 1
@@ -208,7 +208,7 @@ fi
 
 if [ ! -e "firefox-$ffVersion.source.tar.bz2.asc" ]; then
   echo "Getting the signature..."
-  curl --retry 3 $releasePath/source/firefox-$ffVersion.source.tar.bz2.asc
+  curl --retry 3 -O $releasePath/source/firefox-$ffVersion.source.tar.bz2.asc
   if [ ! $? -eq 0 ]; then
     echo "Error while retrieving the signature, exiting..."
     exit 1
@@ -224,13 +224,13 @@ gpgVerification firefox-$ffVersion.source.tar.bz2.asc
 echo "Gettings the necessary language packs..."
 echo "Fetching and verifying the SHA1SUMS file..."
 
-curl --retry 3 $releasePath/SHA1SUMS
+curl --retry 3 -O $releasePath/SHA1SUMS
 if [ ! $? -eq 0 ]; then
   echo "Error while retrieving SHA1SUMS, exiting..."
   exit 1
 fi
 
-curl --retry 3 $releasePath/SHA1SUMS.asc
+curl --retry 3 -O $releasePath/SHA1SUMS.asc
 if [ ! $? -eq 0 ]; then
   echo "Error while retrieving the SHA1SUMS signature, exiting..."
   exit 1
