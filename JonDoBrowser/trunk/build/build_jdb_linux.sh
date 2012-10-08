@@ -247,7 +247,7 @@ fi
 
 cp patches/*.patch mozilla-release/ && cd mozilla-release
 
-if [ "$linuxPlatform" == "linux-x86_64" ]; then
+if [ "$platform" == "linux-x86_64" ]; then
   svn export $svnBrowser/build/patches/os/PIE-64bit-Linux.patch
 fi
 
@@ -257,16 +257,16 @@ svn export $svnBrowser/build/branding/jondobrowser browser/branding/jondobrowser
 for i in *patch; do patch -tp1 <$i || exit 1; done
 
 echo "Building JonDoBrowser..."
-svn cat $svnBrowser/build/.mozconfig_$linuxPlatform > .mozconfig
+svn cat $svnBrowser/build/.mozconfig_$platform > .mozconfig
 make -f client.mk build
 
 echo "Creating the final packages..."
 cd linux_build && make package
-mv dist/firefox-$ffVersion.en-US.${linuxPlatform}.tar.bz2 ../../../tmp
-cd ../../../tmp && tar -xjvf firefox-$ffVersion.en-US.${linuxPlatform}.tar.bz2
+mv dist/firefox-$ffVersion.en-US.${platform}.tar.bz2 ../../../tmp
+cd ../../../tmp && tar -xjvf firefox-$ffVersion.en-US.${platform}.tar.bz2
 
 for lang in $langs; do
-  jdbFinal=JonDoBrowser-$linuxPlatform-$jdbVersion-$lang
+  jdbFinal=JonDoBrowser-$platform-$jdbVersion-$lang
   cp -rf firefox/* $jdbDir-$lang/App/Firefox
   mv $jdbDir-$lang $jdbDir
   tar -cf $jdbFinal.tar $jdbDir
