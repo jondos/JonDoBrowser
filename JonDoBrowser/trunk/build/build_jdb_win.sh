@@ -165,9 +165,9 @@ rm -rf $ffPath/searchplugins
 
 # Building the files...
 cd profile/Firefox/Other/Source
-# TODO: Why don't we get a functional JonDoBrowser.exe if we build it with the
-# 2.46 NSIS shipped with Mozilla Build?
-echo "Building the JonDoBrowser installer"
+echo "Building the JonDoBrowser launcher..."
+makensisu-2.46.exe JonDoBrowserExe.nsi
+echo "Building the JonDoBrowser installer..."
 makensisu-2.46.exe JonDoBrowser.nsi
 cd ../../../../
 mv profile/JonDoBrowser*.exe .
