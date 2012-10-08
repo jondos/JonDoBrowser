@@ -251,7 +251,7 @@ if [ ! $? -eq 0 ]; then
 fi
 xpiHash1=$(grep -E "$platform/xpi/$xpiLang.xpi" SHA1SUMS | \
   grep -Eom 1 "[a-z0-9]{40}")
-xpiHash2=$(sha1sum ${platform}_$xpiLang.xpi | grep -Eo "[a-z0-9]{40}")
+xpiHash2=$(shasum ${platform}_$xpiLang.xpi | grep -Eo "[a-z0-9]{40}")
 if [ "$xpiHash1" = "$xpiHash2" ]; then
   echo "Verified SHA1 hash..."
   if [ ! -d xpi_helper ]; then
