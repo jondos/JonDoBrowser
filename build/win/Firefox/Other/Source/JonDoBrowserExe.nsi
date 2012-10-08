@@ -62,7 +62,7 @@ SetDatablockOptimize On
 ;=== Include
 ;(Standard NSIS)
 !include MUI.nsh
-;!include Registry.nsh
+!include Registry.nsh
 !include TextFunc.nsh
 !insertmacro GetParameters
 !insertmacro GetParent
