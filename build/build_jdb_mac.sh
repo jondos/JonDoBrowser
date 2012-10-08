@@ -6,7 +6,7 @@ langs="en de"
 # We only need the german language pack currently as english is the default
 xpiLang=de
 macPlatform=""
-platforms="mac"
+platform="mac"
 jdbVersion="0.1"
 title="JonDoBrowser"
 size="200000"
@@ -175,8 +175,8 @@ ffVersion=$(curl -L --retry 3 -so - $releasePath/source | \
    grep -Eom 1 '[0-9]{2}\.[0-9](\.[0-9])*')
 
 gpgVerification() {
-  sigKey=$(gpg --verify $1 2>&1 | \
-    grep -Eom 2 '([A-Z0-9]{4}\s*){10}' | tail -n1 | tr -d ' ')
+  sigKey=$(gpg --verify $1 2>&1 | tail -n1 | tr -d ' ' | \
+           sed 's/.*[^A-F0-9]\([A-F0-9]\{40\}\)/\1/g')
 
   if [ "$sigKey" = "$mozKey" ]; then
     echo "Successful verification!"
