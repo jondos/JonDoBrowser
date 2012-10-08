@@ -87,7 +87,7 @@ prepareLinuxProfiles() {
     # Copying the language xpi to get other language strings than the en-US
     # ones.
     if [ "$lang" = "de" ]; then
-      cp -f ${linuxPlatform}_de.xpi $profileDir/extensions/langpack-de@firefox.mozilla.org.xpi
+      cp -f ${platform}_de.xpi $profileDir/extensions/langpack-de@firefox.mozilla.org.xpi
     fi
   done
 }
