@@ -198,7 +198,7 @@ if [ "$ffVersion" = "" ]; then
   echo "We got no version extracted, thus exiting..."
   exit 1
 elif [ ! -e "firefox-$ffVersion.source.tar.bz2" ]; then
-  echo "Getting the latest Firefox sources (version $ffVerion)..."
+  echo "Getting the latest Firefox sources (version $ffVersion)..."
   curl --retry 3 -O $releasePath/source/firefox-$ffVersion.source.tar.bz2
   if [ ! $? -eq 0 ]; then
     echo "Error while retrieving the Firefox sources, exiting..."
