@@ -37,8 +37,7 @@ langs="en de"
 # We only need the german language pack currently as english is the default
 xpiLang=de
 # Allowing 32bit and 64bit JonDoBrowser builds
-linuxPlatform="linux-$(uname -m)"
-platforms="${linuxPlatform} mac win32"
+platform="linux-$(uname -m)"
 jdbDir="JonDoBrowser"
 jdbVersion="0.1"
 mozKey=247CA658AA95F6171EB0F13EA7D75CC7C52175E2
@@ -192,43 +191,40 @@ fi
 
 gpgVerification SHA1SUMS.asc
 
-echo "Retrieving commonly used resources preparing the profiles..."
-prepareProfile
-
 echo "Retrieving the language pack(s) and verifying them..."
 
-for platform in $platforms; do
-  wget -t 3 -O ${platform}_$xpiLang.xpi $releasePath/$platform/xpi/$xpiLang.xpi 
-  if [ ! $? -eq 0 ]; then
-    echo "Error while retrieving the $xpiLang language pack for"
-    echo "$platform, continuing without it..."
-    continue
-  fi 
-  xpiHash1=$(grep -E "$platform/xpi/$xpiLang.xpi" SHA1SUMS | \
-    grep -Eom 1 "[a-z0-9]{40}")
-  xpiHash2=$(sha1sum ${platform}_$xpiLang.xpi | grep -Eo "[a-z0-9]{40}") 
-  if [ "$xpiHash1" = "$xpiHash2" ]; then
-    echo "Verified SHA1 hash..."
-    if [ ! -d xpi_helper ]; then
-      mkdir xpi_helper
-    fi
-    unzip -d xpi_helper ${platform}_$xpiLang.xpi
-    cd xpi_helper
-    # TODO: That is german only! If we start to support other languages besides
-    # enlish and german we have to create language specific patches!
-    echo "Patching the xpi..."
-    patch -tp1 < ../XPI.patch 
-    zip -r ${platform}_$xpiLang.xpi *
-    mv ${platform}_$xpiLang.xpi ../
-    rm -rf * && cd ..
-  else
-    echo "Wrong SHA1 hash of ${platform}_$xpiLang.xpi, removing it" 
-    rm ${platform}_$xpiLang.xpi
-    exit 1
+wget -t 3 -O ${platform}_$xpiLang.xpi $releasePath/$platform/xpi/$xpiLang.xpi
+if [ ! $? -eq 0 ]; then
+  echo "Error while retrieving the $xpiLang language pack for"
+  echo "$platform, continuing without it..."
+  continue
+fi
+xpiHash1=$(grep -E "$platform/xpi/$xpiLang.xpi" SHA1SUMS | \
+  grep -Eom 1 "[a-z0-9]{40}")
+xpiHash2=$(sha1sum ${platform}_$xpiLang.xpi | grep -Eo "[a-z0-9]{40}")
+if [ "$xpiHash1" = "$xpiHash2" ]; then
+  echo "Verified SHA1 hash..."
+  if [ ! -d xpi_helper ]; then
+    mkdir xpi_helper
   fi
-done
+  unzip -d xpi_helper ${platform}_$xpiLang.xpi
+  cd xpi_helper
+  # TODO: That is german only! If we start to support other languages besides
+  # enlish and german we have to create language specific patches!
+  echo "Patching the xpi..."
+  patch -tp1 < ../XPI.patch 
+  zip -r ${platform}_$xpiLang.xpi *
+  mv ${platform}_$xpiLang.xpi ../
+  rm -rf * && cd ..
+else
+  echo "Wrong SHA1 hash of ${platform}_$xpiLang.xpi, removing it" 
+  rm ${platform}_$xpiLang.xpi
+  exit 1
+fi
 
 # Now, we set up the JonDoBrowser profiles
+echo "Retrieving commonly used resources preparing the profiles..."
+prepareProfile
 echo "Setting up the JonDoBrowser profiles..."
 prepareLinuxProfiles
 
