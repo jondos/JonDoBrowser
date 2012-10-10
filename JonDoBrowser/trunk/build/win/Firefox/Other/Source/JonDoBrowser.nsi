@@ -289,7 +289,6 @@ Function CheckJonDoBrowserRunning
   Push "firefox.exe"
   processwork::existsprocess
   Pop $R5
-  MessageBox MB_OK $R5
   IntCmp $R5 1 is1 done done
   is1:
     # Okay, we know there is a Firefox running but is that really our process?
