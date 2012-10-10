@@ -407,7 +407,10 @@ Function Update
     CopyFiles $profilePath\NoScriptSTS.db $TEMP
     IfErrors Error
 
-    IfFileExists $profilePath\HTTPSEverywhereUserRules\*.* 0 +4
+    IfFileExists $profilePath\HTTPSEverywhereUserRules\*.* 0 +5
+    # We know the directory exists, but that is created automatically.
+    # Do we have files to copy in it at all?
+    IfFileExists $profilePath\HTTPSEverywhereUserRules\*.xml 0 +4
     CreateDirectory $TEMP\HTTPSEverywhereUserRules
     CopyFiles $profilePath\HTTPSEverywhereUserRules\*.* $TEMP\HTTPSEverywhereUserRules
     IfErrors Error
@@ -438,11 +441,6 @@ Function RestoreBackup
   IfFileExists $TEMP\NoScriptSTS.db 0 +2
   CopyFiles "$TEMP\NoScriptSTS.db" $profilePath
   IfFileExists $TEMP\HTTPSEverywhereUserRules\*.* 0 +2
-  # We have a new profile here. Avoid overwriting new rules regarding
-  # our domains with old ones. As CopyFiles is overwriting files
-  # automatically we have to copy the new rules for our domain to the
-  # temp folder first, ugh.
-  CopyFiles $profilePath\HTTPSEverywhereUserRules\*.* "$TEMP\HTTPSEverywhereUserRules"
   CopyFiles "$TEMP\HTTPSEverywhereUserRules\*.*" $profilePath\HTTPSEverywhereUserRules
   # Adding the user chosen forced domains or exceptions
   IfFileExists "$profilePath\prefs.js" 0 httpsForcedDone
