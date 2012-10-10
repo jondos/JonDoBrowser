@@ -111,7 +111,7 @@ prepareProfile() {
 
   echo "Preparing the profile..."
   # We do not need ProfileSwitcher in our JonDoBrowser, thus removing it.
-  rm -rf profile/extensions/\{fa8476cf-a98c-4e08-99b4-65a69cb4b7d4\}
+  rm -rf profile/extensions/\{fa8476cf-a98c-4e08-99b4-65a69cb4b7d4\}.xpi
   # Patching the profile xpi to be optimized for JDB, sigh...
   unzip -d profile/extensions/\{437be45a-4114-11dd-b9ab-71d256d89593\} -o jondofox.xpi 
   # And removing the .xpi in the extensions folder if it exists...
