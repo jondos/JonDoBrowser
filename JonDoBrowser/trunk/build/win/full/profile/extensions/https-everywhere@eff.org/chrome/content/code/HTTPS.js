@@ -38,9 +38,9 @@ const HTTPS = {
 
     var c2 = channel.QueryInterface(CI.nsIHttpChannel);
     this.log(DBUG,"Redirection limit is " + c2.redirectionLimit);
-    // This used to be (c2.redirectionLimit == 1), but that's very
+    // XXX This used to be (c2.redirectionLimit == 1), but that's very
     // inefficient in a case (eg amazon) where this may happen A LOT.
-    // FIXME Rather than a number like 10, we should use the starting value
+    // Rather than number like 10, we should use the starting value
     // in network.http.redirection-limit minus some counter
     if (c2.redirectionLimit < 10) {
       this.log(WARN, "Redirection loop trying to set HTTPS on:\n  " +
@@ -52,6 +52,22 @@ const HTTPS = {
       https_everywhere_blacklist[channel.URI.spec] = blob.applied_ruleset;
       return false;
     }
+
+    // Check for the new internal redirect API. If it exists, use it.
+    if ("redirectTo" in channel) {
+      this.log(INFO, "Found nsIHttpChannel.redirectTo. Using it.");
+      try {
+        channel.redirectTo(uri);
+        return true;
+      } catch(e) {
+        // This should not happen. We should only get exceptions if
+        // the channel was already open.
+        this.log(WARN, "Exception on nsIHttpChannel.redirectTo: "+e);
+
+        // Don't return: Fallback to NoScript ChannelReplacement.js
+      }
+    }
+
     if (ChannelReplacement.supported) {
       HTTPSEverywhere.instance.notifyObservers(channel.URI, uri.spec);
       HTTPS.log(INFO,"Scheduling channel replacement for "+channel.URI.spec);
@@ -59,9 +75,6 @@ const HTTPS = {
         var cr = new ChannelReplacement(channel, uri);
         cr.replace(true,null);
         cr.open();
-        // XXX If we had a way to tell other extensions that we were replacing
-        // their channels, perhaps this would be a good place to do it?
-        // https://trac.torproject.org/projects/tor/ticket/3190
         HTTPS.log(INFO,"Ran channel replacement for "+channel.URI.spec);
       });
       return true;
@@ -115,10 +128,10 @@ const HTTPS = {
   },
 
   forceURI: function(uri, fallback, ctx) {
-    // Switch some uris to https; ctx is either nsIDOMNode or nsIDOMWindow as
-    // per the ContentPolicy API.
-    // Returns true if everything worked out (either correct replacement or no 
-    // replacement needed).  Retun False if all attempts to rewrite failed.
+  // Switch some uris to https; ctx is either nsIDOMNode or nsIDOMWindow as
+  // per the ContentPolicy API.
+  // Returns true if everything worked out (either correct replacement or no 
+  // replacement needed).  Retun False if all attempts to rewrite failed.
     
     // first of all we need to get the applicable rules list to keep track of
     // what rulesets might have applied to this page

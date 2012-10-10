@@ -12,6 +12,7 @@ rulesets = Array.slice(https_everywhere.https_rules.rulesets);
 
 const id_prefix = "he_enable";
 const pref_prefix = "extensions.https_everywhere.";
+const GITID = https_everywhere.https_rules.GITCommitID;
 
 // Disable all rules.
 function disable_all() {
@@ -26,6 +27,87 @@ function disable_all() {
 function reset_defaults() {
   https_everywhere.https_rules.resetRulesetsToDefaults()
   treeView.treebox.invalidate();
+}
+
+function resetSelected() {
+  var start = {};
+  var end = {};
+  var st = document.getElementById('sites_tree');
+  var sel = st.view.selection;
+  var numRanges = sel.getRangeCount();
+
+  for (var t = 0; t < numRanges; t++){
+    sel.getRangeAt(t, start, end);
+    for (var v = start.value; v <= end.value; v++){
+      var rs = treeView.rules[v];
+      rs[rs.on_by_default ? "enable" : "disable"]();
+    }
+  }
+}
+
+function resetSelectedMenu() {
+  var start = {};
+  var end = {};
+  var st = document.getElementById('sites_tree');
+  var sel = st.view.selection;
+  var numRanges = sel.getRangeCount();
+  var menuitem = document.getElementById("revert_menuitem");
+
+  for (var t = 0; t < numRanges; t++){
+    sel.getRangeAt(t, start, end);
+    for (var v = start.value; v <= end.value; v++){
+      var rs = treeView.rules[v];
+      if (rs.active !== rs.on_by_default) {
+        menuitem.disabled = false;
+        return;
+      }
+    }
+  }
+  menuitem.disabled = true;
+}
+
+function toggleSelected() {
+  var start = {};
+  var end = {};
+  var st = document.getElementById('sites_tree');
+  var sel = st.view.selection;
+  var numRanges = sel.getRangeCount();
+  var menuitem = document.getElementById("revert_menuitem");
+
+  for (var t = 0; t < numRanges; t++){
+    sel.getRangeAt(t, start, end);
+    for (var v = start.value; v <= end.value; v++){
+      var rs = treeView.rules[v];
+      rs.toggle();
+      treeView.treebox.invalidateRow(v);
+    }
+  }
+}
+
+
+function viewXMLSource() {
+  var start = {};
+  var end = {};
+  var st = document.getElementById('sites_tree');
+  var sel = st.view.selection;
+  var numRanges = sel.getRangeCount();
+  var menuitem = document.getElementById("revert_menuitem");
+
+  for (var t = 0; t < numRanges; t++){
+    sel.getRangeAt(t, start, end);
+    for (var v = start.value; v <= end.value; v++){
+      var rs = treeView.rules[v];
+      
+      //This *should* not violate TorButton's State Control, but someone should double check
+      //this code just in case
+      var aWin = CC['@mozilla.org/appshell/window-mediator;1']
+      .getService(CI.nsIWindowMediator) 
+      .getMostRecentWindow('navigator:browser');
+      aWin.openDialog("chrome://https-everywhere/content/fetch-source.xul",
+              rs.xmlName, "chrome,centerscreen", 
+              {xmlName: rs.xmlName, GITCommitID: GITID} );
+    }
+  }
 }
 
 function getValue(row, col) {
@@ -57,7 +139,7 @@ function compareRules(a, b, col) {
 
 function https_prefs_init(doc) {
   var st = document.getElementById('sites_tree');
-
+  
   // GLOBAL VARIABLE!
   treeView = {
     rules: rulesets,
