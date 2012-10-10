@@ -207,9 +207,6 @@ xpiHash1=$(grep -E "$platform/xpi/$xpiLang.xpi" SHA1SUMS | \
 xpiHash2=$(sha1sum ${platform}_$xpiLang.xpi | grep -Eo "[a-z0-9]{40}")
 if [ "$xpiHash1" = "$xpiHash2" ]; then
   echo "Verified SHA1 hash..."
-  if [ ! -d xpi_helper ]; then
-    mkdir xpi_helper
-  fi
   unzip -d xpi_helper ${platform}_$xpiLang.xpi
   cd xpi_helper
   # TODO: That is german only! If we start to support other languages besides

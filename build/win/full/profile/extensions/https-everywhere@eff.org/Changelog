@@ -1,17 +1,306 @@
-2.2.2                                     (2012-09-06)
-  * Fix a bug that was preventing settings from persisting:
-    https://trac.torproject.org/projects/tor/ticket/6653
-  * Fixes and improvements: Lenovo, YahooNew, Pirate Party, OpenDNS, Wordpress
-    https://trac.torproject.org/projects/tor/ticket/6604
-    https://mail1.eff.org/pipermail/https-everywhere-rules/2012-August/001267.html
-  * Disable broken rulesets: FAZ, Playboy, Mapquest, Imgur, F-Secure
- 
+3.0                                         (2012-10-04)
+  * Since version 2.x:
+    * 1,455 new active rulesets
+    * UI improvements: 
+      - right-click to view ruleset source in the config window
+      - translate some untranslated menus
+      - better icons in a few places (breaking/redirecting rules,
+        context button)
+    * Numerous improvements to the SSL Observatory internals, including cached
+      submissions on hostile networks, better Tor and Convergence integration,
+      and a new setting to control self-signed cert submission
+    * New translations: Basque, Czech, Danish, French, Greek, Hungarian,
+                        Italian, Korean, Malaysian, Polish, Slovak, Turkish,
+                        Traditional Chinese
+  * Relative to 3.0development.8:
+    * Only promote the Decentralized SSL Observatory to 5% of non-Tor users
+    * Update the SSL Observatory whitelist of common cert chains
+    * Fixes, mostly in the CDN/media playback department: 
+             Akamai/CNN, GO.com/ABC, AWS/Amazon Zeitgeist MP3 player,
+             AWS/Spiegel.tv, Technology Review, Cloudfront/Tunein,
+             Akamai/Discovery Channel, Beyond Security, OCaml, Gentoo,
+             Nokia, Widgetbox.com, Squarespace
+             https://trac.torproject.org/projects/tor/ticket/4199
+             https://trac.torproject.org/projects/tor/ticket/6871
+             https://trac.torproject.org/projects/tor/ticket/6992
+             https://trac.torproject.org/projects/tor/ticket/7000
+             https://trac.torproject.org/projects/tor/ticket/7020
+             https://mail1.eff.org/pipermail/https-everywhere-rules/2012-October/001324.html
+    * Disable buggy: Web.de, AJC.com, Feross, Bestofmedia
+    * Remove a lot of off-by-default rulesets from the code, since they have
+      some costs in terms of startup speed and RAM usage
+
+3.0development.8                            (2012-10-03)
+  * 3.0 stable release candidate 1
+  * Fixes: AOL, 1and1 Internet, American Physical Society, Antispam.de, BBC,
+           Baker and Taylor, Barnes and Noble, BitTorrent, CacheFly,
+           CheezBurger, Cleverbridge, Cloudfront, Facebook, Trustguard,
+           IEEE, Link Plus Catalog, Microsoft, Mozilla, News Corp, Nrelate,
+           OpenDNS, PassThePopcorn, Pidgin, Piriform, RFC Editor, Symantec,
+           Telegraph, Transmission, Valve, Zenimax-Media,
+           kirjoitusalusta.fi, uTorrent
+  * Reenable: CodingTeam
+  * Disable broken: GrooveShark, Gearhog, Paper.li, Soton.ac.uk, SVT.se
+  * Various translation improvements
+  * Support a new platform="mixedcontent" attribute
+  * Switch to the actual HTTPS Everywhere logo for the context menu button
+
+
+chrome-2012.9.21
+  * Workaround for breakage in Amazon Look Inside the Book (via Cloudfront)
+    https://trac.torproject.org/projects/tor/ticket/6848
+  * Replace jsURI with URI.js, fixing a number of bugs in the Chrome port
+    - https://trac.torproject.org/projects/tor/ticket/6197
+    - Also breakage on other random pages like 
+      http://venturebeat.com/2012/09/13/how-do-not-track-could-destroy-the-internet-as-you-know-it/
+  * Fixes: AOL, Antispam.de, BBC, BitTorrent, Facebook, Gearhog, LinkPlus
+    Catalog, Microsoft, Mother Jones, Mozilla, Office.co.uk, OpenDNS,
+    PassThePopcorn, Piriform, WhatCD, uTorrent
+  * Disable broken: Paper.li, SVT.se, Soton.ac.uk
+  * Reenable: Referly
+    
+chrome-2012.9.10
+  * The "just add eleven" chromium alpha
+  * Time to test the updating mechanism from direct -> Chrome Web Store
+    installs
+  * Ruleset changes in addition to those in FF 3.0dev7:
+    * Fixes: News Corp, Cheezburger, CacheFly, Cleverbridge, Nrelate,
+             Pidgin, Telegraph
+    * Improvements: Global Marketing Strategies
+
+
+3.0development.7                            (2012-09-07)
+  * Add a cleanup routine for profiles affected by a 2.2 defaults bug:
+    https://mail1.eff.org/pipermail/https-everywhere/2012-August/001511.html
+  * Make Decentralized SSL Observatory-Tor interactions saner in the wake of
+    Torbutton transitioning to "always on" (we now detect a local Tor instance
+    on port 9050 and use it)
+    https://trac.torproject.org/projects/tor/ticket/6541
+  * Fix some other bugs in the Observatory proxy-wrangling code
+  * Disable broken/buggy rulesets: Voxel, Mapquest, Imgur, Justin.tv,
+    F-Secure, Valve, SpringFiles, openDesktop, syllabushare, Playboy, FAZ
+  * Fixes / Improvements: Eloqua, OpenDNS, Mashable, News Corp, Sony, Yahoo!,
+    Examiner.com, FBI, Adtechus, Mozilla, Dreamhost, Lenovo / Thinkpad, Pirate
+    Party, Scribd
+  * New Czech translation
+
+3.0development.6                            (2012-08-16)
+  * Prevent ruleset bugs from crashing the UI
+    https://trac.torproject.org/projects/tor/ticket/6280
+  * Fix a lack-of-translation bug in the context menu
+    https://trac.torproject.org/projects/tor/ticket/6516
+    (although coverage will probably be patchy for a while)
+  * Add hooks to use our new Firefox internal rewrite API, if the browser
+    has it (this should address
+      https://trac.torproject.org/projects/tor/ticket/5477
+      https://trac.torproject.org/projects/tor/ticket/3190
+      )
+  * Fixes: OpenStreetMap, Okcupid, Yandex, Valve, Atlantic Media, AWS,
+           XDA developers, Tumblr, MetaPress, Mixpanel, VideoLAN, JBoss,
+           Yourhosting, Pypi, QT, Imgur, Scientific American,
+           Chronicle, ISOC, Wikimedia, Xmission, Tumblr, OpenDNS
+           Mobygames, Telegraph Media, Dailymotion, RFC-editor, US gov,
+           Discogs, Costco, Brightcove, PirateParty, BrownPaperTickets
+  * Improvements: Apple, MIT
+  * Disable buggy/broken: ZDNet, Globe and Mail, Malwarebytes, Plenty of Fish,
+                          Raymond.CC, Blip.tv, Governo Portugês, adf.ly,
+                          McAfee :( :( :(
+  * New translations: Italian, Turkish, Traditional Chinese, Korean
+  * Numerous updated translations
+
+chrome-2012.8.16
+  * The "exponential bifurcation" alpha
+  * Change the update URI to the specific one blessed by the Chrome Web Store
+    (they tell us that, despite appearances, the request will actually be
+    https)
+
+chrome-2012.8.15
+
+  * The "Happiness in the Cloud" Alpha
+  * We still suffer from the horrible Appcache bug, so this is still an alpha:
+    https://trac.torproject.org/projects/tor/ticket/5585
+    https://code.google.com/p/chromium/issues/detail?id=121325
+  * Enslave ourselves to the Chrome Web Store, because Google has made it
+    very tricky to install .crx files in Chrome version 21
+    https://code.google.com/p/chromium/issues/detail?id=133818
+    https://code.google.com/p/chromium/issues/detail?id=128748
+  * Do a better job of displaying the context menu, especially for error pages:
+    https://trac.torproject.org/projects/tor/ticket/6085
+    (should be fixed for real this time)
+  * Fancier Chrome context menus by Jay Weisskopf
+  * Fixes: OpenStreetMap, Okcupid, Yandex, Valve, Atlantic Media, AWS,
+           XDA developers, Tumblr, MetaPress, Mixpanel, VideoLAN, JBoss,
+           Yourhosting, Pypi, QT, Imgur, Scientific American,
+           Chronicle, ISOC, Wikimedia, Xmission, Tumblr, OpenDNS
+           Mobygames, Telegraph Media, Dailymotion, RFC-editor, US gov,
+           Discogs, Costco, Brightcove, PirateParty, BrownPaperTickets,
+  * Improvements: Apple, MIT
+  * Disable buggy/broken: ZDNet, Globe and Mail, Malwarebytes, Plenty of Fish,
+                          Raymond.CC, Blip.tv, Governo Portugês, adf.ly
+                          McAfee :( :( :(
+
+3.0development.5                            (2012-06-26)
+  * Fix the enable/disable button in Firefox 15
+    https://trac.torproject.org/projects/tor/ticket/6212
+  * Fixes: GetFirebug, Gentoo, Ebay, Yandex (extensive), Maxmind, Blogger, HP,
+           Jottit
+  * Disable broken: Project Syndicate, Alton Towers, Network for Good
+    https://trac.torproject.org/projects/tor/ticket/6222
+  * The Decentralized SSL Observatory client now saves up some certificates if 
+    the network blocks or MITMs attempts to submit them.
+
+chrome-2012.6.21
+  * The Autonomous Greenland Beta Release
+  * Allow rulesets to be toggled when the page breaks completely
+    https://trac.torproject.org/projects/tor/ticket/6085
+  * Fixes: Github, Gentoo, HP, Maxmind, Orange
+  * Disable broken: Alton Towers, Project Syndicate
+  * Only ship 1 new ruleset (we're in a freeze)
+
+3.0development.4                            (2012-06-18)
+  * Fix compatibility bug with Firefox 15:
+    https://trac.torproject.org/projects/tor/ticket/5893
+  * Ship 217 new rulesets (frozen; new rulesets now have to wait until 4.0
+    development)
+  * Fixes: numerous, including: Boxee, CiteULike, MozillaMessaging, 
+           Yandex, Demonoid, Pirate Party, Gentoo, NYTimes, Microsoft, 
+           Wikipedia, Lenovo, MyWOT
+    https://trac.torproject.org/projects/tor/ticket/5912
+    https://trac.torproject.org/projects/tor/ticket/6091
+    https://trac.torproject.org/projects/tor/ticket/5703
+    https://trac.torproject.org/projects/tor/ticket/5931
+    https://trac.torproject.org/projects/tor/ticket/5958
+    https://mail1.eff.org/pipermail/https-everywhere-rules/2012-June/001189.html
+    https://mail1.eff.org/pipermail/https-everywhere-rules/2012-June/001190.html
+    https://mail1.eff.org/pipermail/https-everywhere-rules/2012-May/001186.html
+    https://mail1.eff.org/pipermail/https-everywhere/2012-May/001433.html
+  * Disable broken: MarketWatch, Disqus, Magento, Lavasoft, 
+                    Typepad/Say Media, Thomas Cook, Thomson Reuters clients,
+                    Science Daily, BinRev, Ikea, Interpol
+    https://trac.torproject.org/projects/tor/ticket/5899
+    https://trac.torproject.org/projects/tor/ticket/5496
+  
+chrome-2012.6.18
+  * The Divisible By Six Chromium Beta Release
+  * Ship 444 new Rulesets
+  * Fixes: numerous, including: Boxee, omgubuntu, Microsoft
+    https://trac.torproject.org/projects/tor/ticket/5899
+    https://trac.torproject.org/projects/tor/ticket/5703
+    https://trac.torproject.org/projects/tor/ticket/5931
+    https://trac.torproject.org/projects/tor/ticket/5958
+  * Disable broken: Disqus, uTorrent, Thomas Cook, Thomson Reuters clients,
+                    Science Daily, Say Media, BinRev, Ikea, Interpol
+  * Not fixed:
+      The horrible appcache / CSS bug:
+          https://trac.torproject.org/projects/tor/ticket/5585
+      Occasional extension compatibility glitches:
+          https://trac.torproject.org/projects/tor/ticket/5731
+
+3.0development.3                            (2012-05-11)
+  * Ship 361 new rulesets
+  * Do a better job of disabling CACert rulesets by default on non-CAcert
+    platforms
+  * Fix for compatibility with some other Firefox extensions:
+    https://trac.torproject.org/projects/tor/ticket/5682
+  * Fixes: Wordpress stylesheets, USENIX, Mozilla, Opera, Valve, and many
+    others
+    https://mail1.eff.org/pipermail/https-everywhere-rules/2012-April/001105.html
+    https://trac.torproject.org/projects/tor/ticket/5831
+  * Disable broken: Pandora, Miranda IM, Pastebin.ca
+    https://trac.torproject.org/projects/tor/ticket/5804
+    https://trac.torproject.org/projects/tor/ticket/5776
+  * Testing our new more automated release process
+
+chrome-2012.5.1
+  * The May Day Chromium Beta Release
+  * Ship 886 new rulesets (thanks mostly to Negres!)
+  * Fix two downgrade attacks that might allow attackers to deny HTTPS
+    Everywhere protection for cookies on some domains.
+    https://trac.torproject.org/projects/tor/ticket/5676
+    https://trac.torproject.org/projects/tor/ticket/2199
+  * More efficient ruleset storage shrinks the .crx download by a factor of 
+    about 4 (thanks fauxfaux)
+    https://trac.torproject.org/projects/tor/ticket/5275
+  * Disable buggy rulesets: IBM, Scribd, Wunderground, ReadWriteWeb,
+    Pastebin.ca 
+    https://trac.torproject.org/projects/tor/ticket/5344
+    https://trac.torproject.org/projects/tor/ticket/5435
+    https://trac.torproject.org/projects/tor/ticket/5630
+  * Ruleset fixes: Debian, Kohls, Malwarebytes, Yandex, Wikipedia, Mises.org,
+                   OpenDNS, Wizards of the Coast, Lenovo, Barnes and Noble,
+                   Pastebin.ca
+    https://trac.torproject.org/projects/tor/ticket/5509
+    https://trac.torproject.org/projects/tor/ticket/5491
+    https://trac.torproject.org/projects/tor/ticket/5303
+  * Numerous other improvements, fixes, and exciting new bugs :)
+
+
+3.0development.2                            (2012-04-26)
+  * License change: the tree now includes some code from Convergence, which 
+                    is GPL v3+.  Other code remains licensable as GPLv2+
+  * Ship 696 new rulesets (!!!), thanks to a lot of amazing work by Negres
+  * Fix a downgrade attack that might allow attackers to deny HTTPS
+    Everywhere protection for cookies on some domains.
+    https://trac.torproject.org/projects/tor/ticket/5676
+  * Fix a weird wrong DOM-origin bug that occurred while redirects were in
+    progress (this might have security implications, although we are unsure
+    if it was exploitable).
+    https://trac.torproject.org/projects/tor/ticket/5477
+  * Ruleset fixes: Debian, Kohls, Malwarebytes, Yandex, Wikipedia, Mises.org,
+                   OpenDNS, Wizards of the Coast, Lenovo, Barnes and Noble
+    https://trac.torproject.org/projects/tor/ticket/5509
+    https://trac.torproject.org/projects/tor/ticket/5491
+    https://trac.torproject.org/projects/tor/ticket/5303
+  * Stumble across more horrible security holes in the Verizon website:
+    https://mail1.eff.org/pipermail/https-everywhere-rules/2012-February/001003.html
+  * Disable the Gentoo ruleset on non-CAcert platforms
+  * Disable buggy rulesets: IBM, Scribd, Wunderground, ReadWriteWeb :( :( :(
+    https://trac.torproject.org/projects/tor/ticket/5344
+    https://trac.torproject.org/projects/tor/ticket/5435
+    https://trac.torproject.org/projects/tor/ticket/5630
+  * Better cohabitation between the Decentralized SSL Observatory and
+    Convergence
+  * Separate Observatory option to control self-signed cert submission
+  * Numerous other ruleset enhancements, fixes, and probably exciting new bugs
+    in Negres's ruleset changes
+   
+3.0development.1                            (2012-03-14)
+  * By default, use https://google.co.cctld instead of 
+    encrypted.google.com
+    https://trac.torproject.org/projects/tor/ticket/5152
+  * Add an optional ruleset to use https://www.google.com
+    instead of encrypted.google.com, too
+  * Add a new context menu in the rulesets list:
+    - toggle a ruleset
+    - reset it to the default
+      https://trac.torproject.org/projects/tor/ticket/3762
+    - view the ruleset source
+      https://trac.torproject.org/projects/tor/ticket/5237
+  * Show the Observatory popup to all users once, not just TorButton users
+  * Four new translations: Basque, French, Polish, Slovak
+  * Ship 125 new rulesets
+
+chrome-2012.3.14
+  * Ship 109 new rulesets since the last Chromium release
+  * Add an optional ruleset to search on https://www.google.com
+    instead of encrypted.google.com
+  * Switch non-US google searches to country sites by default
+  * Better chrome context UI 
+
+2.2.3                                     (2012-09-25)
+  * Workaround for breakage in Amazon Look Inside the Book (via Cloudfront)
+    https://trac.torproject.org/projects/tor/ticket/6848
+  * Fix logout for AOL users
+  * Other fixes: PassThePopcorn, WhatCD, Antispam.de, RFCeditor,
+                 Weatherspark / GoogleMaps
+  * Disable broken: SVT.se
+    
 2.2.1                                     (2012-08-17)
   * Fix a configuration-parsing bug in 2.2 that would
     ignore default_off rules if this was a first install
     https://mail1.eff.org/pipermail/https-everywhere/2012-August/001511.html
   * Add a cleanup routine for profiles affected by that bug.
-  
+
 2.2                                       (2012-08-15)
   * Prevent ruleset bugs from crashing the UI
     https://trac.torproject.org/projects/tor/ticket/6280
@@ -23,7 +312,7 @@
     Alton Towers, McAfee :( :( :(
   * Fixes: Yandex, Wikipedia, PirateParty, JBoss, Gentoo
   * Hopefully the last 2.x release before 3.0 stable
- 
+
 2.1                                       (2012-06-18)
   * Fix context menu breakage when URIs lack a host
   * Fixes: CiteULike, MozillaMessaging, Yandex, Demonoid, Pirate Party,
@@ -52,6 +341,7 @@
     https://trac.torproject.org/projects/tor/ticket/5804
     https://trac.torproject.org/projects/tor/ticket/5776
 
+
 2.0.3                                       (2012-04-26)
 
   * Fix a downgrade attack that might allow attackers to deny HTTPS
@@ -70,9 +360,10 @@
     https://trac.torproject.org/projects/tor/ticket/5477
   * By default, use https://google.co.cctld instead of
     encrypted.google.com
+    https://trac.torproject.org/projects/tor/ticket/5152
   * Add an optional ruleset to use https://www.google.com
     instead of encrypted.google.com, too
-  * Ruleset fixes: Debian, Kohls, Malwarebytes, Yandex, Wikipedia, Mises.org, 
+  * Ruleset fixes: Debian, Kohls, Malwarebytes, Yandex, Wikipedia, Mises.org,
                    OpenDNS, Wizards of the Coast, Lenovo, Barnes and Noble
     https://trac.torproject.org/projects/tor/ticket/5509
     https://trac.torproject.org/projects/tor/ticket/5491
@@ -84,8 +375,7 @@
     https://trac.torproject.org/projects/tor/ticket/5344
     https://trac.torproject.org/projects/tor/ticket/5435
     https://trac.torproject.org/projects/tor/ticket/5630
-    
-  
+
 2.0.1                                       (2012-02-27)
   * 2.0 is now Stable!
   * Fix tiny settings window on some versions of Windows:
@@ -99,14 +389,20 @@
     (404 new rulesets since 1.2.2!)
   * Check ruleset grammaticity with xmllint/RelaxNG
 
-chrome-2012.02.09
+chrome-2012.2.27
+  * Split Google Translate out of the Google APIs rule, and turn it off by
+    default on Chrome only:
+    Fixes https://trac.torproject.org/projects/tor/ticket/5196
+  * Ship 19 new rulesets since last Chromium release 
+
+chrome-2012.2.9
   * make <exclusion pattern> rulesets elements work in the Chrome version
     https://trac.torproject.org/projects/tor/ticket/5042
     (also disable the LinkedIn ruleset)
   * Support for Google Sorry
   * 6 new rulesets
 
-2.0.0development.6                           (2012-02-08)
+2.0development.6                           (2012-02-08)
   * Fix a nasty UI crash bug on Windows
     https://trac.torproject.org/projects/tor/ticket/5020
   * Ruleset fixes: Google Video, Yandex, LDS
@@ -119,10 +415,11 @@ chrome-2012.02.09
 
 chrome-2012.02.06{,.01}
   * First "Official" EFF alpha Chrome release
+    (Thanks to Mike Perry and Aaron Swartz for leading the porting effort!)
   * Installable on Chrome|Chromium 18+
   * Two point versions, to test the autoupdating mechanism
 
-2.0.0development.5                           (2012-02-02)
+2.0development.5                           (2012-02-02)
   * Fix some data structure inefficiencies that should reduce RAM consumption
     by 25-75MB (!)
     https://trac.torproject.org/projects/tor/ticket/4804
@@ -139,7 +436,7 @@ chrome-2012.02.06{,.01}
   * New experimental Yahoo! ruleset (off by default)
   * New translations: Spanish, Nederlands
 
-2.0.0development.4                           (2011-11-15)
+2.0development.4                           (2011-11-15)
   * The translations actually work
   * Add new translations: Chinese, Russian
   * Ship 37 new rulesets
@@ -154,7 +451,7 @@ chrome-2012.02.06{,.01}
                     Yahoo Mail :( :(,
                     Google Cache coverage in Google Services :( :( :(
 
-2.0.0development.3                           (2011-10-19)
+2.0development.3                           (2011-10-19)
   * Selectively reenable nsIContentPolicy::shouldLoad()
       Fixes: https://trac.torproject.org/projects/tor/ticket/4194
       Fixes: https://trac.torproject.org/projects/tor/ticket/4149
@@ -171,7 +468,7 @@ chrome-2012.02.06{,.01}
   * Disable: MikeWest
   * Improvements: YouTube, Google Images
 
-2.0.0development.2                           (2011-10-05)
+2.0development.2                           (2011-10-05)
   * Enable YouTube by default
     (also closes https://trac.torproject.org/projects/tor/ticket/4032)
   * Merge nsIContentPolicy disablement from stable
@@ -189,7 +486,7 @@ chrome-2012.02.06{,.01}
   * Improve the state of our translations-in progress
   * Fancy new Python build scripts
 
-2.0.0development.1                           (2011-09-15)
+2.0development.1                           (2011-09-15)
   * Begin alpha testing for the Decentralized SSL Observatory!
     (currently opt-in, with a popup prompt if you have Tor Button installed)
   * Ship 164 new rulesets

@@ -1,5 +1,0 @@
-<ruleset name="Anonymous-proxy-servers.net">
-  <target host="anonymous-proxy-servers.net"/>
-  <target host="www.anonymous-proxy-servers.net"/>
-  <rule from="^http://(?:www\.)?anonymous-proxy-servers\.net/" to="https://anonymous-proxy-servers.net/"/>
-</ruleset>

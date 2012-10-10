@@ -10,18 +10,20 @@ function Exclusion(pattern) {
 }
 
 function CookieRule(host, cookiename) {
-  this.host = host
+  this.host = host;
   this.host_c = new RegExp(host);
   this.name = cookiename;
   this.name_c = new RegExp(cookiename);
 }
 
+localPlatformRegexp = new RegExp("(firefox|mixedcontent)");
 ruleset_counter = 0;
-function RuleSet(name, match_rule, default_off) {
+function RuleSet(name, xmlName, match_rule, default_off, platform) {
   this.id="httpseR" + ruleset_counter;
   ruleset_counter += 1;
   this.on_by_default = true;
   this.name = name;
+  this.xmlName = xmlName;
   //this.ruleset_match = match_rule;
   this.notes = "";
   if (match_rule)   this.ruleset_match_c = new RegExp(match_rule)
@@ -33,6 +35,12 @@ function RuleSet(name, match_rule, default_off) {
     this.notes = default_off;
     this.on_by_default = false;
   }
+  if (platform)
+    if (platform.search(localPlatformRegexp) == -1) {
+      this.on_by_default = false;
+      this.notes = "Only for " + platform;
+    }
+
   this.rules = [];
   this.exclusions = [];
   this.cookierules = [];
@@ -243,7 +251,6 @@ const RuleWriter = {
     this.parseXmlRulesets(xmlrulesets, rule_store, file);
   },
 
-
   parseXmlRulesets: function(xmldom, rule_store, file) {
     // XML input files can either be a <ruleset> in a file, or a
     // <rulesetlibrary> with many <rulesets> inside it (the latter form exists
@@ -253,6 +260,15 @@ const RuleWriter = {
       this.parseOneRuleset(xmldom.documentElement, rule_store, file);
     } else {
       // The root of the XML tree is assumed to look like a <rulesetlibrary>
+      if (xmldom.documentElement.getAttribute("gitcommitid")) {
+        // The gitcommitid is a tricky hack to let us display the true full
+        // source code of a ruleset, even though we strip out comments at build
+        // time, by having the UI fetch the ruleset from the public https git repo.
+        this.log(DBUG, "gitcommitid tag not found in <xmlruleset>");
+        rule_store.gitcommitid = "HEAD";
+      } else {
+        rule_store.GITCommitID = xmldom.documentElement.getAttribute("gitcommitid");
+      }
       var rulesets = xmldom.documentElement.getElementsByTagName("ruleset");
       if (rulesets.length == 0 && (file.path.search("00README") == -1))
         this.log(WARN, "Probable <rulesetlibrary> with no <rulesets> in "
@@ -273,7 +289,8 @@ const RuleWriter = {
 
     var match_rl = xmlruleset.getAttribute("match_rule");
     var dflt_off = xmlruleset.getAttribute("default_off");
-    var rs = new RuleSet(xmlruleset.getAttribute("name"), match_rl, dflt_off);
+    var platform = xmlruleset.getAttribute("platform");
+    var rs = new RuleSet(xmlruleset.getAttribute("name"), xmlruleset.getAttribute("f"), match_rl, dflt_off, platform);
 
     var targets = xmlruleset.getElementsByTagName("target");
     if (targets.length == 0) {
@@ -458,6 +475,7 @@ const HTTPSRules = {
     var blob = {};
     blob.newuri = null;
     if (!alist) this.log(DBUG, "No applicable list rewriting " + uri.spec);
+    this.log(NOTE, "Processing " + uri.spec);
 
     // Rulesets shouldn't try to parse usernames and passwords.  If we find
     // those, apply the ruleset without them and then add them back.
@@ -537,14 +555,12 @@ const HTTPSRules = {
     // Return a list of rulesets that declare targets matching this host
     var i, tmp, t;
     var results = this.global_rulesets;
-	try{
-		if (this.targets[host])
-			results = results.concat(this.targets[host]);
-	}
-	catch(e){	
-		this.log(DBUG,"Couldn't check for ApplicableRulesets: " + e);
-		return [];
-	}
+    try {
+      if (this.targets[host]) results = results.concat(this.targets[host]);
+    } catch(e) {   
+      this.log(DBUG,"Couldn't check for ApplicableRulesets: " + e);
+      return [];
+    }
     // replace each portion of the domain with a * in turn
     var segmented = host.split(".");
     for (i = 0; i < segmented.length; ++i) {
