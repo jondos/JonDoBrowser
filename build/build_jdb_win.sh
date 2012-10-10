@@ -165,8 +165,9 @@ rm -rf $ffPath/searchplugins
 
 # Building the files...
 cd profile/Firefox/Other/Source
-echo "Building the JonDoBrowser launcher..."
-makensisu-2.46.exe JonDoBrowserExe.nsi
+# TODO: Why does that not work wiht the NSIS tool in mozilla-build?
+# echo "Building the JonDoBrowser launcher..."
+# makensisu-2.46.exe JonDoBrowserExe.nsi
 echo "Building the JonDoBrowser installer..."
 makensisu-2.46.exe JonDoBrowser.nsi
 cd ../../../../
