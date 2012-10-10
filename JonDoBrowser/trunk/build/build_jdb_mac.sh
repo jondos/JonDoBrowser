@@ -266,9 +266,6 @@ fi
 
 gpgVerification SHA1SUMS.asc
 
-echo "Retrieving commonly used resources preparing the profiles..."
-prepareProfile
-
 echo "Retrieving the language pack(s) and verifying them..."
 
 curl --retry 3 -o ${platform}_$xpiLang.xpi $releasePath/$platform/xpi/$xpiLang.xpi
