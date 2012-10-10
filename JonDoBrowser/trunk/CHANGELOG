@@ -1,4 +1,4 @@
-Version 0.2 XXXX-XX-XX
+Version 0.2 2012-10-10
   * made caching preferences more coherent ("browser.cache.disk.enable",
     "browser.cache.offline.enable" and "browser.cache.disk_cache_ssl" are set
     to "false" now)
@@ -8,6 +8,8 @@ Version 0.2 XXXX-XX-XX
   * set "security.warn_viewing_mixed" to "true"
   * set "browser.newtab.url" to "about:blank"
   * fixed bug in windows installer (german umlauts) 
+  * added option to backup and import saved bookmarks etc. during installation
+    of a new JonDoBrowser before overwriting the old version on Windows
   * fixed glitch in Mac-Installer on OS X 10.6.8
   * updated build scripts to include this CHANGELOG file into JonDoBrowser
 
