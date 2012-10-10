@@ -191,8 +191,11 @@ fi
 
 gpgVerification SHA1SUMS.asc
 
-echo "Retrieving the language pack(s) and verifying them..."
+echo "Retrieving commonly used resources preparing the profiles (e.g. the"
+echo "branding patch for the .xpi..."
+prepareProfile
 
+echo "Retrieving the language pack(s) and verifying them..."
 wget -t 3 -O ${platform}_$xpiLang.xpi $releasePath/$platform/xpi/$xpiLang.xpi
 if [ ! $? -eq 0 ]; then
   echo "Error while retrieving the $xpiLang language pack for"
@@ -223,8 +226,6 @@ else
 fi
 
 # Now, we set up the JonDoBrowser profiles
-echo "Retrieving commonly used resources preparing the profiles..."
-prepareProfile
 echo "Setting up the JonDoBrowser profiles..."
 prepareLinuxProfiles
 
