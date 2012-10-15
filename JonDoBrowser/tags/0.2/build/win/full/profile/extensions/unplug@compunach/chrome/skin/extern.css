@@ -1,0 +1,37 @@
+
+.process .filename {
+	overflow: hidden;
+}
+
+.process .status {
+	font-weight: bold;
+}
+
+.process-status-done .status {
+	color: #00cc00;
+}
+
+.process-status-error .status {
+	color: #cc0000;
+}
+
+.process-status-running .status {
+	color: #000000;
+}
+
+button.stop {
+	/* list-style-image: url("chrome://unplug/skin/tango-16/process-stop.png"); */
+}
+
+label.method {
+	display: none;
+}
+
+label.size {
+	width: 8em;
+}
+
+label.status {
+	width: 8em;
+}
+

@@ -1,0 +1,24 @@
+# Building a universal binary...
+. $topsrcdir/build/macosx/universal/mozconfig
+
+mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/mac_build
+mk_add_options MOZ_MAKE_FLAGS="-j4"
+
+CFLAGS="-Wformat -Wformat-security -D_FORTIFY_SOURCE=2 -fstack-protector-all --param ssp-buffer-size=1 -fPIE -pie"
+CXXFLAGS="${CFLAGS}"
+
+# Universal builds override the default of browser (bug 575283 comment 29)
+ac_add_options --enable-application=browser
+
+# Treat warnings as errors in directories with FAIL_ON_WARNINGS.
+ac_add_options --enable-warnings-as-errors
+
+# We don't need tests in a release build
+ac_add_options --disable-tests
+
+# We don't want to have the crashreporter for privacy reasons
+ac_add_options --disable-crashreporter
+# No updater yet. Thus, we don't need to build it.
+ac_add_options --disable-updater
+ac_add_options --enable-optimize
+ac_add_options --with-branding=browser/branding/jondobrowser
