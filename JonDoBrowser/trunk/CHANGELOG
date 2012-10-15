@@ -1,4 +1,4 @@
-Version 0.2 2012-10-10
+Version 0.2 2012-10-15
   * made caching preferences more coherent ("browser.cache.disk.enable",
     "browser.cache.offline.enable" and "browser.cache.disk_cache_ssl" are set
     to "false" now)
