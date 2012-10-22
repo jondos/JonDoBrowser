@@ -32,7 +32,6 @@
 # built.
 
 svnBrowser=https://svn.jondos.de/svnpub/JonDoBrowser/trunk
-ffPath=profile/Firefox/App/firefox
 mozKey=247CA658AA95F6171EB0F13EA7D75CC7C52175E2
 releasePath=http://releases.mozilla.org/pub/mozilla.org/firefox/releases/latest
 gpg="/c/Program Files (x86)/GNU/GnuPG/pub/gpg"
@@ -159,7 +158,7 @@ cd ../../
 echo "Now we gonna build the installer..."
 svn export $svnBrowser/build/win profile
 unzip -d profile/Firefox/App build/firefox-$ffVersion.en-US.win32.zip
-cd profile/Firefox/App
+cd profile/Firefox/App/firefox
 # We need the VC++ runtime files if we distribute JonDoBrowser. We are
 # currently building with VC 2010, therefore the *100.dll's. And we are shipping
 # them here as they are not included in the Express edition we currently use for
@@ -168,10 +167,10 @@ svn export $svnBrowser/build/msvcp100.dll
 svn export $svnBrowser/build/msvcr100.dll
 
 # Removing unneccessary files...
-rm -rf $ffPath/searchplugins
+rm -rf searchplugins
 
 # Building the files...
-cd ../../Firefox/Other/Source
+cd ../../Other/Source
 # TODO: Why does that not work wiht the NSIS tool in mozilla-build?
 # echo "Building the JonDoBrowser launcher..."
 # makensisu-2.46.exe JonDoBrowserExe.nsi
