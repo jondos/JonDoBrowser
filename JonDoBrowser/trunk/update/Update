@@ -10,13 +10,14 @@ Funktionsweise:
 -Anzeige, dass Updates gesucht werden + isChecking = true
 -this.checker.checkForUpdates(this.updateCheckListener, true);
         |                                   |
-      @mozilla.org/updates/update-checker;1 + nsIUpdateChecker
+      @mozilla.org/updates/update-checker;1 + nsIUpdateChecker <- in
+        | nsUpdateService deklariert        |
         |                                   |
         |      nsIUpdateCheckListener wird in aboutDialog.js implementiert
         |
       toolkit/mozapps/update/nsUpdateService.js
           |
-        this.getUpdateURL(force) ["force" ist dritter Parameter von oben]
+        this.getUpdateURL(force) ["force" ist zweiter Parameter von oben]
             |
           default-URL kann mit app.update.url.override überschrieben werden
             |
