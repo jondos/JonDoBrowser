@@ -169,8 +169,13 @@ svn export $svnBrowser/build/msvcr100.dll
 # Removing unneccessary files...
 rm -rf searchplugins
 
+# Getting the preference files...
+cd ../../../full/profile
+svn export $svnBrowser/build/langPatches/prefs_browser_de.js
+svn export $svnBrowser/build/langPatches/prefs_browser_en.js
+
 # Building the files...
-cd ../../Other/Source
+cd ../../Firefox/Other/Source
 # TODO: Why does that not work wiht the NSIS tool in mozilla-build?
 # echo "Building the JonDoBrowser launcher..."
 # makensisu-2.46.exe JonDoBrowserExe.nsi
