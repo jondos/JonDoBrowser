@@ -1,3 +1,7 @@
+Version 0.2.1 2012-10-22
+  * bugfix release for Windows users that added missing libraries and updated
+    NoScript and HTTPS Everyhwere
+
 Version 0.2 2012-10-15
   * made caching preferences more coherent ("browser.cache.disk.enable",
     "browser.cache.offline.enable" and "browser.cache.disk_cache_ssl" are set
