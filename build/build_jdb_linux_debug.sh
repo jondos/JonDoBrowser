@@ -39,7 +39,7 @@ xpiLang=de
 # Allowing 32bit and 64bit JonDoBrowser builds
 platform="linux-$(uname -m)"
 jdbDir="JonDoBrowser"
-jdbVersion="0.2"
+jdbVersion="0.2-debug"
 mozKey=247CA658AA95F6171EB0F13EA7D75CC7C52175E2
 releasePath=http://releases.mozilla.org/pub/mozilla.org/firefox/releases/latest
 
