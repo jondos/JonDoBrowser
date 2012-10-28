@@ -40,6 +40,9 @@ xpiLang=de
 platform="linux-$(uname -m)"
 jdbDir="JonDoBrowser"
 jdbVersion="0.2"
+# TODO: Shouldn't we check whether this one is still used/valid before actually
+# building? Maybe that's something which is related to the more generic routine
+# for the case the key was not imported yet which is mentioned below.
 mozKey=247CA658AA95F6171EB0F13EA7D75CC7C52175E2
 releasePath=http://releases.mozilla.org/pub/mozilla.org/firefox/releases/latest
 
@@ -169,7 +172,7 @@ if [ ! -e "firefox-$ffVersion.source.tar.bz2.asc" ]; then
 fi
 
 echo "Checking the signature of the sources..."
-# TODO: Implement a more generic routine her assuming the user has not yet
+# TODO: Implement a more generic routine here assuming the user has not yet
 # imported the Firefox key
 # gpg prints the verification success message to stderr
 gpgVerification firefox-$ffVersion.source.tar.bz2.asc
