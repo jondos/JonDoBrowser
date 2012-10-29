@@ -195,7 +195,7 @@ fi
 gpgVerification SHA1SUMS.asc
 
 echo "Retrieving commonly used resources preparing the profiles (e.g. the"
-echo "branding patch for the .xpi..."
+echo "branding patch for the .xpi)..."
 prepareProfile
 
 echo "Retrieving the language pack(s) and verifying them..."
