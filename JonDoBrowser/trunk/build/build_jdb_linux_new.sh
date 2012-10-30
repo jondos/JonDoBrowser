@@ -236,7 +236,7 @@ for lang in $langs; do
       # Checking out the locale repo
       hg clone -r FIREFOX_${ffVersion//./_}_RELEASE http://hg.mozilla.org/releases/l10n/mozilla-release/$lang 
       # We need the branding files in the locale repo as well
-      rsync ../build/mozilla-release/browser/branding/jondobrowser/locales/brand* $lang/browser/branding/jondobrowser
+      rsync ../build/mozilla-release/browser/branding/jondobrowser/locales/en-US/brand* $lang/browser/branding/jondobrowser
       # Updating the .mozconfig
       cd ../build/mozilla-release
       echo "ac_add_options --enable-ui-locale=$lang" >> .mozconfig
@@ -249,7 +249,7 @@ for lang in $langs; do
   make -f client.mk build
 
   echo "Creating the final packages..."
-  cd linux_build && make package
+  cd linux_build_$lang && make package
   mv dist/firefox-$ffVersion.$lang.${platform}.tar.bz2 ../../../tmp
   cd ../../../tmp && tar -xjvf firefox-$ffVersion.$lang.${platform}.tar.bz2
 
