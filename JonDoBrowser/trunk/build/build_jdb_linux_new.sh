@@ -256,8 +256,9 @@ for lang in $langs; do
   bzip2 -z9 $jdbFinal.tar
   mv $jdbFinal.tar.bz2 ../
   rm -rf $jdbDir
+  cd ../build/mozilla-release
 done
 
-cd ..
+cd ../../../
 
 exit 0
