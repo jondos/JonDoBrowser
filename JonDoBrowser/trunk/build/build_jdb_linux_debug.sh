@@ -33,13 +33,13 @@
 
 svnProfile=https://svn.jondos.de/svnpub/JonDoFox_Profile/trunk/full/profile
 svnBrowser=https://svn.jondos.de/svnpub/JonDoBrowser/trunk
-langs="en de"
+langs="en-US de"
 # We only need the german language pack currently as english is the default
 xpiLang=de
 # Allowing 32bit and 64bit JonDoBrowser builds
 platform="linux-$(uname -m)"
 jdbDir="JonDoBrowser"
-jdbVersion="0.2-debug"
+jdbVersion="0.2.2-debug"
 mozKey=247CA658AA95F6171EB0F13EA7D75CC7C52175E2
 releasePath=http://releases.mozilla.org/pub/mozilla.org/firefox/releases/latest
 
