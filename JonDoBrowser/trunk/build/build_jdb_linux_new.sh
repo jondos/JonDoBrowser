@@ -253,7 +253,7 @@ for lang in $langs; do
   mv dist/firefox-$ffVersion.$lang.${platform}.tar.bz2 ../../../tmp
   cd ../../../tmp && tar -xjvf firefox-$ffVersion.$lang.${platform}.tar.bz2
 
-  jdbFinal=JonDoBrowser-$platform-$jdbVersion-$lang
+  jdbFinal=JonDoBrowser-$jdbVersion-$platform-$lang
   cp -rf firefox/* $jdbDir-$lang/App/Firefox
   mv $jdbDir-$lang $jdbDir
   tar -cf $jdbFinal.tar $jdbDir
