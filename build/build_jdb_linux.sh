@@ -33,7 +33,7 @@
 
 svnProfile=https://svn.jondos.de/svnpub/JonDoFox_Profile/trunk/full/profile
 svnBrowser=https://svn.jondos.de/svnpub/JonDoBrowser/trunk
-langs="en de"
+langs="en-US de"
 # We only need the german language pack currently as english is the default
 xpiLang=de
 # Allowing 32bit and 64bit JonDoBrowser builds

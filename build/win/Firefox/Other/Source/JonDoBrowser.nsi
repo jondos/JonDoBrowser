@@ -234,8 +234,8 @@ Section JFPortable
     File "/oname=prefs.js" "..\..\..\full\profile\prefs_browser_de.js"
     File "/oname=places.sqlite" "..\..\..\full\profile\places.sqlite_de"
   ${ElseIf} $LANGUAGE == "1033"
-    File "/oname=prefs.js" "..\..\..\full\profile\prefs_browser_en.js"
-    File "/oname=places.sqlite" "..\..\..\full\profile\places.sqlite_en"
+    File "/oname=prefs.js" "..\..\..\full\profile\prefs_browser_en-US.js"
+    File "/oname=places.sqlite" "..\..\..\full\profile\places.sqlite_en-US"
   ${EndIf}
 
   # The search plugins...
