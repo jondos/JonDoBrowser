@@ -228,18 +228,22 @@ for i in *patch; do patch -tp1 <$i || exit 1; done
 echo "Building JonDoBrowser..."
 for lang in $langs; do
   svn cat $svnBrowser/build/.mozconfig_$platform > .mozconfig
+  echo "mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/linux_build_$lang" >> .mozconfig
   for localBuild in $localBuilds; do
     if [ "$lang" == "$localBuild" ]; then
       # Now, we do all the stuff needed for localized builds
       cd ../../tmp
       # Checking out the locale repo
       hg clone -r FIREFOX_${ffVersion//./_}_RELEASE http://hg.mozilla.org/releases/l10n/mozilla-release/$lang 
+      # We need the branding files in the locale repo as well
+      rsync ../build/mozilla-release/browser/branding/jondobrowser/locales/brand* $lang/browser/branding/jondobrowser
       # Updating the .mozconfig
       cd ../build/mozilla-release
       echo "ac_add_options --enable-ui-locale=$lang" >> .mozconfig
       echo "ac_add_options --with-l10n-base=$(cd ../../tmp && pwd)" >> .mozconfig
       # Reconfiguring the build to be aware of the locale other than en-US
       make -f client.mk configure
+      break
     fi
   done
   make -f client.mk build
