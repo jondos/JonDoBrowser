@@ -189,8 +189,7 @@ fi
 
 gpgVerification SHA1SUMS.asc
 
-echo "Retrieving commonly used resources preparing the profiles (e.g. the"
-echo "branding patch for the .xpi)..."
+echo "Retrieving commonly used resources preparing the profiles..."
 prepareProfile
 
 # Now, we set up the JonDoBrowser profiles
@@ -250,6 +249,7 @@ for lang in $langs; do
 
   echo "Creating the final packages..."
   cd linux_build_$lang && make package
+  echo "Creating the JonDoBrowser with $lang support..."
   mv dist/firefox-$ffVersion.$lang.${platform}.tar.bz2 ../../../tmp
   cd ../../../tmp && tar -xjvf firefox-$ffVersion.$lang.${platform}.tar.bz2
 
