@@ -35,8 +35,8 @@ svnProfile=https://svn.jondos.de/svnpub/JonDoFox_Profile/trunk/full/profile
 svnBrowser=https://svn.jondos.de/svnpub/JonDoBrowser/trunk
 langs="en-US"
 # These languages need a special treatment (i.e. a non-default localized build
+# Currently we only make en-US debug builds...
 localeBuilds=""
-xpiLang=de
 # Allowing 32bit and 64bit JonDoBrowser builds
 platform="linux-$(uname -m)"
 jdbDir="JonDoBrowser"
