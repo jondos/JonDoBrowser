@@ -30,8 +30,8 @@
 svnProfile=https://svn.jondos.de/svnpub/JonDoFox_Profile/trunk/full/profile
 svnBrowser=https://svn.jondos.de/svnpub/JonDoBrowser/trunk
 langs="en-US de"
-# We only need the german language pack currently as english is the default
-xpiLang=de
+# These languages need a special treatment (i.e. a non-default localized build
+localeBuilds="de"
 macPlatform=""
 platform="mac"
 jdbVersion="0.2.2"
@@ -98,7 +98,6 @@ generateDmgImage() {
 prepareProfile() {
   echo "Fetching sources..."
   svn export $svnProfile
-  svn export $svnBrowser/build/patches/xpi/XPI-Branding.patch XPI.patch
   for lang in $langs; do
     svn export $svnBrowser/build/langPatches/prefs_browser_$lang.js
   done
@@ -148,12 +147,6 @@ prepareMacProfiles() {
     cp CHANGELOG $appDir
     cp Info.plist $jdbDir/Contents
     cp jondobrowser.icns $jdbDir/Contents/Resources
-    # Copying the language xpi to get other language strings than the en-US
-    # ones.
-    # TODO: We need to get that copied from the Linux machine first...
-    if [ "$lang" = "de" ]; then
-      cp -f mac_de.xpi "$profileDir"/extensions/langpack-de@firefox.mozilla.org.xpi
-    fi
   done
 }
 
@@ -249,7 +242,6 @@ echo "Checking the signature of the sources..."
 # gpg prints the verification success message to stderr
 gpgVerification firefox-$ffVersion.source.tar.bz2.asc
 
-echo "Gettings the necessary language packs..."
 echo "Fetching and verifying the SHA1SUMS file..."
 
 curl --retry 3 -O $releasePath/SHA1SUMS
@@ -266,39 +258,8 @@ fi
 
 gpgVerification SHA1SUMS.asc
 
-echo "Retrieving commonly used resources preparing the profiles (e.g. the"
-echo "branding patch for the .xpi..."
+echo "Retrieving commonly used resources preparing the profiles..."
 prepareProfile
-
-echo "Retrieving the language pack(s) and verifying them..."
-curl --retry 3 -o ${platform}_$xpiLang.xpi $releasePath/$platform/xpi/$xpiLang.xpi
-if [ ! $? -eq 0 ]; then
-  echo "Error while retrieving the $xpiLang language pack for"
-  echo "$platform, continuing without it..."
-  continue
-fi
-xpiHash1=$(grep -E "$platform/xpi/$xpiLang.xpi" SHA1SUMS | \
-  grep -Eom 1 "[a-z0-9]{40}")
-xpiHash2=$(shasum ${platform}_$xpiLang.xpi | grep -Eo "[a-z0-9]{40}")
-if [ "$xpiHash1" = "$xpiHash2" ]; then
-  echo "Verified SHA1 hash..."
-  if [ ! -d xpi_helper ]; then
-    mkdir xpi_helper
-  fi
-  unzip -d xpi_helper ${platform}_$xpiLang.xpi
-  cd xpi_helper
-  # TODO: That is german only! If we start to support other languages besides
-  # enlish and german we have to create language specific patches!
-  echo "Patching the xpi..."
-  patch -tp1 < ../XPI.patch 
-  zip -r ${platform}_$xpiLang.xpi *
-  mv ${platform}_$xpiLang.xpi ../
-  rm -rf * && cd ..
-else
-  echo "Wrong SHA1 hash of ${platform}_$xpiLang.xpi, removing it" 
-  rm ${platform}_$xpiLang.xpi
-  exit 1
-fi
 
 echo "Setting up the JonDoBrowser profiles..."
 prepareMacProfiles
@@ -311,8 +272,8 @@ if [ ! -d "build" ]; then
 fi
 
 # Assuming we got the verified FF source copied to tmp first...
-cd build && cp ../tmp/firefox-*.source.tar.bz2 .
-tar -xjvf firefox-*.source.tar.bz2
+cd build && cp ../tmp/firefox-$ffVersion.source.tar.bz2 .
+tar -xjvf firefox-$ffVersion.source.tar.bz2
 echo
 echo "Patching JonDoBrowser..."
 
@@ -329,15 +290,33 @@ svn export $svnBrowser/build/branding/jondobrowser browser/branding/jondobrowser
 for i in *patch; do patch -tp1 <$i || exit 1; done
 
 echo "Building JonDoBrowser..."
-svn cat $svnBrowser/build/.mozconfig_mac > .mozconfig
-make -f client.mk build
-
-echo "Creating the final packages..."
-cd ../..
 for lang in $langs; do
+  svn cat $svnBrowser/build/.mozconfig_mac > .mozconfig
+  echo "mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/mac_build_$lang" >> .mozconfig
+  for localeBuild in $localeBuilds; do
+    if [ "$lang" == "$localeBuild" ]; then
+      # Now, we do all the stuff needed for localized builds
+      cd ../../tmp
+      # Checking out the locale repo
+      hg clone -r FIREFOX_${ffVersion//./_}_RELEASE http://hg.mozilla.org/releases/l10n/mozilla-release/$lang 
+      # We need the branding files in the locale repo as well
+      rsync ../build/mozilla-release/browser/branding/jondobrowser/locales/en-US/brand* $lang/browser/branding/jondobrowser
+      # Updating the .mozconfig
+      cd ../build/mozilla-release
+      echo "ac_add_options --enable-ui-locale=$lang" >> .mozconfig
+      echo "ac_add_options --with-l10n-base=$(cd ../../tmp && pwd)" >> .mozconfig
+      # Reconfiguring the build to be aware of the locale other than en-US
+      make -f client.mk configure
+      break
+    fi
+  done
+  make -f client.mk build
+
+  echo "Creating the final packages..."
+  cd ../..
   jdbDir=JonDoBrowser-$lang
   cp -rf tmp/$jdbDir .
-  cp -rf build/mozilla-release/mac_build/dist/JonDoBrowser.app/* $jdbDir/Contents/MacOS/Firefox.app
+  cp -rf build/mozilla-release/mac_build_$lang/dist/JonDoBrowser.app/* $jdbDir/Contents/MacOS/Firefox.app
   mv $jdbDir JonDoBrowser.app
   # Preparing everything for generating the dmg image...
   if [ ! -d $source ]; then
@@ -349,6 +328,10 @@ for lang in $langs; do
   mv JonDoBrowser.app $source/
   generateDmgImage $lang
   rm -rf $source
+  # TODO: Only needed if we need to build another localized build...
+  cd build/mozilla-release
 done
+
+cd ../../
 
 exit 0
