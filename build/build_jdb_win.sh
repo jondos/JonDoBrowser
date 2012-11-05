@@ -35,6 +35,10 @@ svnBrowser=https://svn.jondos.de/svnpub/JonDoBrowser/trunk
 mozKey=247CA658AA95F6171EB0F13EA7D75CC7C52175E2
 releasePath=http://releases.mozilla.org/pub/mozilla.org/firefox/releases/latest
 gpg="/c/Program Files (x86)/GNU/GnuPG/pub/gpg"
+# These are the languages we support with JonDoBrowser
+langs="en-US de"
+# These languages need a special treatment (i.e. a non-default localized build
+localeBuilds="de"
 
 cleanup() {
   #Cleanup: Imitating make...
@@ -143,20 +147,40 @@ svn export $svnBrowser/build/branding/jondobrowser browser/branding/jondobrowser
 for i in *patch; do patch -tp1 <$i || exit 1; done
 
 echo "Building JonDoBrowser..."
-svn cat $svnBrowser/build/.mozconfig_win32 > .mozconfig
+for lang in $langs; do
+  svn cat $svnBrowser/build/.mozconfig_win32 > .mozconfig
+  echo "mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/win32_build_$lang" >> .mozconfig
+  for localeBuild in $localeBuilds; do
+    if [ "$lang" == "$localeBuild" ]; then
+      # Now, we do all the stuff needed for localized builds
+      cd ../../tmp
+      # Checking out the locale repo
+      hg clone -r FIREFOX_${ffVersion//./_}_RELEASE http://hg.mozilla.org/releases/l10n/mozilla-release/$lang 
+      # We need the branding files in the locale repo as well
+      rsync ../build/mozilla-release/browser/branding/jondobrowser/locales/en-US/brand* $lang/browser/branding/jondobrowser
+      # Updating the .mozconfig
+      cd ../build/mozilla-release
+      echo "ac_add_options --enable-ui-locale=$lang" >> .mozconfig
+      echo "ac_add_options --with-l10n-base=$(cd ../../tmp && pwd)" >> .mozconfig
+      # Reconfiguring the build to be aware of the locale other than en-US
+      python build/pymake/make.py -f client.mk configure
+      break
+    fi
+  done
 
-python build/pymake/make.py -f client.mk
-cd win32_build
-python ../build/pymake/make.py package
-cd dist
-mv firefox-$ffVersion.en-US.win32.zip ../../../
-cd ../../
-rm -rf win32_build
+  python build/pymake/make.py -f client.mk build
+  echo "Creating the final packages for locale $lang..."
+  cd win32_build_$lang && python ../build/pymake/make.py package
+  mv dist/firefox-$ffVersion.$lang.win32.zip ../../
+  cd ..
+done
 cd ../../
 
 # Now preparing the installer
 echo "Now we gonna build the installer..."
 svn export $svnBrowser/build/win profile
+# We start with the en-US version and separate the locale specific parts one
+# after the other...
 unzip -d profile/Firefox/App build/firefox-$ffVersion.en-US.win32.zip
 cd profile/Firefox/App/firefox
 # We need the VC++ runtime files if we distribute JonDoBrowser. We are
@@ -168,6 +192,8 @@ svn export $svnBrowser/build/msvcr100.dll
 
 # Removing unneccessary files...
 rm -rf searchplugins
+
+#TODO: Moving the en-US locale specific files and adding all the other too.
 
 # Getting the preference files...
 cd ../../../full/profile
