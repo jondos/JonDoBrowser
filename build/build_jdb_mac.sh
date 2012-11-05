@@ -30,7 +30,7 @@
 svnProfile=https://svn.jondos.de/svnpub/JonDoFox_Profile/trunk/full/profile
 svnBrowser=https://svn.jondos.de/svnpub/JonDoBrowser/trunk
 langs="en-US de"
-# These languages need a special treatment (i.e. a non-default localized build
+# These languages need a special treatment (i.e. a non-default localized build)
 localeBuilds="de"
 macPlatform=""
 platform="mac"
@@ -55,7 +55,7 @@ generateDmgImage() {
 
   # We want to have just "JonDoBrowser" shown. 
   applicationName="JonDoBrowser.app"
-  finalDMGName="JonDoBrowser-${macPlatform}-$jdbVersion-$1.dmg"
+  finalDMGName="JonDoBrowser-$jdbVersion-${macPlatform}-$1.dmg"
   # TODO GeKo: Why does the backslash as a line delimiter not work but result in an error?
   # UDBZ?
   hdiutil create -srcfolder "${source}" -volname "${title}" -fs HFS+ -fsargs "-c c=64,a=16,e=16" -format UDRW -size ${size}k JDB.temp.dmg
