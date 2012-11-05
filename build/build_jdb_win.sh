@@ -39,6 +39,9 @@ gpg="/c/Program Files (x86)/GNU/GnuPG/pub/gpg"
 langs="en-US de"
 # These languages need a special treatment (i.e. a non-default localized build
 localeBuilds="de"
+# Files we need to move to the locale specific dierctories
+directories="dictionaries uninstall webapprt"
+files="dictionaries/* omni.ja uninstall updater.ini update-settings.ini webapprt"
 
 cleanup() {
   #Cleanup: Imitating make...

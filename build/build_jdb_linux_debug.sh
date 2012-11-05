@@ -223,7 +223,7 @@ for i in *patch; do patch -tp1 <$i || exit 1; done
 
 echo "Building JonDoBrowser..."
 for lang in $langs; do
-  svn cat $svnBrowser/build/.mozconfig_$platform > .mozconfig
+  svn cat $svnBrowser/build/.mozconfig_${platform}_debug > .mozconfig
   echo "mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/linux_build_$lang" >> .mozconfig
   for localeBuild in $localeBuilds; do
     if [ "$lang" == "$localeBuild" ]; then

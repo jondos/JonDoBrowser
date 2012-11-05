@@ -1,4 +1,3 @@
-mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/win32_build
 mk_add_options MOZ_MAKE_FLAGS="-j8"
 
 # As we are releasing official builds with VS2010 there is no need to add
