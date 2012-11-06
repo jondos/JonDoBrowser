@@ -1,8 +1,6 @@
 mk_add_options MOZ_MAKE_FLAGS="-j8"
 
-# GDB 7.1 is the first version to support debugging PIE enabled code. If that is
-# an issue disable it.
-CFLAGS="-Wformat -Wformat-security -D_FORTIFY_SOURCE=2 -fstack-protector-all --param ssp-buffer-size=1 -fPIE -pie"
+CFLAGS="-Wformat -Wformat-security -D_FORTIFY_SOURCE=2 -fstack-protector-all --param ssp-buffer-size=1"
 CXXFLAGS="${CFLAGS}"
 LDFLAGS="-z relro -z now"
 
