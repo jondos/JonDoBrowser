@@ -213,7 +213,7 @@ fi
 cp patches/*.patch mozilla-release/ && cd mozilla-release
 
 # PIE support got introduced in GDB 7.1. If that is an issue disable all PIE
-# related stuff (in the .mozconfig files as well).
+# related stuff (in the i686 .mozconfig file).
 if [ "$platform" == "linux-x86_64" ]; then
   svn export $svnBrowser/build/patches/os/PIE-64bit-Linux.patch
 fi
