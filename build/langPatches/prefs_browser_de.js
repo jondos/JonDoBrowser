@@ -28,6 +28,7 @@ user_pref("browser.cache.memory.capacity", 65536);
 user_pref("browser.cache.offline.enable", false);
 user_pref("browser.download.hide_plugins_without_extensions", false);
 user_pref("browser.download.manager.alertOnEXEOpen", true);
+user_pref("browser.download.manager.retention", 0);
 user_pref("browser.download.useDownloadDir", false);
 user_pref("browser.feeds.handler", "bookmarks");
 user_pref("browser.feeds.handler.default", "bookmarks");
@@ -156,12 +157,16 @@ user_pref("network.proxy.socks_remote_dns", true);
 user_pref("network.proxy.ssl", "127.0.0.1");
 user_pref("network.proxy.ssl_port", 4001);
 user_pref("network.proxy.type", 1);
+// No need to contact Giorgio's server with JonDonym...
+user_pref("noscript.ABE.wanIpAsLocal", false);
 user_pref("noscript.autoReload", true);
 user_pref("noscript.blockNSWB", true);
 user_pref("noscript.canonicalFQDN", false);
 user_pref("noscript.contentBlocker", true);
 user_pref("noscript.ctxMenu", false);
 user_pref("noscript.filterXExceptions", "^https?://([a-z]+)\\.google\\.(?:[a-z]{1,3}\\.)?[a-z]+/(?:search|custom|\\1)\\?\n^https?://([a-z]*)\\.?search\\.yahoo\\.com/search(?:\\?|/\\1\\b)\n^https?://[a-z]+\\.wikipedia\\.org/wiki/[^\"<>\\?%]+$\n^https?://translate\\.google\\.com/translate_t[^\"'<>\\?%]+$\n^https://secure\\.wikimedia\\.org/wikipedia/[a-z]+/wiki/[^\"<>\\?%]+$\n^https://www\\.cashu\\.com/cgi-bin/pcashu\\.cgi$");
+// We do not want to have the release notes shown after every update.
+user_pref("noscript.firstRunRedirection", false);
 user_pref("noscript.forbidBookmarklets", true);
 user_pref("noscript.gtemp", "");
 user_pref("noscript.httpsForcedExceptions", "");
