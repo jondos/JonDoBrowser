@@ -1,8 +1,8 @@
 mk_add_options MOZ_MAKE_FLAGS="-j8"
 
-CFLAGS="-Wformat -Wformat-security -D_FORTIFY_SOURCE=2 -fstack-protector-all --param ssp-buffer-size=1 -fPIE -pie"
-CXXFLAGS="${CFLAGS}"
-LDFLAGS="-z relro -z now"
+#CFLAGS="-Wformat -Wformat-security -D_FORTIFY_SOURCE=2 -fstack-protector-all --param ssp-buffer-size=1 -fPIE -pie"
+#CXXFLAGS="${CFLAGS}"
+#LDFLAGS="-z relro -z now"
 
 # We don't need tests in a release build
 ac_add_options --disable-tests
