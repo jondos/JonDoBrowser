@@ -11,5 +11,8 @@ ac_add_options --disable-tests
 ac_add_options --disable-crashreporter
 # No updater yet. Thus, we don't need to build it.
 ac_add_options --disable-updater
-ac_add_options --enable-optimize
+# This is crashy if built on Squeeze with gcc/g++ 4.4.5 but not with a debug
+# build. Another reason against it is Mozilla not using this flag for its
+# release build easier.
+# ac_add_options --enable-optimize
 ac_add_options --with-branding=browser/branding/jondobrowser
