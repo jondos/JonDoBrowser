@@ -250,7 +250,8 @@ for lang in $langs; do
   cd linux_build_$lang && make package
   echo "Creating the JonDoBrowser with $lang support..."
   mv dist/firefox-$ffVersion.$lang.$platform.tar.bz2 ../../../tmp
-  cd ../../../tmp && tar -xjvf firefox-$ffVersion.$lang.$platform.tar.bz2
+  cd .. && rm -rf linux_build_$lang
+  cd ../../tmp && tar -xjvf firefox-$ffVersion.$lang.$platform.tar.bz2
 
   jdbFinal=JonDoBrowser-$jdbVersion-$platform-$lang-debug
   cp -rf firefox/* $jdbDir-$lang/App/Firefox
