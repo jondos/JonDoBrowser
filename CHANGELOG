@@ -1,3 +1,18 @@
+Version 0.3 2012-11-22
+  * fixed stability issues on Linux
+  * changed naming scheme for JonDoBrowser versions
+  * updated extensions
+  * updated preferences (noscript.version and
+    extensions.jondofox.browser_version to the latest version and
+    browser.startup.homepage_override.mstone + extensions.lastAppVersion to
+    "17.0")
+  * disabled unnecessary requests accompanied by the ABE feature in NoScript
+    (set "noscript.ABE.wanIpAsLocal" to "false")
+  * disabled loading of NoScript's homepage after version upgrade (set
+    "noscript.firstRunRedirection" to "false")
+  * disabled the history of the download manager (set
+    "browser.download.manager.retention" to "0")  
+
 Version 0.2.2 2012-10-29
   * bugfix release including extension updates
 
