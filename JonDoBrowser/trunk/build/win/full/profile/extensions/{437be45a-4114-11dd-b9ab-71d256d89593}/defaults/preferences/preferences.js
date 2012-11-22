@@ -73,7 +73,7 @@ pref("extensions.jondofox.jondo.buildID_override", "0");
 pref("extensions.jondofox.jondo.oscpu_override", "Windows NT 6.1");
 pref("extensions.jondofox.jondo.platform_override", "Win32");
 pref("extensions.jondofox.jondo.productsub_override", "20100101");
-pref("extensions.jondofox.jondo.useragent_override", "Mozilla/5.0 (Windows NT 6.1; rv:10.0) Gecko/20100101 Firefox/10.0");
+pref("extensions.jondofox.jondo.useragent_override", "Mozilla/5.0 (Windows NT 6.1; rv:17.0) Gecko/17.0 Firefox/17.0");
 pref("extensions.jondofox.jondo.useragent_vendor", "");
 pref("extensions.jondofox.jondo.useragent_vendorSub", "");
 
@@ -89,26 +89,26 @@ pref("extensions.jondofox.tor.useragent_vendor", "");
 pref("extensions.jondofox.tor.useragent_vendorSub","");
 
 // SafeBrowsing provider
-pref("extensions.jondofox.safebrowsing.provider.0.gethashURL", 
-    "http://safebrowsing.clients.google.com/safebrowsing/gethash?client=navclient-auto-ffox&appver=10.0&pver=2.2");
-pref("extensions.jondofox.safebrowsing.provider.0.keyURL", 
-    "https://sb-ssl.google.com/safebrowsing/newkey?client=navclient-auto-ffox&appver=10.0&pver=2.2");
+pref("extensions.jondofox.safebrowsing.provider.0.gethashURL",
+    "http://safebrowsing.clients.google.com/safebrowsing/gethash?client=navclient-auto-ffox&appver=17.0&pver=2.2");
+pref("extensions.jondofox.safebrowsing.provider.0.keyURL",
+    "https://sb-ssl.google.com/safebrowsing/newkey?client=navclient-auto-ffox&appver=17.0&pver=2.2");
 pref("extensions.jondofox.safebrowsing.provider.0.lookupURL",
-    "http://safebrowsing.clients.google.com/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=10.0&");
-pref("extensions.jondofox.safebrowsing.provider.0.reportErrorURL", 
+    "http://safebrowsing.clients.google.com/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=17.0&");
+pref("extensions.jondofox.safebrowsing.provider.0.reportErrorURL",
     "http://en-US.phish-error.mozilla.com/?hl=en-US");
-pref("extensions.jondofox.safebrowsing.provider.0.reportGenericURL", 
+pref("extensions.jondofox.safebrowsing.provider.0.reportGenericURL",
     "http://en-US.phish-generic.mozilla.com/?hl=en-US");
-pref("extensions.jondofox.safebrowsing.provider.0.reportMalwareErrorURL", 
+pref("extensions.jondofox.safebrowsing.provider.0.reportMalwareErrorURL",
     "http://en-US.malware-error.mozilla.com/?hl=en-US");
-pref("extensions.jondofox.safebrowsing.provider.0.reportMalwareURL", 
+pref("extensions.jondofox.safebrowsing.provider.0.reportMalwareURL",
     "http://en-US.malware-report.mozilla.com/?hl=en-US");
-pref("extensions.jondofox.safebrowsing.provider.0.reportPhishURL", 
+pref("extensions.jondofox.safebrowsing.provider.0.reportPhishURL",
     "http://en-US.phish-report.mozilla.com/?hl=en-US");
-pref("extensions.jondofox.safebrowsing.provider.0.reportURL", 
-    "http://safebrowsing.clients.google.com/safebrowsing/report?"); 
-pref("extensions.jondofox.safebrowsing.provider.0.updateURL", 
-    "http://safebrowsing.clients.google.com/safebrowsing/downloads?client=navclient-auto-ffox&appver=10.0&pver=2.2");
+pref("extensions.jondofox.safebrowsing.provider.0.reportURL",
+    "http://safebrowsing.clients.google.com/safebrowsing/report?");
+pref("extensions.jondofox.safebrowsing.provider.0.updateURL",
+    "http://safebrowsing.clients.google.com/safebrowsing/downloads?client=navclient-auto-ffox&appver=17.0&pver=2.2");
 
 pref("extensions.jondofox.safebrowsing.warning.infoURL", "http://www.mozilla.com/en-US/firefox/phishing-protection/");
 
@@ -161,8 +161,7 @@ pref("extensions.jondofox.sanitize_onShutdown", true);
 // In order to be able to use NoScript's STS feature...
 pref("extensions.jondofox.clearOnShutdown_history", false);
 pref("extensions.jondofox.clearOnShutdown_offlineApps", true);
-// Only valid for FF4
-pref("extensions.jondofox.websocket.enabled", false);
+// Only valid for FF4+
 pref("extensions.jondofox.indexedDB.enabled", false);
 // Only valid for FF3
 pref("extensions.jondofox.history_expire_days", 0);
@@ -173,7 +172,6 @@ pref("extensions.jondofox.delete_searchbar", true);
 // Only valid for FF4
 // No pinging of Mozilla once a day for Metadata updates or whatever
 // See: http://blog.mozilla.com/addons/2011/02/10/add-on-metadata-start-up-time 
-pref("extensions.jondofox.update.autoUpdateDefault", false);
 pref("extensions.jondofox.getAddons.cache.enabled", false);
 pref("extensions.jondofox.donottrackheader.enabled", true);
 
@@ -226,9 +224,12 @@ pref("extensions.jondofox.adblock_enabled", true);
 pref("extensions.jondofox.temp.email.activated", true);
 pref("extensions.jondofox.temp.email.selected", "10minutemail.com");
 
+//NoScript
+pref("extensions.jondofox.noscript_showDomain", false);
+
 // Mozilla shall not be able to deactivate one of our extensions
 pref("extensions.jondofox.blocklist.enabled", false);
 
 //JonDoBrowser
 pref("extensions.jondofox.advanced_menu", false);
-pref("extensions.jondofox.jdb.version", "0.2.2");
+pref("extensions.jondofox.jdb.version", "0.3");

@@ -93,16 +93,20 @@ JDFManager.prototype = {
   uninstall: false,
 
   // Do we have a FF4 or still a FF3?
-  ff4: true,
+  ff4: null,
 
   // If FF4, which version (the add-on bar exists since 4.0b7pre)
   ff4Version: "",
 
   // The NavigationTiming API we want to deactivate got introduced in FF7.
-  ff7: true,
+  ff7: null,
 
   // Can we use our improved HTTP Auth defense (available since FF12)?
-  ff12: true,
+  ff12: null,
+
+  // In FF 18 the central |getOriginatingURI()| method used to determine
+  // whether a resource is third party or not is gone :-/
+  notFF18 : null,
 
   // Do we have already checked whether JonDoBrowser is up-to-date
   jdbCheck: false,
@@ -217,6 +221,9 @@ JDFManager.prototype = {
     'intl.charset.default':'extensions.jondofox.default_charset',
     'intl.accept_charsets':'extensions.jondofox.accept_charsets',
     'network.http.accept.default':'extensions.jondofox.accept_default',
+    // TODO: This one can get deleted if we do not support FF versions < 4
+    // anymore.
+    'network.http.accept-encoding':'extensions.jondofox.http.accept_encoding',
     'security.default_personal_cert':
     'extensions.jondofox.security.default_personal_cert'
   },
@@ -298,8 +305,8 @@ JDFManager.prototype = {
        CC['@mozilla.org/file/directory_service;1'].getService(CI.nsIProperties);
       this.envSrv = CC["@mozilla.org/process/environment;1"].
         getService(CI.nsIEnvironment);
-      // Determine whether we use FF4 or still some FF3
-      this.isFirefox4or7or12();
+      // Determine whether we use FF4 or 7 or 12 or 17 still some FF3
+      this.isFirefox4or7or12orNot18();
       if (this.ff4) {
         try {
           var extensionListener = {
@@ -590,19 +597,11 @@ JDFManager.prototype = {
           this.boolPrefsMap['dom.enable_performance'] =
             'extensions.jondofox.navigationTiming.enabled';
         }
-	// Adding the websockets pref until we decided whether this
-	// feature is harmless.
-	this.boolPrefsMap['network.websocket.enabled'] =
-	        'extensions.jondofox.websocket.enabled';
         this.boolPrefsMap['dom.indexedDB.enabled'] =
                 'extensions.jondofox.indexedDB.enabled';
         // Disabling WebGL for security reasons
         this.boolPrefsMap['webgl.disabled'] =
                 'extensions.jondofox.webgl.disabled';
-        // Firefox 4 has a whitespace between the "," and "deflate". We need to 
-	// avoid that in order not to reduce our anonymity set.	
-	this.stringPrefsMap['network.http.accept-encoding'] =
-          'extensions.jondofox.http.accept_encoding';
 	this.boolPrefsMap['privacy.donottrackheader.enabled'] =
 	  'extensions.jondofox.donottrackheader.enabled';
         // Restricting the sessionhistory max_entries
@@ -613,9 +612,6 @@ JDFManager.prototype = {
         this.checkExtensionsFF4();
 	// We do not want to ping Mozilla once per day for different updates
 	// of Add-On Metadata and other stuff (duration of last startup...).
-	this.prefsHandler.setBoolPref('extensions.update.autoUpdateDefault',
-        this.prefsHandler.
-	     getBoolPref('extensions.jondofox.update.autoUpdateDefault'));
         this.prefsHandler.setBoolPref('extensions.getAddons.cache.enabled',
         this.prefsHandler.
 	     getBoolPref('extensions.jondofox.getAddons.cache.enabled'));
@@ -1103,7 +1099,7 @@ JDFManager.prototype = {
     }
   },
 
-  isFirefox4or7or12: function() {
+  isFirefox4or7or12orNot18: function() {
     // Due to some changes in Firefox 4 (notably the replacement of the
     // nsIExtensionmanager by the AddonManager) we check the FF version now
     // to ensure compatibility.
@@ -1127,6 +1123,11 @@ JDFManager.prototype = {
       this.ff12 = true;
     } else {
       this.ff12 = false;
+    }
+    if (versComp.compare(ffVersion, "18.0a1") < 0) {
+      this.notFF18 = true;
+    } else {
+      this.notFF18 = false;
     }
   },
 
@@ -1158,6 +1159,8 @@ JDFManager.prototype = {
             'extensions.jondofox.profile_version') !== "2.6.8" &&
           this.prefsHandler.getStringPref(
             'extensions.jondofox.profile_version') !== "2.6.9" &&
+          this.prefsHandler.getStringPref(
+            'extensions.jondofox.profile_version') !== "2.6.10" &&
           this.prefsHandler.getBoolPref('extensions.jondofox.update_warning')) {
           this.jdfUtils.showAlertCheck(this.jdfUtils.
             getString('jondofox.dialog.attention'), this.jdfUtils.
@@ -1200,8 +1203,12 @@ JDFManager.prototype = {
       for (var i = 0; i < plugins.length; i++) {
         var p=plugins[i];
         if (/^Shockwave.*Flash/i.test(p.name)) {
+          // We are disabling Flash if a user of the JonDoFox-Profile wanted to
+          // or if the JonDoBrowser is used.
           if (this.prefsHandler.
-              getBoolPref("extensions.jondofox.disableAllPluginsJonDoMode")) {
+              getBoolPref("extensions.jondofox.disableAllPluginsJonDoMode") ||
+              this.prefsHandler.
+              isPreferenceSet("extensions.jondofox.browser_version")) {
             p.disabled = true;
           } else {
             // We need this if we are coming from Tor mode
@@ -1256,8 +1263,6 @@ JDFManager.prototype = {
   setUserAgent: function(startup, state) {
     var p;
     var userAgent;
-    var proxyKeepAlive = this.prefsHandler.
-      getBoolPref("network.http.proxy.keep-alive");
     var acceptLang = this.prefsHandler.getStringPref("intl.accept_languages");
     log("Setting user agent and other stuff for: " + state);
     // First the plugin pref
@@ -1284,11 +1289,6 @@ JDFManager.prototype = {
         if (acceptLang !== "en-us") {
           this.settingLocationNeutrality("");
         }
-	// Check whether we had network.http.proxy.keep-alive on before. If so
-	// we switch it off.
-	if (proxyKeepAlive) {
-          this.prefsHandler.setBoolPref("network.http.proxy.keep-alive", false);
-	}
         this.prefsHandler.setStringPref("network.http.accept.default",
           this.prefsHandler.
           getStringPref("extensions.jondofox.accept_default"));
@@ -1301,9 +1301,6 @@ JDFManager.prototype = {
         if (acceptLang !== "en-us, en") {
           this.settingLocationNeutrality("tor.");
         }
-	if (!proxyKeepAlive) {
-          this.prefsHandler.setBoolPref("network.http.proxy.keep-alive", true);
-	}
         this.prefsHandler.setStringPref("network.http.accept.default",
           this.prefsHandler.
           getStringPref("extensions.jondofox.tor.accept_default"));
@@ -1324,12 +1321,6 @@ JDFManager.prototype = {
           if (acceptLang !== "en-us") {
             this.settingLocationNeutrality("");
           }
-          // Check whether we had network.http.proxy.keep-alive on before. If so
-	  // we switch it off.
-	  if (proxyKeepAlive) {
-            this.prefsHandler.setBoolPref("network.http.proxy.keep-alive",
-              false);
-	  }
           this.prefsHandler.setStringPref("network.http.accept.default",
             this.prefsHandler.
             getStringPref("extensions.jondofox.accept_default"));
@@ -1341,10 +1332,6 @@ JDFManager.prototype = {
           if (acceptLang !== "en-us, en") {
             this.settingLocationNeutrality("tor.");
           }
-          if (!proxyKeepAlive) {
-            this.prefsHandler.setBoolPref("network.http.proxy.keep-alive",
-              true);
-	  }
           this.prefsHandler.setStringPref("network.http.accept.default",
             this.prefsHandler.
             getStringPref("extensions.jondofox.tor.accept_default"));
@@ -1356,19 +1343,12 @@ JDFManager.prototype = {
             this.prefsHandler.deletePreference(p);
           }
         }
-	this.prefsHandler.setBoolPref("network.http.proxy.keep-alive",
-	    this.prefsHandler.
-	    getBoolPref("extensions.jondofox.custom.proxyKeepAlive"));
-
         break;
       case (this.STATE_NONE):
 	this.clearPrefs();
         for (p in this.safebrowseMap) {
             this.prefsHandler.deletePreference(p);
           }
-	if (!proxyKeepAlive) {
-	  this.prefsHandler.setBoolPref("network.http.proxy.keep-alive", true);
-	}
 	break;
       default:
 	log("We should not be here!");
