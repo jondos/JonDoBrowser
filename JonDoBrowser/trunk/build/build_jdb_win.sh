@@ -201,7 +201,7 @@ rm -rf searchplugins
 # Getting the preference files...
 cd ../../../full/profile
 svn export $svnBrowser/build/langPatches/prefs_browser_de.js
-svn export $svnBrowser/build/langPatches/prefs_browser_en.js
+svn export $svnBrowser/build/langPatches/prefs_browser_en-US.js
 
 # Building the files...
 cd ../../Firefox/Other/Source
