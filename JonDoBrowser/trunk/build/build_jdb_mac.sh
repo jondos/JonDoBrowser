@@ -32,7 +32,7 @@ svnBrowser=https://svn.jondos.de/svnpub/JonDoBrowser/trunk
 langs="en-US de"
 # These languages need a special treatment (i.e. a non-default localized build)
 localeBuilds="de"
-macPlatform=""
+#macPlatform=""
 platform="mac"
 jdbVersion="0.3"
 title="JonDoBrowser"
@@ -55,7 +55,7 @@ generateDmgImage() {
 
   # We want to have just "JonDoBrowser" shown. 
   applicationName="JonDoBrowser.app"
-  finalDMGName="JonDoBrowser-$jdbVersion-${macPlatform}-$1.dmg"
+  finalDMGName="JonDoBrowser-$jdbVersion-$1.dmg"
   # TODO GeKo: Why does the backslash as a line delimiter not work but result in an error?
   # UDBZ?
   hdiutil create -srcfolder "${source}" -volname "${title}" -fs HFS+ -fsargs "-c c=64,a=16,e=16" -format UDRW -size ${size}k JDB.temp.dmg
@@ -181,11 +181,11 @@ done
 # may have a 32Bit Kernel but build nevertheless 64Bit JonDoBrowsers. Testing
 # via |ioreg -l -p IODeviceTree | grep firmware-abi | grep -Eo 64| does not work
 # either. Assuming we have gcc available we borrow the test from config.guess.
-if gcc -E -dM -x c /dev/null | grep __LP64__>/dev/null 2>&1 ; then
-  macPlatform="mac-x86_64"
-else
-  macPlatform="mac-i386"
-fi
+#if gcc -E -dM -x c /dev/null | grep __LP64__>/dev/null 2>&1 ; then
+#  macPlatform="mac-x86_64"
+#else
+#  macPlatform="mac-i386"
+#fi
 
 # The first grep makes sure we really get the latest firefox version and not
 # someting else of the html page. The second grep finally extracts the latest
@@ -291,7 +291,7 @@ for i in *patch; do patch -tp1 <$i || exit 1; done
 
 echo "Building JonDoBrowser..."
 for lang in $langs; do
-  svn cat $svnBrowser/build/.mozconfig_mac > .mozconfig
+  svn cat $svnBrowser/build/.mozconfig_mac_universal > .mozconfig
   echo "mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/mac_build_$lang" >> .mozconfig
   for localeBuild in $localeBuilds; do
     if [ "$lang" == "$localeBuild" ]; then

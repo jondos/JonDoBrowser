@@ -1,7 +1,6 @@
 # Building a universal binary...
 . $topsrcdir/build/macosx/universal/mozconfig
 
-mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/mac_build
 mk_add_options MOZ_MAKE_FLAGS="-j4"
 
 CFLAGS="-Wformat -Wformat-security -D_FORTIFY_SOURCE=2 -fstack-protector-all --param ssp-buffer-size=1 -fPIE -pie"
