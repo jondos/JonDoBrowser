@@ -1,3 +1,103 @@
+3.0.4                                        (2012-11-9)
+  * Fixes:
+    ACLU, Amazon, Barnes & Noble, CharityNavigator, Cloudfront/Turntable.fm,
+    Coursera, itella.fi, posti.fi, Uservoice
+    https://trac.torproject.org/projects/tor/ticket/7336
+    https://trac.torproject.org/projects/tor/ticket/7273
+    https://trac.torproject.org/projects/tor/ticket/7227
+  * Disable broken:
+    Asterisk, Boston Globe (separated out from NYTimes.com), Extabit, Gawker,
+    Google Services (Followers widget), NPR, SF.se, SonyMusic, Statcounter, WebType
+    https://trac.torproject.org/projects/tor/ticket/7270
+    https://trac.torproject.org/projects/tor/ticket/7243
+    https://trac.torproject.org/projects/tor/ticket/7361
+    https://trac.torproject.org/projects/tor/ticket/7120
+    https://trac.torproject.org/projects/tor/ticket/7278
+    https://trac.torproject.org/projects/tor/ticket/7363
+    https://trac.torproject.org/projects/tor/ticket/7294
+  * No longer cacert: lawblog.de
+  * Offer the SSL Observatory popup to a larger cohort of users
+  * Update translations: Spanish, Russian, Turkish, Swedish
+
+chrome-2012.10.31
+  * The "ghosts and goblins" chromium alpha
+  * Work around a nasty bug that was affecting some high-volume Live Youtube streams
+    (but not other live YouTube streams)
+    https://trac.torproject.org/projects/tor/ticket/7127
+  * Other Fixes: 
+    AdaCore, Akamai/MTV3 Katsomo, Akamai/HP, Atlassian, Bahn.de, MySQL, NPR, PBS, 
+    Phronoix Media/Openbenchmarking, SSRN, Spoki
+    https://trac.torproject.org/projects/tor/ticket/7219
+    https://trac.torproject.org/projects/tor/ticket/7180
+    https://trac.torproject.org/projects/tor/ticket/7135
+    https://trac.torproject.org/projects/tor/ticket/7206
+    https://trac.torproject.org/projects/tor/ticket/7198
+  * Disable broken/buggy:
+    CBS/Last.fm, Citibank Australia, Bytename, HP, NIFTY, Microchip, MyOpenID,  NttDocomo
+    https://trac.torproject.org/projects/tor/ticket/6587
+    https://trac.torproject.org/projects/tor/ticket/7226
+    https://trac.torproject.org/projects/tor/ticket/7111
+    https://trac.torproject.org/projects/tor/ticket/7161
+    https://trac.torproject.org/projects/tor/ticket/7114
+    https://trac.torproject.org/projects/tor/ticket/7138
+    https://trac.torproject.org/projects/tor/ticket/7107
+
+  
+3.0.3                                       (2012-10-25)
+  * Work around a nasty bug that was affecting some high-volume Live Youtube streams
+    (but not other live YouTube streams)
+    https://trac.torproject.org/projects/tor/ticket/7127
+  * Other Fixes: 
+    AdaCore, Akamai/MTV3 Katsomo, Akamai/HP, Atlassian, Bahn.de, DemocracyNow, MySQL, NuGet,
+    PBS, Phronoix Media/Openbenchmarking, SSRN, Spoki
+    https://trac.torproject.org/projects/tor/ticket/7219
+    https://trac.torproject.org/projects/tor/ticket/7180
+    https://trac.torproject.org/projects/tor/ticket/7135
+    https://trac.torproject.org/projects/tor/ticket/7206
+    https://trac.torproject.org/projects/tor/ticket/7198
+  * Disable broken/buggy:
+    CBS/Last.fm, Citibank Australia, Bytename, HP, NIFTY, Microchip, MyOpenID,  NttDocomo
+    https://trac.torproject.org/projects/tor/ticket/6587
+    https://trac.torproject.org/projects/tor/ticket/7226
+    https://trac.torproject.org/projects/tor/ticket/7111
+    https://trac.torproject.org/projects/tor/ticket/7161
+    https://trac.torproject.org/projects/tor/ticket/7114
+    https://trac.torproject.org/projects/tor/ticket/7138
+    https://trac.torproject.org/projects/tor/ticket/7107
+  * Updated translations:
+    Greek, Russian, Latvian
+  * New translation:
+    Turkish
+  * Offer the SSL Observatory popup to a larger cohort of users
+
+4.0development.2                            (2012-10-25)
+  * Ship 67 new rulesets
+  * Fix broken logouts from non-US Google accounts:
+    https://mail1.eff.org/pipermail/https-everywhere-rules/2012-October/001347.html
+  * Other fixes:
+    Microsoft (Bing login button), ZeniMax, Ubuntuone, TrueCrypt, Springer,
+    Optical Society, IMDB, Facebook, EzineArticles, Broadband Reports, Apache,
+    Akamai (exclude Zynga content to prevent breakage of some Zynga games),
+    Costco, Atlassian, Akamai/MTV3 Katsomo
+  * Disable broken/buggy:
+    HP, Bytename, NIFTY, Microchip, NttDocomo
+  * Updated translations:
+    Greek, Russian, Latvian
+  * New translation:
+    Turkish
+
+chrome-2012.10.18
+  * The "even more perfect" chromium alpha
+  * Fixes from the last two Firefox releases: 
+    Microsoft (Bing login button), ZeniMax, Ubuntuone, TrueCrypt, Springer,
+    Optical Society, IMDB, Facebook, EzineArticles, Broadband Reports, Apache,
+    Akamai (exclude Zynga content to prevent breakage of some Zynga games),
+    Costco Akamai/SVTplay.se, Bahn.de, European Southern Observatory, IEEE,
+    Indeed, Java, Librivox, Pinterest, New York Times, Springer, Vimeo,
+    Shannon Health, O'Reilly Media
+  * Also fix: DemocracyNow, NuGet
+  * Disable: NIFTY
+
 3.0.2                                       (2012-10-16)
   * Some fixes that should have shipped in 3.0.1, but actually didn't:
     European Southern Observatory, Indeed, LibriVox
@@ -6,6 +106,10 @@
     (fix / reenable), Optical Society, IMDB, Facebook, EzineArticles,
     Broadband Reports, Apache, Akamai (exclude Zynga content to prevent
     breakage of some Zynga games), Costco
+
+4.0development.1                            (2012-10-11)
+  * Merge the 4.0 branch, which ships 884 new rulesets and expands
+    hundreds of others
 
 3.0.1 and 4.0development.1:
   * Fixes: adition.com, Akamai/SVTplay.se, Bahn.de, European Southern Observatory, 

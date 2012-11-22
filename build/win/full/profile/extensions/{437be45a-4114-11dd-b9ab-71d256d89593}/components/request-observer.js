@@ -37,7 +37,7 @@ CU.import("resource://gre/modules/XPCOMUtils.jsm");
 
 var RequestObserver = function() {
   this.wrappedJSObject = this;
-  CU.import("resource://jondofox/ssl-observatory.jsm", this); 
+  CU.import("resource://jondofox/ssl-observatory.jsm", this);
   CU.import("resource://jondofox/safeCache.jsm", this);
   this.sslObservatory.init();
   this.safeCache.init();
@@ -53,7 +53,7 @@ RequestObserver.prototype = {
   logger: null,
 
   firstRequest: true,
-  
+
   init: function() {
     try {
       this.prefsHandler = CC['@jondos.de/preferences-handler;1'].
@@ -91,9 +91,9 @@ RequestObserver.prototype = {
     } else {
       try {
         wind = notificationCallbacks.getInterface(CI.nsILoadContext).
-          associatedWindow; 
+          associatedWindow;
       } catch (e) {
-        log("Error while trying to get the Window: " + e); 
+        log("Error while trying to get the Window: " + e);
       }
     }
     return wind;
@@ -106,19 +106,20 @@ RequestObserver.prototype = {
     wind = this.getDOMWindow(channel);
     if (wind) {
       try {
-        // TODO: Why should be want to have wind.window.top.location here?
         parentHost = wind.top.location.hostname;
         return parentHost;
       } catch (ex) {
         log("nsIDOMWindow seems not to be available here!");
       }
-    } 
+    }
     // We are still here, thus something went wrong. Trying further things.
     // We can't rely on the Referer here as this can legitimately be
     // 1st party while the content is still 3rd party (from a bird's eye
     // view). Therefore...
     try {
-      parentHost = this.cookiePerm.getOriginatingURI(channel).host; 
+      if (this.jdfManager.notFF18) {
+        parentHost = this.cookiePerm.getOriginatingURI(channel).host;
+      }
     } catch (e) {
       log("getOriginatingURI failed as well: " + e +
         "\nWe try our last resort the Referer...");
@@ -130,7 +131,7 @@ RequestObserver.prototype = {
       } else {
         log("No Referer either. Could be 3rd party interaction though.");
       }
-    } 
+    }
     return parentHost;
   },
 
@@ -151,8 +152,8 @@ RequestObserver.prototype = {
 	    getBoolPref('extensions.jondofox.stanford-safecache_enabled')) {
 	channel.QueryInterface(CI.nsIHttpChannelInternal);
         channel.QueryInterface(CI.nsICachingChannel);
-        parentHost = this.getParentHost(channel); 
-        this.safeCache.safeCache(channel, parentHost); 
+        parentHost = this.getParentHost(channel);
+        this.safeCache.safeCache(channel, parentHost);
       }
 
       // Forge the referrer if necessary
@@ -161,15 +162,20 @@ RequestObserver.prototype = {
         domWin = this.getDOMWindow(channel);
         // Determine the base domain of the request
         try {
-          baseDomain = this.tldService.getBaseDomain(channel.URI, 0);
+          if (this.jdfManager.notFF18) {
+            baseDomain = this.tldService.getBaseDomain(channel.URI, 0);
+          } else {
+            baseDomain = this.tldService.getBaseDomainFromHost(channel.URI.
+              host);
+          }
         } catch (e if e.name === "NS_ERROR_HOST_IS_IP_ADDRESS") {
-          // It's an IP address
-          baseDomain = channel.URI.hostPort;
-        }       
+          // It's an IP address. No port isolation, thus just the host.
+          baseDomain = channel.URI.host;
+        }
         // ... the string to compare to
         try {
           // ... the value of the referer header
-          oldRef = channel.getRequestHeader("Referer"); 
+          oldRef = channel.getRequestHeader("Referer");
           // Cut off the path from the referer
           log("Referrer (unmodified): " + oldRef);
           refDomain = oldRef.split("/", 3)[2];
@@ -197,32 +203,41 @@ RequestObserver.prototype = {
 	// And, finally, the most important case: the Referer is set and the 
 	// user visits a new domain, we replace the old Referer with null.
         if (suffix && baseDomain !== suffix) {
-          try {
-            originatingDomain = this.cookiePerm.getOriginatingURI(channel);
-          } catch (e) {
-            log ("Getting the originating URI failed!");
-            originatingDomain = false;
+          if (this.jdfManager.notFF18) {
+            try {
+              originatingDomain = this.cookiePerm.getOriginatingURI(channel);
+            } catch (e) {
+              log ("Getting the originating URI failed!");
+              originatingDomain = false;
+            }
+          } else {
+            originatingDomain = parentHost;
           }
           if (originatingDomain) {
             try {
-              originatingDomain = this.tldService.
-                                     getBaseDomain(originatingDomain, 0);
+              if (this.jdfManager.notFF18) {
+                originatingDomain = this.tldService.
+                  getBaseDomain(originatingDomain, 0);
+              } else {
+                originatingDomain = this.tldService.
+                  getBaseDomainFromHost(channel.URI.host);
+              }
             } catch (e)  {
 	      if (e.name === "NS_ERROR_HOST_IS_IP_ADDRESS") {
-                // It's an IP address
-                originatingDomain = originatingDomain.hostPort;
+                // It's an IP address. No port isolation, thus just the host.
+                originatingDomain = originatingDomain.host;
 	      } else {
                 originatingDomain = false;
-	        log("There occurred an error while trying to get the " + 
-		    "originating Domain! " + e + " setting it to 'false'");	
+	        log("There occurred an error while trying to get the " +
+		    "originating Domain! " + e + " setting it to 'false'");
 	      }
-            }  
+            }
           }
           log ("Originating URI is: " + originatingDomain);
           if (baseDomain === originatingDomain || !originatingDomain) {
             channel.setRequestHeader("Referer", null, false);
 	    try {
-	      log("Referrer (modified): " + 
+	      log("Referrer (modified): " +
 			      channel.getRequestHeader("Referer"));
 	    } catch (e if e.name === "NS_ERROR_NOT_AVAILABLE") {
               // The header is not set. That's good as deleting the old one
@@ -238,7 +253,7 @@ RequestObserver.prototype = {
             if (originatingDomain !== "false") {
               log("3rd party content, Referrer not modified");
             } else {
-              log("We got a referer but no originating URI!\n" + 
+              log("We got a referer but no originating URI!\n" +
 	          "Modify the referer, although it may be 3rd party content!");
 	      channel.setRequestHeader("Referer", null, false);
             }
@@ -251,8 +266,7 @@ RequestObserver.prototype = {
           // But we want to delete it only if the domain in the URL bar
           // changes. Let's therefore check whether we have 3rd party content
           // first.
-          origHostname = this.cookiePerm.getOriginatingURI(channel).hostname; 
-          if (origHostname && origHostname !== channel.URI.host) { 
+          if (parentHost && parentHost !== channel.URI.host) {
             // Do nothing here as we have a 3rd party scenario (e.g. mixed
             // content sites)...
           } else {
@@ -269,23 +283,6 @@ RequestObserver.prototype = {
           }
         }
       }
-
-      // Set other headers here
-      // It is not enough to have the values only in the about:config! But in
-      // order to use them for all requests we must use setRequestHeader() and
-      // give them as an argument...
-      acceptHeader = this.prefsHandler.
-                         getStringPref("network.http.accept.default");
-      channel.setRequestHeader("Accept", acceptHeader, false);
-      // The Mozilla Do Not Track header. Maybe it helps in some scenarios...
-      // See: http://donottrack.us
-      channel.setRequestHeader("DNT", 1, false);
-      // And we set X-Behavioral-Ad-Opt-Out as well... but only if major
-      // actors like NoScript or AdBlock are supporting it.
-      // channel.setRequestHeader("X-Behavioral-Ad-Opt-Out", 1, false);
-      // We do not send the Accept-Charset header anymore due to FF6 doing this
-      // by default.
-      channel.setRequestHeader("Accept-Charset", null, false);
     } catch (e) {
       if (e.name === "NS_NOINTERFACE") {
         log("The requested interface is not available!" + e);
@@ -293,11 +290,44 @@ RequestObserver.prototype = {
         log("modifyRequest(): " + e);
       }
     }
+    // Set other headers here
+    // It is not enough to have the values only in the about:config! But in
+    // order to use them for all requests we must use setRequestHeader() and
+    // give them as an argument...
+    acceptHeader = this.prefsHandler.
+                       getStringPref("network.http.accept.default");
+    channel.setRequestHeader("Accept", acceptHeader, false);
+    // The Mozilla Do Not Track header. Maybe it helps in some scenarios...
+    // See: http://donottrack.us
+    channel.setRequestHeader("DNT", 1, false);
+    // And we set X-Behavioral-Ad-Opt-Out as well... but only if major
+    // actors like NoScript or AdBlock are supporting it.
+    // channel.setRequestHeader("X-Behavioral-Ad-Opt-Out", 1, false);
+    // We do not send the Accept-Charset header anymore due to FF6 doing this
+    // by default.
+    channel.setRequestHeader("Accept-Charset", null, false);
+    // We need to do this here as since FF17 there is no other way to disable
+    // keep-alive. See: https://bugzilla.mozilla.org/show_bug.cgi?id=770331
+    // The exception we make is the WebSocket handshake that needs a keep-alive
+    // header: "At this point the HTTP connection breaks down and is replaced by
+    // the WebSocket connection over the same underlying TCP/IP connection." 
+    // http://www.websocket.org/aboutwebsocket.html section: The WebSocket
+    // Protocol
+    var reqHeader = null;
+    try {
+      reqHeader = channel.getRequestHeader("Sec-WebSocket-Version");
+    } catch (e) {}
+    // Indicating that we want to close the connection if we do not have a
+    // WebSocket upgrade request.
+    if (this.jdfManager.getState() === "jondo" && !reqHeader) {
+      channel.setRequestHeader("Proxy-Connection", "close", false);
+      channel.setRequestHeader("Connection", "close", false);
+    }
   },
 
   // Call the forgery on every request
   onModifyRequest: function(httpChannel) {
-    try {                        
+    try {
       httpChannel.QueryInterface(CI.nsIChannel);
       this.modifyRequest(httpChannel);
     } catch (ex) {
@@ -332,12 +362,12 @@ RequestObserver.prototype = {
         if (location !== null) {
 	  //If so add the new location to the noProxyList as well.
           log("Got a redirection to: " + location);
-          this.jdfManager.noProxyListAdd(location);     
+          this.jdfManager.noProxyListAdd(location);
         }
       }
       // Now the code helping the EFF SSL-Observatory...
       var obsProxy = this.prefsHandler.
-        getIntPref("extensions.jondofox.observatory.proxy"); 
+        getIntPref("extensions.jondofox.observatory.proxy");
       var proxyState = this.jdfManager.getState();
       // We can safely assume that a user wants to send the certs via a custom
       // proxy even if there are no "valid" proxy values entered as she has
@@ -364,25 +394,40 @@ RequestObserver.prototype = {
             this.sslObservatory.
               submitChain(chainArray, channel.URI.host+":"+channel.URI.port);
           }
-        }  
+        }
       }
       // The HTTP Auth tracking protection on the response side: Just for FF <
       // 12! Starting from FF 12 we have an improved protection.
       if (!this.jdfManager.ff12) {
         if (this.prefsHandler.
-          getBoolPref('extensions.jondofox.stanford-safecache_enabled')) { 
-          parentHost = this.getParentHost(channel); 
+          getBoolPref('extensions.jondofox.stanford-safecache_enabled')) {
+          parentHost = this.getParentHost(channel);
           if (channel.documentURI && channel.documentURI === channel.URI) {
             parentHost = null;  // first party interaction
-          } 
-          if (parentHost && parentHost !== channel.URI.host) {  
+          }
+          if (parentHost && parentHost !== channel.URI.host) {
             try {
               if (channel.getResponseHeader("WWW-Authenticate")) {
                 channel.setResponseHeader("WWW-Authenticate", null, false);
               }
-            } catch (e) {} 
+            } catch (e) {}
           } else {}
-        } 
+        }
+      }
+      // For safety's sake we set the "close" header here as well as it looks
+      // as if an attacker could let the connection open by sending a
+      // "Connection: keep-alive": https://mxr.mozilla.org/mozilla-central/
+      // source/netwerk/protocol/http/nsHttpConnection.cpp#703ff.
+      // Patrick aknowledges my reading of the code:
+      // mcmanus: we try and work with broken servers where we can..
+      // and in this instance we honor the reply
+      if (this.jdfManager.getState() === "jondo") {
+        // Just using "Connection: close" is not enough as an attacker could do
+        // some tricks with "Proxy-Connection: keep-alive" then. See:
+        // https://mxr.mozilla.org/mozilla-central/source/netwerk/protocol/
+        // http/nsHttpConnection.cpp#730ff. 
+        channel.setResponseHeader("Proxy-Connection", "close", false);
+        channel.setResponseHeader("Connection", "close", false);
       }
     } catch (e) {
       this.logger.warn("examineRespone(): " + e);
@@ -390,15 +435,15 @@ RequestObserver.prototype = {
   },
 
   onExamineResponse: function(httpChannel) {
-    try {                        
+    try {
       if (this.firstRequest) {
         this.firstRequest = false;
         let testURL = this.jdfManager.jdfUtils.
-          getString("jondofox.jondo." + this.jdfManager.os); 
+          getString("jondofox.jondo." + this.jdfManager.os);
         log("Die URL " + testURL + " wird wieder entfernt");
         if (this.jdfManager.noProxyListContains(testURL)) {
           this.jdfManager.noProxyListRemove(testURL);
-          this.jdfManager.noProxyListRemove("http://ocsp.godaddy.com/"); 
+          this.jdfManager.noProxyListRemove("http://ocsp.godaddy.com/");
         }
       }
       httpChannel.QueryInterface(CI.nsIChannel);
@@ -453,7 +498,7 @@ RequestObserver.prototype = {
           log("Got topic --> " + topic);
           this.unregisterObservers();
           break;
-        
+
         case 'http-on-modify-request':
           subject.QueryInterface(CI.nsIHttpChannel);
           this.onModifyRequest(subject);
