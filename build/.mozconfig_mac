@@ -1,7 +1,16 @@
 mk_add_options MOZ_MAKE_FLAGS="-j4"
 
-CFLAGS="-Wformat -Wformat-security -D_FORTIFY_SOURCE=2 -fstack-protector-all --param ssp-buffer-size=1 -fPIE -pie"
-CXXFLAGS="${CFLAGS}"
+CC="gcc -arch i386 -Wformat -Wformat-security -D_FORTIFY_SOURCE=2 -fstack-protector-all --param ssp-buffer-size=1 -fPIE -pie"
+CXX="g++ -arch i386 -Wformat -Wformat-security -D_FORTIFY_SOURCE=2 -fstack-protector-all --param ssp-buffer-size=1 -fPIE -pie"
+
+HOST_CC="gcc-4.2"
+HOST_CXX="g++-4.2"
+RANLIB=ranlib
+AR=ar
+AS=$CC
+LD=ld
+STRIP="strip -x -S"
+CROSS_COMPILE=1
 
 # We don't need tests in a release build
 ac_add_options --disable-tests
