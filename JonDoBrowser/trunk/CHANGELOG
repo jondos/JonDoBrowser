@@ -1,5 +1,7 @@
 Version 0.3 2012-11-22
   * fixed stability issues on Linux
+  * building now universal binaries on Mac OS X with 10.6.0 as minimum
+    requirement
   * changed naming scheme for JonDoBrowser versions
   * updated extensions
   * updated preferences (noscript.version and
