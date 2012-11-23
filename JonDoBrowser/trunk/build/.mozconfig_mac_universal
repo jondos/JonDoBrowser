@@ -3,6 +3,9 @@
 
 mk_add_options MOZ_MAKE_FLAGS="-j4"
 
+# Setting the compiler to clang in case the configure script does not find it
+CC=clang-mp-2.9
+CXX=clang++-mp-2.9
 #CFLAGS="-Wformat -Wformat-security -D_FORTIFY_SOURCE=2 -fstack-protector-all --param ssp-buffer-size=1 -fPIE -pie"
 #CXXFLAGS="${CFLAGS}"
 
