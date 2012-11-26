@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<!DOCTYPE prefwindow [
+	<!ENTITY % dtdcommon SYSTEM "chrome://unplug/locale/common.dtd">
+	%dtdcommon;
+	<!ENTITY % dtdlocal SYSTEM "chrome://unplug/locale/config.dtd">
+	%dtdlocal;
+	]>
+<!--
+/*
+ *         _        ___
+ *    /\ / /___    / _ \ /\ /\  _ ___
+ *   / // // _ \  / // // // // // _ \
+ *  / // // // / / ___// // // // // /
+ *  \___//_//_/ /_/   /_/ \___/ \_  /
+ *                             \___/
+ * 
+ *  Compunach UnPlug
+ *  Copyright (C) 2010, 2011 David Batley <unplug@dbatley.com>
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ * 
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ * 
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+-->
+<prefwindow id="cn_unplug2_config"
+  title="&dialog.title; – &configheader.subtitle;"
+  flex="1"
+  buttons="cancel,accept"
+  defaultButton="accept"
+
+  width="500"
+  height="400"
+  
+  onload="do_load();"
+  
+  xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+	<script type="application/javascript" src="chrome://unplug/content/common.js" />
+	<script type="application/javascript" src="chrome://unplug/content/config/config.js" />
+	<script type="application/javascript" src="chrome://unplug/content/display/download.js" />
+	
+	<prefpane id="tababout" label="&tab.title.about;" image="chrome://unplug/skin/tango-32/dialog-information.png">
+		<preferences>
+			<preference id="popularity_contest" name="extensions.unplug2.popularity_contest" type="bool"/>
+		</preferences>
+		<groupbox>
+			<caption label="&about.title;" />
+			<description> &about.description; </description>
+			<label class="text-link" onclick="window.open(&quot;http://www.gnu.org/licenses/agpl-3.0.html&quot;);" value="&about.agpl;" tabindex="2"/>
+
+			<vbox id="setup_complete" style="display: none;">
+				<description>&about.updated;</description>
+			</vbox>
+		</groupbox>
+		<groupbox>
+			<caption label="&privacy.title;" />
+			<checkbox label="&privacy.popcontest;" accesskey="&privacy.popcontest.a;" preference="popularity_contest" />
+			<label onclick="window.open(&quot;http://unplug.dbatley.com/popularity_contest/&quot;);" class="text-link" value="&privacy.infolink;" accesskey="&privacy.infolink.a;" />
+		</groupbox>
+		<spacer flex="1" />
+		<label id="version" />
+	</prefpane>
+	<prefpane id="tabgeneral" label="&tab.title.integration;" image="chrome://unplug/skin/tango-32/mail-attachment.png" >
+		<preferences>
+			<preference id="add_to_toolsmenu" name="extensions.unplug2.add_to_toolsmenu" type="bool"/>
+			<preference id="add_to_contextmenu" name="extensions.unplug2.add_to_contextmenu" type="bool"/>
+			<preference id="add_to_addonsbar" name="extensions.unplug2.add_to_addonsbar" type="bool"/>
+		</preferences>
+		<notificationbox flex="1" id="integration_notification">
+			<groupbox>
+				<caption label="&interface.title;" />
+				<checkbox label="&interface.toolsmenu;" accesskey="&interface.toolsmenu.a;" preference="add_to_toolsmenu" class="needs_restart" />
+				<checkbox label="&interface.contextmenu;" accesskey="&interface.contextmenu.a;" preference="add_to_contextmenu" class="needs_restart" />
+				<checkbox label="&interface.addonsbar;" accesskey="&interface.addonsbar.a;" preference="add_to_addonsbar" class="needs_restart" />
+				<checkbox id="add_toolbar_button" label="&interface.toolbarbtn;" accesskey="&interface.toolbarbtn.a;" disabled="true" oncommand="toggle_toolbarbutton();" class="needs_restart" />
+			</groupbox>
+			<spacer flex="1" />
+		</notificationbox>
+	</prefpane>
+	<prefpane id="tabdiscovery" label="&tab.title.discovery;" image="chrome://unplug/skin/tango-32/system-search.png">
+		<preferences>
+			<preference id="show_all" name="extensions.unplug2.show_all" type="bool" />
+		</preferences>
+		<groupbox>
+			<caption label="&rulesxml.title;" />
+			<description> &rulesxml.description; </description>
+			<textbox value="chrome://unplug/content/rules.xml" disabled="true" />
+			<hbox>
+				<spacer flex="1" />
+				<button label="&rulesxml.default;" accesskey="&rulesxml.default.a;" disabled="true" />
+			</hbox>
+		</groupbox>
+		<groupbox>
+			<caption label="&showall.title;" />
+			<checkbox label="&showall.label;" accesskey="&showall.label.a;" preference="show_all" />
+		</groupbox>
+		<spacer flex="1" />
+	</prefpane>
+	<prefpane id="tabdownload" label="&tab.title.downloads;" image="chrome://unplug/skin/tango-32/document-save-as.png">
+		<preferences>
+			<preference id="downloader" name="extensions.unplug2.downloader" type="string"/>
+			<preference id="allow_external_via_proxy" name="extensions.unplug2.allow_external_via_proxy" type="bool" />
+		</preferences>
+		<groupbox>
+			<caption label="&downloader.title;" />
+			<menulist preference="downloader">
+				<menupopup>
+					<menuitem id="dmethod-saveas" value="saveas" />
+					<menuitem id="dmethod-auto" value="auto" label="&downloader.auto;" />
+					<menuitem id="dmethod-openover" value="openover" />
+				</menupopup>
+			</menulist>
+		</groupbox>
+		<groupbox>
+			<caption label="&downloader.addons;" />
+			<label href="https://addons.mozilla.org/en-US/firefox/addon/201" class="text-link" value="&downloader.dta;" />
+			<label href="https://addons.mozilla.org/en-US/firefox/addon/220" class="text-link" value="&downloader.flashgot;" />
+		</groupbox>
+		<groupbox>
+			<caption label="&extern.list.header;" />
+			<hbox>
+				<menulist id="extern-tool" flex="1">
+					<menupopup />
+				</menulist>
+				<button label="&extern.edit;" accesskey="&extern.edit.a;" oncommand="edit_extern_tool();" />
+			</hbox>
+			<checkbox id="allowviaproxy" label="&extern.allowviaproxy;" accesskey="&extern.allowviaproxy.a;" preference="allow_external_via_proxy" />
+			<description> &extern.allowviaproxywarning; </description>
+		</groupbox>
+		<spacer flex="1" />
+	</prefpane>
+</prefwindow>
+

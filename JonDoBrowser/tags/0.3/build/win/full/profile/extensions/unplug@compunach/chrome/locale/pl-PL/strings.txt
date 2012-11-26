@@ -1,0 +1,83 @@
+extensions.{unplug@compunach}.description=Download embedded media
+
+# Confirmation after clicking on "Nothing found" button
+nothing_found_send_data=Czy chcesz wysłać informacje o tej stronie do deweloperów UnPlug?
+
+# Short status strings during/after clicking "Nothing found" button
+nothing_found_sending=Wysyłanie...
+nothing_found_done=Dzięki !
+nothing_found_failed=Błąd
+
+# for below the search box
+# search_done=Zakończono
+# search_busy=Busy
+# search_1_active_download=1 aktywne pobieranie
+# search_n_active_downloads=# aktywne pobierania
+# search_no_results_yet=Jeszcze brak wyników
+# search_1_result=1 wynik
+# search_n_results=# wyników
+# search_no_results=Brak wyników
+cannot_download_this_kind=Cannot download this kind of file
+
+# for rules.xml
+high_quality=Wysoka jakość
+low_quality=Niska jakość
+mid_quality=Normalna jakość
+hd_quality=High definition
+embedplayer=Osadzony objekt (prawdopodobnie odtwarzacz, nie wideo)
+
+# download methods
+save_to_file=Save As
+save_to_directory=Save to Folder
+dmethod.open-tab=Otwórz w nowej karcie
+dmethod.open-tab.a=k
+dmethod.open-tab.tip=
+dmethod.open-new=Otwórz w nowym oknie
+dmethod.open-new.a=n
+dmethod.open-new.tip=
+dmethod.open-over=Otwórz w tym oknie
+dmethod.open-over.a=o
+dmethod.open-over.tip=
+dmethod.saveas=Zapisz jako
+dmethod.saveas.a=Z
+dmethod.saveas.tip=Użyj wbudowanego menedżera pobrań Firefoxa.
+dmethod.dta=DownThemAll
+dmethod.dta.a=A
+dmethod.dta.tip=Pobierz rozszerzeniem DownThemAll.
+dmethod.flashgot=FlashGot
+dmethod.flashgot.a=F
+dmethod.flashgot.tip=Pobierz rozszerzeniem FlashGot.
+dmethod.copyurl=Kopiuj link
+dmethod.copyurl.a=K
+dmethod.copyurl.tip=
+dmethod.rtmpdump=Rtmpdump
+dmethod.rtmpdump.a=R
+dmethod.rtmpdump.tip=
+dmethod.vlc=VLC
+dmethod.vlc.a=V
+dmethod.vlc.tip=
+
+dmethod.unavailable.tip=No downloader
+plus_n_extra_results=Plus %s results which will not be downloaded
+n_files=%s files
+
+trace=Debug
+trace.a=g
+trace.tip=Show information which can be used for debugging
+subtitles=Subtitles
+
+proc.status.error=Error
+proc.status.running=Running
+proc.status.done=Done
+
+# external download methods
+need_to_install=You need to install %s to download this file
+location_of=Location of %s
+
+extern.cancel.title=UnPlug: Cancel download
+extern.cancel.onefile=Would you like to cancel the download of %s?
+extern.cancel.manyfile=Would you like to cancel %s active downloads?
+extern.cancel.stop=Stop
+extern.cancel.dontstop=Don't stop
+extern.cancel.deletefile=Delete partially downloaded file
+

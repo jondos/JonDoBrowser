@@ -1,0 +1,9 @@
+* general: installing gpg and importing the Mozilla release key found on:
+  http://releases.mozilla.org/pub/mozilla.org/firefox/releases/latest/KEY 
+ 
+* on Mac OS X make sure the SHA1 sum can get checked by the build script; that
+  boils down to checking that e.g. 'shasum' is available (if not one may need to
+  link it e.g. from 'shasum-5.12' like on Mac OS X 10.5.8) and uses SHA1 (which
+  should be the default and if not specified by '-a 1')
+* on Mac OS X make sure that ccache is installed, if not install it (sudo port
+  install ccache) and configure it appropriately if necessary
