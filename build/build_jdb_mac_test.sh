@@ -37,6 +37,8 @@ platform="mac"
 jdbVersion="0.4"
 # CHANGE ME!
 ffVersion=18.0b1
+# CHANGE ME!
+train=beta
 title="JonDoBrowser"
 size="200000"
 mozKey=247CA658AA95F6171EB0F13EA7D75CC7C52175E2
@@ -275,7 +277,7 @@ if [ ! -d "patches" ]; then
     1>/dev/null
 fi
 
-cp patches/*.patch mozilla-release/ && cd mozilla-release
+cp patches/*.patch mozilla-$train/ && cd mozilla-$train
 
 svn export $svnBrowser/build/branding/jondobrowser browser/branding/jondobrowser
 
@@ -291,11 +293,12 @@ for lang in $langs; do
       # Now, we do all the stuff needed for localized builds
       cd ../../tmp
       # Checking out the locale repo
+      # TODO: Does not really fit into this testing script yet...
       hg clone -r FIREFOX_${ffVersion//./_}_RELEASE http://hg.mozilla.org/releases/l10n/mozilla-release/$lang 
       # We need the branding files in the locale repo as well
-      rsync ../build/mozilla-release/browser/branding/jondobrowser/locales/en-US/brand* $lang/browser/branding/jondobrowser
+      rsync ../build/mozilla-$train/browser/branding/jondobrowser/locales/en-US/brand* $lang/browser/branding/jondobrowser
       # Updating the .mozconfig
-      cd ../build/mozilla-release
+      cd ../build/mozilla-$train
       echo "ac_add_options --enable-ui-locale=$lang" >> .mozconfig
       echo "ac_add_options --with-l10n-base=$(cd ../../tmp && pwd)" >> .mozconfig
       # Reconfiguring the build to be aware of the locale other than en-US
@@ -309,7 +312,7 @@ for lang in $langs; do
   cd ../..
   jdbDir=JonDoBrowser-$lang
   cp -rf tmp/$jdbDir .
-  cp -rf build/mozilla-release/mac_build_$lang/dist/JonDoBrowser.app/* $jdbDir/Contents/MacOS/Firefox.app
+  cp -rf build/mozilla-$train/mac_build_$lang/dist/JonDoBrowser.app/* $jdbDir/Contents/MacOS/Firefox.app
   mv $jdbDir JonDoBrowser.app
   # Preparing everything for generating the dmg image...
   if [ ! -d $source ]; then
@@ -322,7 +325,7 @@ for lang in $langs; do
   generateDmgImage $lang
   rm -rf $source
   # TODO: Only needed if we need to build another localized build...
-  cd build/mozilla-release
+  cd build/mozilla-$train
 done
 
 cd ../../
