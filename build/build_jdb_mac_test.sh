@@ -282,7 +282,7 @@ cp patches/*.patch mozilla-$train/ && cd mozilla-$train
 svn export $svnBrowser/build/branding/jondobrowser browser/branding/jondobrowser
 
 # Essentially the patch-any-src.sh from the Tor Project
-for i in *patch; do patch -tp1 <$i || exit 1; done
+for i in *patch-$train; do patch -tp1 <$i || exit 1; done
 
 echo "Building JonDoBrowser..."
 for lang in $langs; do
