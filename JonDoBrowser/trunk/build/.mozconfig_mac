@@ -1,13 +1,13 @@
 mk_add_options MOZ_MAKE_FLAGS="-j4"
 
-CC="clang-mp-2.9 -arch i386"
-CXX="clang++-mp-2.9 -arch i386"
+CC="/usr/local/clang/bin/clang -arch i386"
+CXX="/usr/local/clang/bin/clang++ -arch i386"
 
 ac_add_options --target=i386-apple-darwin9.2.0
 ac_add_options --enable-macos-target=10.5
 
-HOST_CC="clang-mp-2.9"
-HOST_CXX="clang++-mp-2.9"
+HOST_CC="/usr/local/clang/bin/clang"
+HOST_CXX="/usr/local/clang/bin/clang++"
 RANLIB=ranlib
 AR=ar
 AS=$CC
