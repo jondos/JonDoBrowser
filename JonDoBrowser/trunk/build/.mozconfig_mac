@@ -1,10 +1,10 @@
 mk_add_options MOZ_MAKE_FLAGS="-j4"
 
-CC="gcc -arch i386 -Wformat -Wformat-security -D_FORTIFY_SOURCE=2 -fstack-protector-all --param ssp-buffer-size=1 -fPIE -pie"
-CXX="g++ -arch i386 -Wformat -Wformat-security -D_FORTIFY_SOURCE=2 -fstack-protector-all --param ssp-buffer-size=1 -fPIE -pie"
+CC="clang-mp-2.9 -arch i386 -Wformat -Wformat-security -D_FORTIFY_SOURCE=2 -fstack-protector-all --param ssp-buffer-size=1 -fPIE -pie"
+CXX="clang-mp-2.9++ -arch i386 -Wformat -Wformat-security -D_FORTIFY_SOURCE=2 -fstack-protector-all --param ssp-buffer-size=1 -fPIE -pie"
 
-HOST_CC="gcc-4.2"
-HOST_CXX="g++-4.2"
+HOST_CC="clang-mp-2.9"
+HOST_CXX="clang-mp-2.9++"
 RANLIB=ranlib
 AR=ar
 AS=$CC
