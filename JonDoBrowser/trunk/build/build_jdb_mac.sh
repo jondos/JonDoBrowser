@@ -32,8 +32,7 @@ svnBrowser=https://svn.jondos.de/svnpub/JonDoBrowser/trunk
 langs="en-US de"
 # These languages need a special treatment (i.e. a non-default localized build)
 localeBuilds="de"
-#macPlatform=""
-platform="mac"
+macPlatforms="mac-x86_64 mac-i386"
 jdbVersion="0.3"
 title="JonDoBrowser"
 size="200000"
@@ -55,7 +54,7 @@ generateDmgImage() {
 
   # We want to have just "JonDoBrowser" shown. 
   applicationName="JonDoBrowser.app"
-  finalDMGName="JonDoBrowser-$jdbVersion-$1.dmg"
+  finalDMGName="JonDoBrowser-$jdbVersion-$1-$2.dmg"
   # TODO GeKo: Why does the backslash as a line delimiter not work but result in an error?
   # UDBZ?
   hdiutil create -srcfolder "${source}" -volname "${title}" -fs HFS+ -fsargs "-c c=64,a=16,e=16" -format UDRW -size ${size}k JDB.temp.dmg
@@ -177,16 +176,6 @@ do
   getopts "${OPTSTR}" CMD_OPT
 done
 
-# On which platform are we building? |uname -m| does not necessarily work as we
-# may have a 32Bit Kernel but build nevertheless 64Bit JonDoBrowsers. Testing
-# via |ioreg -l -p IODeviceTree | grep firmware-abi | grep -Eo 64| does not work
-# either. Assuming we have gcc available we borrow the test from config.guess.
-#if gcc -E -dM -x c /dev/null | grep __LP64__>/dev/null 2>&1 ; then
-#  macPlatform="mac-x86_64"
-#else
-#  macPlatform="mac-i386"
-#fi
-
 # The first grep makes sure we really get the latest firefox version and not
 # someting else of the html page. The second grep finally extracts the latest
 # version.
@@ -290,46 +279,80 @@ svn export $svnBrowser/build/branding/jondobrowser browser/branding/jondobrowser
 for i in *patch; do patch -tp1 <$i || exit 1; done
 
 echo "Building JonDoBrowser..."
-for lang in $langs; do
-  svn cat $svnBrowser/build/.mozconfig_mac > .mozconfig
-  echo "mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/mac_build_$lang" >> .mozconfig
-  for localeBuild in $localeBuilds; do
-    if [ "$lang" == "$localeBuild" ]; then
-      # Now, we do all the stuff needed for localized builds
-      cd ../../tmp
-      # Checking out the locale repo
-      hg clone -r FIREFOX_${ffVersion//./_}_RELEASE http://hg.mozilla.org/releases/l10n/mozilla-release/$lang 
-      # We need the branding files in the locale repo as well
-      rsync ../build/mozilla-release/browser/branding/jondobrowser/locales/en-US/brand* $lang/browser/branding/jondobrowser
-      # Updating the .mozconfig
-      cd ../build/mozilla-release
-      echo "ac_add_options --enable-ui-locale=$lang" >> .mozconfig
-      echo "ac_add_options --with-l10n-base=$(cd ../../tmp && pwd)" >> .mozconfig
-      # Reconfiguring the build to be aware of the locale other than en-US
-      make -f client.mk configure
-      break
+for macPlatform in $macPlatforms; do
+  for lang in $langs; do
+    svn cat $svnBrowser/build/.mozconfig_mac > .mozconfig
+    echo >> .mozconfig
+    echo "mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/mac_build_${macPlatform}_${lang}" \
+      >> .mozconfig
+    echo >> .mozconfig
+    if [ "$macPlatform" == "mac-i386"]; then
+      # TODO: Not sure if we need everything here.
+      # On 10.6.8 our building platform we only get clang 2.9 as newest clang
+      # version if installed via MacPorts. But that is not recent enought to
+      # build JonDoBrowser if it is based at least on FF 17. Thus, we need our
+      # own compiler (3.1 is working atm)...
+      echo "CC=\"/usr/local/clang/bin/clang -arch i386\"" >> .mozconfig
+      echo "CXX=\"/usr/local/clang/bin/clang++ -arch i386\"" >> .mozconfig
+      echo "ac_add_options --target=i386-apple-darwin9.2.0" >> .mozconfig
+      echo "ac_add_options --enable-macos-target=10.5" >> .mozconfig
+      echo  >> .mozconfig
+      echo "HOST_CC=/usr/local/clang/bin/clang" >> .mozconfig
+      echo "HOST_CXX=/usr/local/clang/bin/clang++" >> .mozconfig
+      echo "RANLIB=ranlib" >> .mozconfig
+      echo "AR=ar" >> .mozconfig
+      echo 'AS=$CC' >> .mozconfig
+      echo "LD=ld" >> .mozconfig
+      echo "STRIP=\"strip -x -S\"" >> .mozconfig
+      echo "CROSS_COMPILE=1"
+    else
+      echo "CC=/usr/local/clang/bin/clang" >> .mozconfig
+      echo "CXX=/usr/local/clang/bin/clang++" >> .mozconfig
+       
     fi
-  done
-  make -f client.mk build
+    for localeBuild in $localeBuilds; do
+      if [ "$lang" == "$localeBuild" ]; then
+        # Now, we do all the stuff needed for localized builds
+        cd ../../tmp
+        # Checking out the locale repo if it is not existing already
+        if [ ! -d $lang ]; then
+          hg clone -r FIREFOX_${ffVersion//./_}_RELEASE http://hg.mozilla.org/releases/l10n/mozilla-release/$lang 
+          # We need the branding files in the locale repo as well
+          rsync ../build/mozilla-release/browser/branding/jondobrowser/locales/en-US/brand* $lang/browser/branding/jondobrowser
+        fi
+        # Updating the .mozconfig
+        cd ../build/mozilla-release
+        echo >> .mozconfig
+        echo "ac_add_options --enable-ui-locale=$lang" >> .mozconfig
+        echo "ac_add_options --with-l10n-base=$(cd ../../tmp && pwd)" >> .mozconfig
+        # Reconfiguring the build to be aware of the locale other than en-US
+        make -f client.mk configure
+        break
+      fi
+    done
+    make -f client.mk build
 
-  echo "Creating the final packages..."
-  cd ../..
-  jdbDir=JonDoBrowser-$lang
-  cp -rf tmp/$jdbDir .
-  cp -rf build/mozilla-release/mac_build_$lang/dist/JonDoBrowser.app/* $jdbDir/Contents/MacOS/Firefox.app
-  mv $jdbDir JonDoBrowser.app
-  # Preparing everything for generating the dmg image...
-  if [ ! -d $source ]; then
-    mkdir $source
-    cd $source && mkdir .background && cd .background
-    svn cat $svnBrowser/build/mac/background-$lang.png > ${backgroundPictureName}
+    echo "Creating the final packages..."
     cd ../..
-  fi
-  mv JonDoBrowser.app $source/
-  generateDmgImage $lang
-  rm -rf $source
-  # TODO: Only needed if we need to build another localized build...
-  cd build/mozilla-release
+    jdbDir=JonDoBrowser-$lang
+    cp -rf tmp/$jdbDir .
+    cp -rf build/mozilla-release/mac_build_${macPlatform}_${lang}/dist/JonDoBrowser.app/* $jdbDir/Contents/MacOS/Firefox.app
+    mv $jdbDir JonDoBrowser.app
+    # Preparing everything for generating the dmg image...
+    if [ ! -d $source ]; then
+      mkdir $source
+      cd $source && mkdir .background && cd .background
+      svn cat $svnBrowser/build/mac/background-$lang.png > $backgroundPictureName
+      cd ../..
+    fi
+    mv JonDoBrowser.app $source/
+    generateDmgImage $macPlatform $lang
+    rm -rf $source
+    # TODO: Only needed if we have to build another (localized) build...
+    cd build/mozilla-release
+    # Removing the old objdir as well already built JonDoBrowser successfully.
+    rm -rf mac_build_${macPlatform}_${lang}
+  done
 done
 
 cd ../../
