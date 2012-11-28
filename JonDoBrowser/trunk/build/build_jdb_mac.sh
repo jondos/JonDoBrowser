@@ -286,7 +286,7 @@ for macPlatform in $macPlatforms; do
     echo "mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/mac_build_${macPlatform}_${lang}" \
       >> .mozconfig
     echo >> .mozconfig
-    if [ "$macPlatform" == "mac-i386"]; then
+    if [ "$macPlatform" == "mac-i386" ]; then
       # TODO: Not sure if we need everything here.
       # On 10.6.8 our building platform we only get clang 2.9 as newest clang
       # version if installed via MacPorts. But that is not recent enought to
