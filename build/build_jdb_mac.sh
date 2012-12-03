@@ -353,7 +353,7 @@ for macPlatform in $macPlatforms; do
     rm -rf $source
     # TODO: Only needed if we have to build another (localized) build...
     cd build/mozilla-release
-    # Removing the old objdir as well already built JonDoBrowser successfully.
+    # Removing the old objdir as we already built JonDoBrowser successfully.
     rm -rf mac_build_${macPlatform}_${lang}
   done
 done
