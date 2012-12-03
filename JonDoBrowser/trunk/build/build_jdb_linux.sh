@@ -40,7 +40,7 @@ localeBuilds="de"
 # Allowing 32bit and 64bit JonDoBrowser builds
 platform="linux-$(uname -m)"
 jdbDir="JonDoBrowser"
-jdbVersion="0.3"
+jdbVersion="0.3.1"
 # TODO: Shouldn't we check whether this one is still used/valid before actually
 # building? Maybe that's something which is related to the more generic routine
 # for the case the key was not imported yet which is mentioned below.
@@ -205,6 +205,9 @@ fi
 cd build && cp ../tmp/firefox-$ffVersion.source.tar.bz2 .
 tar -xjvf firefox-$ffVersion.source.tar.bz2
 echo
+echo "Downloading the build config file..."
+svn cat $svnBrowser/build/.mozconfig_$platform > .mozconfig
+echo
 echo "Patching JonDoBrowser..."
 
 if [ ! -d "patches" ]; then
@@ -225,7 +228,7 @@ for i in *patch; do patch -tp1 <$i || exit 1; done
 
 echo "Building JonDoBrowser..."
 for lang in $langs; do
-  svn cat $svnBrowser/build/.mozconfig_$platform > .mozconfig
+  cp -f ../.mozconfig .
   echo "mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/linux_build_$lang" >> .mozconfig
   for localeBuild in $localeBuilds; do
     if [ "$lang" == "$localeBuild" ]; then

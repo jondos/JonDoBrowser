@@ -33,7 +33,7 @@ langs="en-US de"
 # These languages need a special treatment (i.e. a non-default localized build)
 localeBuilds="de"
 macPlatforms="mac-x86_64 mac-i386"
-jdbVersion="0.3"
+jdbVersion="0.3.1"
 title="JonDoBrowser"
 size="200000"
 mozKey=247CA658AA95F6171EB0F13EA7D75CC7C52175E2
@@ -264,6 +264,9 @@ fi
 cd build && cp ../tmp/firefox-$ffVersion.source.tar.bz2 .
 tar -xjvf firefox-$ffVersion.source.tar.bz2
 echo
+echo "Downloading the build config file..."
+svn cat $svnBrowser/build/.mozconfig_mac > .mozconfig
+echo
 echo "Patching JonDoBrowser..."
 
 if [ ! -d "patches" ]; then
@@ -281,7 +284,7 @@ for i in *patch; do patch -tp1 <$i || exit 1; done
 echo "Building JonDoBrowser..."
 for macPlatform in $macPlatforms; do
   for lang in $langs; do
-    svn cat $svnBrowser/build/.mozconfig_mac > .mozconfig
+    cp -f ../.mozconfig .
     echo >> .mozconfig
     echo "mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/mac_build_${macPlatform}_${lang}" \
       >> .mozconfig
@@ -289,7 +292,7 @@ for macPlatform in $macPlatforms; do
     if [ "$macPlatform" == "mac-i386" ]; then
       # TODO: Not sure if we need everything here.
       # On 10.6.8 our building platform we only get clang 2.9 as newest clang
-      # version if installed via MacPorts. But that is not recent enought to
+      # version if installed via MacPorts. But that is not recent enough to
       # build JonDoBrowser if it is based at least on FF 17. Thus, we need our
       # own compiler (3.1 is working atm)...
       echo "CC=\"/usr/local/clang/bin/clang -arch i386\"" >> .mozconfig
