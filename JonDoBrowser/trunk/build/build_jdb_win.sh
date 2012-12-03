@@ -136,6 +136,9 @@ fi
 cd build && cp ../tmp/firefox-$ffVersion.source.tar.bz2 .
 tar -xjvf firefox-$ffVersion.source.tar.bz2
 echo
+echo "Downloading the build config file..."
+svn cat $svnBrowser/build/.mozconfig_win32 > .mozconfig
+echo
 echo "Patching JonDoBrowser..."
 
 if [ ! -d "patches" ]; then
@@ -151,7 +154,7 @@ for i in *patch; do patch -tp1 <$i || exit 1; done
 
 echo "Building JonDoBrowser..."
 for lang in $langs; do
-  svn cat $svnBrowser/build/.mozconfig_win32 > .mozconfig
+  cp -f ../.mozconfig .
   echo "mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/win32_build_$lang" >> .mozconfig
   for localeBuild in $localeBuilds; do
     if [ "$lang" == "$localeBuild" ]; then
