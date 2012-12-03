@@ -62,7 +62,7 @@ Var update
 Var httpsForcedDomains
 Var httpsForcedDomainsExceptions
 
-!define JDB_VERSION "0.3"
+!define JDB_VERSION "0.3.1"
 !define NAME "JonDoBrowser"
 !define VERSION "0.3.1.0"
 !define INSTALLERCOMMENTS "For additional details, visit anonymous-proxy-servers.net"
