@@ -1,6 +1,28 @@
-diff -r 8cdcad2877b9 toolkit/mozapps/update/nsUpdateService.js
---- a/toolkit/mozapps/update/nsUpdateService.js	Mon Nov 19 13:08:06 2012 -0800
-+++ b/toolkit/mozapps/update/nsUpdateService.js	Mon Dec 03 16:35:23 2012 +0100
+diff -r 53fc01ba93c2 browser/app/profile/firefox.js
+--- a/browser/app/profile/firefox.js	Wed Nov 28 20:28:26 2012 -0800
++++ b/browser/app/profile/firefox.js	Tue Dec 04 11:51:02 2012 +0100
+@@ -145,17 +145,17 @@ pref("app.update.mode", 1);
+ // If set to true, the Update Service will present no UI for any event.
+ pref("app.update.silent", false);
+ 
+ // If set to true, the Update Service will apply updates in the background
+ // when it finishes downloading them.
+ pref("app.update.staging.enabled", true);
+ 
+ // Update service URL:
+-pref("app.update.url", "https://aus3.mozilla.org/update/3/%PRODUCT%/%VERSION%/%BUILD_ID%/%BUILD_TARGET%/%LOCALE%/%CHANNEL%/%OS_VERSION%/%DISTRIBUTION%/%DISTRIBUTION_VERSION%/update.xml");
++pref("app.update.url", "https://anonymous-proxy-servers.net/update/JonDoBrowser/%VERSION%/%BUILD_ID%/%LOCALE%/update.xml");
+ // app.update.url.manual is in branding section
+ // app.update.url.details is in branding section
+ 
+ // User-settable override to app.update.url for testing purposes.
+ //pref("app.update.url.override", "");
+ 
+ // app.update.interval is in branding section
+ // app.update.promptWaitTime is in branding section
+diff -r 53fc01ba93c2 toolkit/mozapps/update/nsUpdateService.js
+--- a/toolkit/mozapps/update/nsUpdateService.js	Wed Nov 28 20:28:26 2012 -0800
++++ b/toolkit/mozapps/update/nsUpdateService.js	Tue Dec 04 11:51:02 2012 +0100
 @@ -46,18 +46,16 @@ const PREF_APP_UPDATE_STAGE_ENABLED     
  const PREF_APP_UPDATE_URL                 = "app.update.url";
  const PREF_APP_UPDATE_URL_DETAILS         = "app.update.url.details";
