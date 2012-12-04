@@ -211,8 +211,7 @@ echo
 echo "Patching JonDoBrowser..."
 
 if [ ! -d "patches" ]; then
-  svn export https://svn.jondos.de/svnpub/JonDoBrowser/trunk/build/patches \
-    1>/dev/null
+  svn export $svnBrowser/build/patches 1>/dev/null
 fi
 
 cp patches/*.patch mozilla-release/ && cd mozilla-release
