@@ -1,0 +1,59 @@
+In the FF update mechanism three parts are involved:
+
+1) an update.xml probably on a remote server
+2) the update .mar file probably on a remote server as well
+3) code and preferences on the client side that drive the update process
+
+ad 1) Information regarding the format may be found at:
+  https://wiki.mozilla.org/Software_Update:updates.xml_Format
+
+ad 2) Useful links:
+  https://wiki.mozilla.org/Software_Update:HowToManuallyGenerateMARFiles
+  https://wiki.mozilla.org/UpdateGeneration
+  https://wiki.mozilla.org/Software_Update:Processing_Updates
+  http://old.nabble.com/Problem-creating-MAR-file.-td32154053.html
+
+ad 3) Relevant prefs that need to be handled:
+  app.update.cert.*.*
+
+  these prefs allow a "pinning" of certificates. More exactly, the code in
+  toolkit/mozapps/shared/CertUtils.jsm compares every preference value with
+  the counterpart in the certificate of the server hosting the update.xml
+  (provided "app.update.cert.checkAttributes" is "true"). See e.g. the AString
+  attributes in nsIX509Cert.idl for possible options.
+
+  Setting "app.update.cert.requireBuiltin" to "true" sounds not useful to me.
+  Even if one uses a CA with a "Builtin Object Token" there are still way to
+  much of it in Mozilla's root store to mitigate MITM attacks (if this even
+  was the intention of this pref).
+
+  It does not matter whether the pref "app.update.url" or
+  "app.update.url.override" gets used to point to the update.xml if one wants
+  the above described "cert pinning" feature as well. The source needs patches
+  in either case.
+
+  The patches:
+  Most of the small patches just replace the application version with the
+  JonDoBrowser version which is set by the JonDoFox extension (I've seen that
+  TorBrowser has a similar preference, thus this should be staightforward.
+  Maybe you have to doublecheck whether the current format of the TorBrowser
+  version pref is in the proper format to get used by Mozilla's version
+  comparator...)
+  The patch of nsUpdateDriver.cpp is neither working on all platforms nor
+  complete. The first part of the patch is not working on Mac OSX as two
+  directories above the appDir is not enough for the TBB update to get properly
+  applied. When I wrote the patch I did not have a working Mac to take that
+  into account and therefore treated all platforms in the same way. The second
+  part of the patch is not complete. I essentially commented the version check
+  out as the comparison with the pref is not working here. The problem is that
+  user defined prefs are not available yet (the code is running before a
+  profile is chosen and all its user defined prefs are initialized). The way to
+  go here is probably to use a environment variable (see e.g. the
+  MOZ_UPDATE_APPDIR_OVERRIDE check in the same file) but I have not tested it
+  yet.
+
+TODO:
+  There is a lot to do as the patches are nothing more than a PoC. Especially,
+  the post update code needs to get examined and patched where needed, other
+  code paths than the default one need to get adapted and above all the
+  robustness against attacks outlined in this bug needs to get examined.
