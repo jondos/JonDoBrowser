@@ -1,7 +1,33 @@
 diff -r 53fc01ba93c2 browser/app/profile/firefox.js
 --- a/browser/app/profile/firefox.js	Wed Nov 28 20:28:26 2012 -0800
-+++ b/browser/app/profile/firefox.js	Tue Dec 04 14:05:16 2012 +0100
-@@ -145,17 +145,17 @@ pref("app.update.mode", 1);
++++ b/browser/app/profile/firefox.js	Tue Dec 04 16:54:35 2012 +0100
+@@ -112,21 +112,20 @@ pref("app.update.cert.maxErrors", 5);
+ // present the following conditions apply for a successful update check:
+ // 1. the uri scheme must be https
+ // 2. the preference name must exist as an attribute name on the certificate and
+ //    the value for the name must be the same as the value for the attribute name
+ //    on the certificate.
+ // If these conditions aren't met it will be treated the same as when there is
+ // no update available. This validation will not be performed when using the
+ // |app.update.url.override| preference for update checking.
+-pref("app.update.certs.1.issuerName", "OU=Equifax Secure Certificate Authority,O=Equifax,C=US");
+-pref("app.update.certs.1.commonName", "aus3.mozilla.org");
+-
+-pref("app.update.certs.2.issuerName", "CN=Thawte SSL CA,O=\"Thawte, Inc.\",C=US");
+-pref("app.update.certs.2.commonName", "aus3.mozilla.org");
++pref("app.update.certs.1.issuerName", "serialNumber=07969287,CN=Go Daddy Secure Certification Authority,OU=http://certificates.godaddy.com/repository,O=\"GoDaddy.com, Inc.\",L=Scottsdale,ST=Arizona,C=US");
++pref("app.update.certs.1.commonName", "anonymous-proxy-servers.net");
++pref("app.update.certs.1.md5Fingerprint", "DD:75:D9:C7:A3:B5:9D:7A:E5:98:C$:FD:4D:2E:78:8A");
++pref("app.update.certs.1.sha1Fingerprint", "84:78:73:F0:9F:25:17:F3:08:3A:3D:DB:D1:C4:2C:BD:C7:3D:38:AA");
+ 
+ // Whether or not app updates are enabled
+ pref("app.update.enabled", true);
+ 
+ // This preference turns on app.update.mode and allows automatic download and
+ // install to take place. We use a separate boolean toggle for this to make
+ // the UI easier to construct.
+ pref("app.update.auto", true);
+@@ -145,17 +144,17 @@ pref("app.update.mode", 1);
  // If set to true, the Update Service will present no UI for any event.
  pref("app.update.silent", false);
  
@@ -22,7 +48,7 @@ diff -r 53fc01ba93c2 browser/app/profile/firefox.js
  // app.update.promptWaitTime is in branding section
 diff -r 53fc01ba93c2 toolkit/mozapps/update/nsUpdateService.js
 --- a/toolkit/mozapps/update/nsUpdateService.js	Wed Nov 28 20:28:26 2012 -0800
-+++ b/toolkit/mozapps/update/nsUpdateService.js	Tue Dec 04 14:05:16 2012 +0100
++++ b/toolkit/mozapps/update/nsUpdateService.js	Tue Dec 04 16:54:35 2012 +0100
 @@ -46,18 +46,16 @@ const PREF_APP_UPDATE_STAGE_ENABLED     
  const PREF_APP_UPDATE_URL                 = "app.update.url";
  const PREF_APP_UPDATE_URL_DETAILS         = "app.update.url.details";
