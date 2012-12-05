@@ -17,7 +17,7 @@ diff -r 53fc01ba93c2 browser/app/profile/firefox.js
 -pref("app.update.certs.2.commonName", "aus3.mozilla.org");
 +pref("app.update.certs.1.issuerName", "serialNumber=07969287,CN=Go Daddy Secure Certification Authority,OU=http://certificates.godaddy.com/repository,O=\"GoDaddy.com, Inc.\",L=Scottsdale,ST=Arizona,C=US");
 +pref("app.update.certs.1.commonName", "anonymous-proxy-servers.net");
-+pref("app.update.certs.1.md5Fingerprint", "DD:75:D9:C7:A3:B5:9D:7A:E5:98:C$:FD:4D:2E:78:8A");
++pref("app.update.certs.1.md5Fingerprint", "DD:75:D9:C7:A3:B5:9D:7A:E5:98:C4:FD:4D:2E:78:8A");
 +pref("app.update.certs.1.sha1Fingerprint", "84:78:73:F0:9F:25:17:F3:08:3A:3D:DB:D1:C4:2C:BD:C7:3D:38:AA");
  
  // Whether or not app updates are enabled
