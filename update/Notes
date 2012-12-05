@@ -1,0 +1,30 @@
+DirLayout:
+                        %BUILD_TARGET%
+/JonDoBrowser/%VERSION%/Linux_x86-gcc3/%LOCALE%/update.xml
+                        Linux_x86_64-gcc3
+                        Windows_x86-msvc
+                        ....
+
+* we went with adapting "app.update.url" directly (and do not use
+  "app.update.url.override") for the following reasons:
+  a) using a URL pointing to our servers does break the whole build (extensions
+     are disabled, etc.), not sure yet why
+  b) we make sure that Mozilla's servers are not contacted for application
+     updates as there is no update URL anymore
+  c) "app.update.url.override" was for testing purposes only anyway
+
+* we should consider the update policy: By default automatic updates, and no 2MB
+    limit for free services and by default not over JonDonym (checkbox whether
+    one wants the updates over it, though), right!?
+
+* UI change, if cert validation fails + UI change, if update server cannot be
+  reached + probably in onError() in aboutDialog.js: the onError handler in 
+  Checker does already generate a quite detailed error status message we could
+  evaluate in onError()
+
+* reading the parsing the update.xml in onLoad() before checking the certs is on
+  purpose, see: #583408. Not sure if we want to keep that, though. Does only
+  hold for background update checks!?
+
+* what about the license of JonDoBrowser and the option for the license URL in
+  updates!?
