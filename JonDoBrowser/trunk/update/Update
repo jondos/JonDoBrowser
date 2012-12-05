@@ -59,7 +59,6 @@ Funktionsweise:
 
 Sachen, die geändert werden müssen
 ==================================
--app.update.url.override muss angepasst werden
 -app.update.certs.1* muss an unser/Torproject-Zertifikat angepasst werden
 -app.update.auto? (vielleicht extra im JDF/Torbutton-Menü noch einmal!?)
 -Einlesen der hard-kodierten Zerts auch wenn app.update.url.override (oder eben
