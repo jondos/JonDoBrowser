@@ -1,6 +1,6 @@
 diff -r 53fc01ba93c2 browser/app/profile/firefox.js
 --- a/browser/app/profile/firefox.js	Wed Nov 28 20:28:26 2012 -0800
-+++ b/browser/app/profile/firefox.js	Mon Dec 10 10:42:07 2012 +0100
++++ b/browser/app/profile/firefox.js	Mon Dec 10 16:09:22 2012 +0100
 @@ -112,21 +112,20 @@ pref("app.update.cert.maxErrors", 5);
  // present the following conditions apply for a successful update check:
  // 1. the uri scheme must be https
@@ -48,7 +48,7 @@ diff -r 53fc01ba93c2 browser/app/profile/firefox.js
  // app.update.promptWaitTime is in branding section
 diff -r 53fc01ba93c2 toolkit/mozapps/update/nsUpdateService.js
 --- a/toolkit/mozapps/update/nsUpdateService.js	Wed Nov 28 20:28:26 2012 -0800
-+++ b/toolkit/mozapps/update/nsUpdateService.js	Mon Dec 10 10:42:07 2012 +0100
++++ b/toolkit/mozapps/update/nsUpdateService.js	Mon Dec 10 16:09:22 2012 +0100
 @@ -46,21 +46,21 @@ const PREF_APP_UPDATE_STAGE_ENABLED     
  const PREF_APP_UPDATE_URL                 = "app.update.url";
  const PREF_APP_UPDATE_URL_DETAILS         = "app.update.url.details";
@@ -325,7 +325,7 @@ diff -r 53fc01ba93c2 toolkit/mozapps/update/nsUpdateService.js
 +    // Don't download the update if the update's version is less than or equal
 +    // to the current application's version.
 +    if (update.appVersion && Services.vc.compare(update.appVersion,
-+        Services.getCharPref(PREF_JONDOBROWSER_VERSION)) <= 0) {
++        Services.prefs.getCharPref(PREF_JONDOBROWSER_VERSION)) <= 0) {
        LOG("UpdateService:downloadUpdate - canceling download of update since " +
 -          "it is for an earlier or same application version and build ID.\n" +
 -          "current application version: " + Services.appinfo.version + "\n" +
@@ -333,7 +333,7 @@ diff -r 53fc01ba93c2 toolkit/mozapps/update/nsUpdateService.js
 -          "current build ID: " + Services.appinfo.appBuildID + "\n" +
 -          "update build ID : " + update.buildID);
 +          "it is for an earlier or same application version.\n" +
-+          "current application version: " + Services.
++          "current application version: " + Services.prefs.
 +          getCharPref(PREF_JONDOBROWSER_VERSION) + "\n" +
 +          "update application version : " + update.appVersion + "\n");
        cleanupActiveUpdate();
