@@ -27,4 +27,10 @@ DirLayout:
   hold for background update checks!?
 
 * what about the license of JonDoBrowser and the option for the license URL in
-  updates!?
+  updates!? 
+  - not sure regarding the license but I think we should neither include a
+    license nor a billboard URL but rather let the update run silently in the
+    background *as long as we don't touch the user's profile directory*
+
+* big question: What do we want to update? Only the application i.e. the
+  Firefox + patches or (parts of) the profile folder as well?
