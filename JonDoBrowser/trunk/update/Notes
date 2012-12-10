@@ -22,7 +22,7 @@ DirLayout:
   Checker does already generate a quite detailed error status message we could
   evaluate in onError()
 
-* reading the parsing the update.xml in onLoad() before checking the certs is on
+* parsing the update.xml in onLoad() before checking the certs is on
   purpose, see: #583408. Not sure if we want to keep that, though. Does only
   hold for background update checks!?
 
