@@ -250,7 +250,7 @@ for lang in $langs; do
     cd linux_build/browser/locales   
     # TODO: Do we need compare-locales here? If so document that!
     make merge-$lang LOCALE_MERGEDIR=mergedir
-    make installers-x-testing LOCALE_MERGEDIR=mergedir
+    make installers-$lang LOCALE_MERGEDIR=mergedir
     cd ../../
   fi
 
