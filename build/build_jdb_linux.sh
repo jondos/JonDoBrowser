@@ -33,7 +33,8 @@
 
 svnProfile=https://svn.jondos.de/svnpub/JonDoFox_Profile/trunk/full/profile
 svnBrowser=https://svn.jondos.de/svnpub/JonDoBrowser/trunk
-# The locales we support
+# The locales we support. en-US must be first as all the other localized builds
+# are actually only a repackaging of the en-US one.
 langs="en-US de"
 # Allowing 32bit and 64bit JonDoBrowser builds
 platform="linux-$(uname -m)"
@@ -230,9 +231,8 @@ for lang in $langs; do
     make -f client.mk build
     echo "Creating the final packages..."
     cd linux_build && make package
-    #echo "mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/linux_build_$lang" >> .mozconfig
   else
-    # Now, we do all the stuff needed for the non en-US localized builds
+    # Now we do all the stuff needed for the non en-US localized builds
     cd ../../tmp
     # Checking out the locale repo
     hg clone -r FIREFOX_${ffVersion//./_}_RELEASE http://hg.mozilla.org/releases/l10n/mozilla-release/$lang 
@@ -240,10 +240,8 @@ for lang in $langs; do
     rsync ../build/mozilla-release/browser/branding/jondobrowser/locales/en-US/brand* $lang/browser/branding/jondobrowser
     # Updating the .mozconfig
     cd ../build/mozilla-release
-    #echo "ac_add_options --enable-ui-locale=$lang" >> .mozconfig
     echo "ac_add_options --with-l10n-base=$(cd ../../tmp && pwd)" >> .mozconfig
     echo "ac_add_options --disable-compile-environment" >> .mozconfig
-    echo "ac_add_options --enable-application=browser" >> .mozconfig
     # Reconfiguring the build to be aware of the locale other than en-US
     make -f client.mk configure
     # Now we go and repack the binary
