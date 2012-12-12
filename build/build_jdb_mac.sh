@@ -29,9 +29,9 @@
 
 svnProfile=https://svn.jondos.de/svnpub/JonDoFox_Profile/trunk/full/profile
 svnBrowser=https://svn.jondos.de/svnpub/JonDoBrowser/trunk
+# The locales we support. en-US must be first as all the other localized builds
+# are actually only a repackaging of the en-US one.
 langs="en-US de"
-# These languages need a special treatment (i.e. a non-default localized build)
-localeBuilds="de"
 macPlatforms="mac-x86_64 mac-i386"
 jdbVersion="0.3.1"
 title="JonDoBrowser"
@@ -285,7 +285,7 @@ for macPlatform in $macPlatforms; do
   for lang in $langs; do
     cp -f ../.mozconfig .
     echo >> .mozconfig
-    echo "mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/mac_build_${macPlatform}_${lang}" \
+    echo "mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/mac_build_${macPlatform}" \
       >> .mozconfig
     echo >> .mozconfig
     if [ "$macPlatform" == "mac-i386" ]; then
@@ -312,33 +312,40 @@ for macPlatform in $macPlatforms; do
       echo "CXX=/usr/local/clang/bin/clang++" >> .mozconfig
        
     fi
-    for localeBuild in $localeBuilds; do
-      if [ "$lang" == "$localeBuild" ]; then
-        # Now, we do all the stuff needed for localized builds
-        cd ../../tmp
-        # Checking out the locale repo if it is not existing already
-        if [ ! -d $lang ]; then
-          hg clone -r FIREFOX_${ffVersion//./_}_RELEASE http://hg.mozilla.org/releases/l10n/mozilla-release/$lang 
-          # We need the branding files in the locale repo as well
-          rsync ../build/mozilla-release/browser/branding/jondobrowser/locales/en-US/brand* $lang/browser/branding/jondobrowser
-        fi
-        # Updating the .mozconfig
-        cd ../build/mozilla-release
-        echo >> .mozconfig
-        echo "ac_add_options --enable-ui-locale=$lang" >> .mozconfig
-        echo "ac_add_options --with-l10n-base=$(cd ../../tmp && pwd)" >> .mozconfig
-        # Reconfiguring the build to be aware of the locale other than en-US
-        make -f client.mk configure
-        break
+    if [ "$lang" == "en-US" ]; then
+      make -f client.mk build
+    else   
+      # Now, we do all the stuff needed for localized builds
+      cd ../../tmp
+      # Checking out the locale repo if it is not existing already
+      if [ ! -d $lang ]; then
+        hg clone -r FIREFOX_${ffVersion//./_}_RELEASE https://hg.mozilla.org/releases/l10n/mozilla-release/$lang 
+        # We need the branding files in the locale repo as well
+        rsync ../build/mozilla-release/browser/branding/jondobrowser/locales/en-US/brand* $lang/browser/branding/jondobrowser
       fi
-    done
-    make -f client.mk build
+      # Updating the .mozconfig
+      cd ../build/mozilla-release
+      echo >> .mozconfig
+      echo "ac_add_options --with-l10n-base=$(cd ../../tmp && pwd)" >> .mozconfig
+      echo "ac_add_options --disable-compile-environment" >> .mozconfig
+      # Reconfiguring the build to be aware of the locale other than en-US
+      make -f client.mk configure
+      # Now we go and repack the binary
+      cd mac_build_${macPlatform}/browser/locales   
+      # We are supposed to need the compare-locales tool for the merge-$lang
+      # target. BUT it seems we can omit that which results in an error (127)
+      # but adds the german language strings, though. Going this route for now
+      # as this means less build dependencies...
+      make merge-$lang LOCALE_MERGEDIR=mergedir
+      make installers-$lang LOCALE_MERGEDIR=mergedir
+      cd ../../../
+    fi
 
     echo "Creating the final packages..."
     cd ../..
     jdbDir=JonDoBrowser-$lang
     cp -rf tmp/$jdbDir .
-    cp -rf build/mozilla-release/mac_build_${macPlatform}_${lang}/dist/JonDoBrowser.app/* $jdbDir/Contents/MacOS/Firefox.app
+    cp -rf build/mozilla-release/mac_build_${macPlatform}/dist/JonDoBrowser.app/* $jdbDir/Contents/MacOS/Firefox.app
     mv $jdbDir JonDoBrowser.app
     # Preparing everything for generating the dmg image...
     if [ ! -d $source ]; then
@@ -352,8 +359,6 @@ for macPlatform in $macPlatforms; do
     rm -rf $source
     # TODO: Only needed if we have to build another (localized) build...
     cd build/mozilla-release
-    # Removing the old objdir as we already built JonDoBrowser successfully.
-    rm -rf mac_build_${macPlatform}_${lang}
   done
 done
 

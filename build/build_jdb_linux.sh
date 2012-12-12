@@ -235,7 +235,7 @@ for lang in $langs; do
     # Now we do all the stuff needed for the non en-US localized builds
     cd ../../tmp
     # Checking out the locale repo
-    hg clone -r FIREFOX_${ffVersion//./_}_RELEASE http://hg.mozilla.org/releases/l10n/mozilla-release/$lang 
+    hg clone -r FIREFOX_${ffVersion//./_}_RELEASE https://hg.mozilla.org/releases/l10n/mozilla-release/$lang 
     # We need the branding files in the locale repo as well
     rsync ../build/mozilla-release/browser/branding/jondobrowser/locales/en-US/brand* $lang/browser/branding/jondobrowser
     # Updating the .mozconfig
@@ -246,7 +246,10 @@ for lang in $langs; do
     make -f client.mk configure
     # Now we go and repack the binary
     cd linux_build/browser/locales   
-    # TODO: Do we need compare-locales here? If so document that!
+    # We are supposed to need the compare-locales tool for the merge-$lang
+    # target. BUT it seems we can omit that which results in an error (127) but
+    # adds the german language strings, though. Going this route for now as this
+    # means less build dependencies...
     make merge-$lang LOCALE_MERGEDIR=mergedir
     make installers-$lang LOCALE_MERGEDIR=mergedir
     cd ../../
