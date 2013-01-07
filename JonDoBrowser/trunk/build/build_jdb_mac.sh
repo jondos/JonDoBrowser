@@ -231,22 +231,6 @@ echo "Checking the signature of the sources..."
 # gpg prints the verification success message to stderr
 gpgVerification firefox-$ffVersion.source.tar.bz2.asc
 
-echo "Fetching and verifying the SHA1SUMS file..."
-
-curl --retry 3 -O $releasePath/SHA1SUMS
-if [ ! $? -eq 0 ]; then
-  echo "Error while retrieving SHA1SUMS, exiting..."
-  exit 1
-fi
-
-curl --retry 3 -O $releasePath/SHA1SUMS.asc
-if [ ! $? -eq 0 ]; then
-  echo "Error while retrieving the SHA1SUMS signature, exiting..."
-  exit 1
-fi
-
-gpgVerification SHA1SUMS.asc
-
 echo "Retrieving commonly used resources preparing the profiles..."
 prepareProfile
 
