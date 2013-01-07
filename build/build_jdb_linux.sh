@@ -44,7 +44,7 @@ jdbVersion="0.3.1"
 # building? Maybe that's something which is related to the more generic routine
 # for the case the key was not imported yet which is mentioned below.
 mozKey=247CA658AA95F6171EB0F13EA7D75CC7C52175E2
-releasePath=http://releases.mozilla.org/pub/mozilla.org/firefox/releases/latest-esr
+releasePath=http://releases.mozilla.org/pub/mozilla.org/firefox/releases/latest
 
 prepareProfile() {
   echo "Fetching sources..."
@@ -171,22 +171,6 @@ echo "Checking the signature of the sources..."
 # gpg prints the verification success message to stderr
 gpgVerification firefox-$ffVersion.source.tar.bz2.asc
 
-echo "Fetching and verifying the SHA1SUMS file..."
-
-wget -t 3 $releasePath/SHA1SUMS
-if [ ! $? -eq 0 ]; then
-  echo "Error while retrieving SHA1SUMS, exiting..."
-  exit 1
-fi
-
-wget -t 3 $releasePath/SHA1SUMS.asc
-if [ ! $? -eq 0 ]; then
-  echo "Error while retrieving the SHA1SUMS signature, exiting..."
-  exit 1
-fi
-
-gpgVerification SHA1SUMS.asc
-
 echo "Retrieving commonly used resources preparing the profiles..."
 prepareProfile
 
@@ -235,6 +219,7 @@ for lang in $langs; do
     # Now we do all the stuff needed for the non en-US localized builds
     cd ../../tmp
     # Checking out the locale repo
+    # TODO: Can we make it even more sure that no one tampered with the repo(s)?
     hg clone -r FIREFOX_${ffVersion//./_}_RELEASE https://hg.mozilla.org/releases/l10n/mozilla-release/$lang 
     # We need the branding files in the locale repo as well
     rsync ../build/mozilla-release/browser/branding/jondobrowser/locales/en-US/brand* $lang/browser/branding/jondobrowser
