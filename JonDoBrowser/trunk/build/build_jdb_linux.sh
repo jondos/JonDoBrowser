@@ -44,7 +44,7 @@ jdbVersion="0.3.1"
 # building? Maybe that's something which is related to the more generic routine
 # for the case the key was not imported yet which is mentioned below.
 mozKey=247CA658AA95F6171EB0F13EA7D75CC7C52175E2
-releasePath=http://releases.mozilla.org/pub/mozilla.org/firefox/releases/latest
+releasePath=http://releases.mozilla.org/pub/mozilla.org/firefox/releases/latest-esr
 
 prepareProfile() {
   echo "Fetching sources..."
