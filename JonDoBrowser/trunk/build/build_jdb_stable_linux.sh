@@ -39,7 +39,7 @@ langs="en-US de"
 # Allowing 32bit and 64bit JonDoBrowser builds
 platform="linux-$(uname -m)"
 jdbDir="JonDoBrowser"
-jdbVersion="0.3.1"
+jdbVersion="0.4"
 # TODO: Shouldn't we check whether this one is still used/valid before actually
 # building? Maybe that's something which is related to the more generic routine
 # for the case the key was not imported yet which is mentioned below.
@@ -222,6 +222,7 @@ for lang in $langs; do
     # Now we do all the stuff needed for the non en-US localized builds
     cd ../../tmp
     # Checking out the locale repo
+    # TODO: Can we make it even more sure that no one tampered with the repo(s)?
     hg clone -r FIREFOX_${ffVersion//./_}esr_RELEASE https://hg.mozilla.org/releases/l10n/mozilla-release/$lang 
     # We need the branding files in the locale repo as well
     rsync ../build/mozilla-release/browser/branding/jondobrowser/locales/en-US/brand* $lang/browser/branding/jondobrowser
