@@ -207,8 +207,8 @@ cd tmp
 if [ "$ffVersion" = "" ]; then
   echo "We got no version extracted, thus exiting..."
   exit 1
-elif [ ! -e "firefox-$ffVersion.source.tar.bz2" ]; then
-  echo "Getting the latest Firefox sources (version $ffVersion)..."
+elif [ ! -e "firefox-${ffVersion}esr.source.tar.bz2" ]; then
+  echo "Getting the latest Firefox ESR sources (version $ffVersion)..."
   curl --retry 3 -O $releasePath/source/firefox-${ffVersion}esr.source.tar.bz2
   if [ ! $? -eq 0 ]; then
     echo "Error while retrieving the Firefox sources, exiting..."
@@ -216,7 +216,7 @@ elif [ ! -e "firefox-$ffVersion.source.tar.bz2" ]; then
   fi
 fi
 
-if [ ! -e "firefox-$ffVersion.source.tar.bz2.asc" ]; then
+if [ ! -e "firefox-${ffVersion}esr.source.tar.bz2.asc" ]; then
   echo "Getting the signature..."
   curl --retry 3 -O $releasePath/source/firefox-${ffVersion}esr.source.tar.bz2.asc
   if [ ! $? -eq 0 ]; then

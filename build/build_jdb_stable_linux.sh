@@ -147,7 +147,7 @@ cd tmp
 if [ "$ffVersion" = "" ]; then
   echo "We got no version extracted, thus exiting..."
   exit 1
-elif [ ! -e "firefox-$ffVersion.source.tar.bz2" ]; then
+elif [ ! -e "firefox-${ffVersion}esr.source.tar.bz2" ]; then
   echo "Getting the latest Firefox sources ..."
   wget -t 3 $releasePath/source/firefox-${ffVersion}esr.source.tar.bz2
   if [ ! $? -eq 0 ]; then
@@ -156,7 +156,7 @@ elif [ ! -e "firefox-$ffVersion.source.tar.bz2" ]; then
   fi
 fi
 
-if [ ! -e "firefox-$ffVersion.source.tar.bz2.asc" ]; then
+if [ ! -e "firefox-${ffVersion}esr.source.tar.bz2.asc" ]; then
   echo "Getting the signature..."
   wget -t 3 $releasePath/source/firefox-${ffVersion}esr.source.tar.bz2.asc
   if [ ! $? -eq 0 ]; then
