@@ -220,7 +220,18 @@ for lang in $langs; do
     cd ../../tmp
     # Checking out the locale repo
     # TODO: Can we make it even more sure that no one tampered with the repo(s)?
+    # It seems as tags are not signed yet...
     hg clone -r FIREFOX_${ffVersion//./_}_RELEASE https://hg.mozilla.org/releases/l10n/mozilla-release/$lang 
+    cd $lang
+    echo "Verifying the source repo..."
+    hg verify
+    retVal=$?
+    if [ $retVal -eq 1 ]; then
+      echo "Something went wrong with verifying the source repo! Exiting..."
+      exit 1
+    fi
+    echo "Done."
+    cd ..
     # We need the branding files in the locale repo as well
     rsync ../build/mozilla-release/browser/branding/jondobrowser/locales/en-US/brand* $lang/browser/branding/jondobrowser
     # Updating the .mozconfig
