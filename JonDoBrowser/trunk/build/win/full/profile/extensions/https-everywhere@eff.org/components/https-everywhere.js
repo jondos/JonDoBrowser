@@ -14,6 +14,9 @@ https_domains = {};              // maps domain patterns (with at most one
 https_everywhere_blacklist = {}; // URLs we've given up on rewriting because
                                  // of redirection loops
 
+https_blacklist_domains = {};    // domains for which there is at least one
+                                 // blacklisted URL
+
 //
 const CI = Components.interfaces;
 const CC = Components.classes;
@@ -95,8 +98,8 @@ const WHERE_UNTRUSTED = 1;
 const WHERE_TRUSTED = 2;
 const ANYWHERE = 3;
 
-const N_COHORTS = 1000;  // For now 450 / 1000 stable non-Tor users get the popup
-const OBS_COHORTS = 450; // asking them if they'd like to turn on the
+const N_COHORTS = 1000;  // For now 850 / 1000 stable non-Tor users get the popup
+const OBS_COHORTS = 850; // asking them if they'd like to turn on the
                          // Decentralized SSL Observatory
 
 const DUMMY_OBJ = {};

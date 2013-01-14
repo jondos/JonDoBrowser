@@ -1,3 +1,61 @@
+3.1.2                                         (2013-1-2)
+  * Release 3.1.2, since 3.1.1 was accidentally mis-tagged
+  * Fixes for: AmazonAWS/Datawrapper, Cachefly, Cloudfront/C-SPAN, Hetzner.de
+               KeyDrive/Snapnames, QT, openDesktop, OpenTTD, WhiskeyMedia
+    https://mail1.eff.org/pipermail/https-everywhere-rules/2012-December/001432.html
+    https://trac.torproject.org/projects/tor/ticket/7608
+    https://trac.torproject.org/projects/tor/ticket/7567
+    https://mail1.eff.org/pipermail/https-everywhere-rules/2012-December/001432.html
+    https://trac.torproject.org/projects/tor/ticket/7560
+    https://trac.torproject.org/projects/tor/ticket/7796
+  * Disable broken: FlossManuals, Pastebin, Poste.it, Ustream, TED, AusGamers
+    https://trac.torproject.org/projects/tor/ticket/7731
+    https://trac.torproject.org/projects/tor/ticket/7850
+    https://trac.torproject.org/projects/tor/ticket/7840
+    https://trac.torproject.org/projects/tor/ticket/7548
+  * Increase Observatory deployment (65%->85%)
+  * Update cert whitelist
+
+chrome-2012.12.17
+  * The "overdue bugfixes" chromium beta
+  * Ship all ruleset bugfixes from Firefox 3.1 and 3.0.4
+  * Additional fixes for: AmazonAWS/Datawrapper, Cachefly, Cloudfront/C-SPAN,
+                          Hetzner.de, KeyDrive/Snapnames, QT
+  * Additionally disable: Automattic
+
+4.0development.4			     (2012-12-17)
+  * Fix nasty bug that prevented Firefox downloads from Mozilla's CDN 
+    https://trac.torproject.org/projects/tor/ticket/7717
+  * Fix download from qt-project.org
+  * Ship 72 new rulesets
+  * Include all rulset fixes from 3.1
+
+3.1                                          (2012-12-12)
+  * Hacky solution to a very nasty bug in which <securecookie> directives
+    would cause cookies to be flagged as secure even if they were set from
+    HTTP origins!
+    https://trac.torproject.org/projects/tor/ticket/7491
+    https://mail1.eff.org/pipermail/https-everywhere-rules/2012-November/001397.html
+  * Fixes: Akamai, Biomed central, BYU, Cachefly / Topix, DuckDuckGo, Focus.de,
+           Fortum, Mashable, Mail.ru, MayFirst/People Link, MIT, Rackspace,
+           Salsa Labs, SurveyMonkey, Tumblr
+  * Disable: Adtech.de, AllthingsD American Public Media, Dafont, MediaFire,
+             Verizon, vk.com, Wired, Conde Nast
+  * Observatory-only translations into Hebrew and Croatian
+  * Offer the SSL Observatory popup to a larger cohort of users
+
+4.0development.3                             (2012-12-3)
+  * Hacky solution to a very nasty bug in which <securecookie> directives
+    would cause cookies to be flagged as secure even if they were set from
+    HTTP origins!
+    https://trac.torproject.org/projects/tor/ticket/7491
+    https://mail1.eff.org/pipermail/https-everywhere-rules/2012-November/001397.html
+  * Ship 245 new rulesets
+  * Fixes include: Internet Archive, Rackspace
+  * Disable broken: American Public Media, Verizon, Nieuwsblad.be, MyOpenID
+  * (Plus fixes and rulesets disabled between 4.0dev2 and 3.0.4)
+  * Observatory-only translations: Croatian, Hebrew
+
 3.0.4                                        (2012-11-9)
   * Fixes:
     ACLU, Amazon, Barnes & Noble, CharityNavigator, Cloudfront/Turntable.fm,
@@ -41,9 +99,8 @@ chrome-2012.10.31
     https://trac.torproject.org/projects/tor/ticket/7114
     https://trac.torproject.org/projects/tor/ticket/7138
     https://trac.torproject.org/projects/tor/ticket/7107
-
   
-3.0.3                                       (2012-10-25)
+3.0.3                                       (2012-10-29)
   * Work around a nasty bug that was affecting some high-volume Live Youtube streams
     (but not other live YouTube streams)
     https://trac.torproject.org/projects/tor/ticket/7127
