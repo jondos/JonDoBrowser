@@ -33,7 +33,7 @@
 
 svnBrowser=https://svn.jondos.de/svnpub/JonDoBrowser/trunk
 mozKey=247CA658AA95F6171EB0F13EA7D75CC7C52175E2
-releasePath=http://releases.mozilla.org/pub/mozilla.org/firefox/releases/latest
+releasePath=http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/latest-esr
 gpg="/c/Program Files (x86)/GNU/GnuPG/pub/gpg"
 # These are the languages we support with JonDoBrowser
 langs="en-US de"
@@ -88,7 +88,7 @@ done
 # as some mirrors of releases.mozilla.org seem to be not reachable at times...
 echo "Getting the latest Firefox source version..."
 ffVersion=$(wget -t 3 -qO - $releasePath/source | \
-            grep -E 'firefox-[0-9]{2}\.[0-9](\.[0-9])*.source.tar.bz2' | \
+            grep -E 'firefox-[0-9]{2}\.[0-9](\.[0-9])*esr.source.tar.bz2' | \
             tail -n1 | \
             sed 's/.*\([0-9]\{2\}\.[0-9]\(\.[0-9]\)*\).*/\1/g')
 
@@ -101,18 +101,18 @@ cd tmp
 if [ "$ffVersion" = "" ]; then
   echo "We got no version extracted, thus exiting..."
   exit 1
-elif [ ! -e "firefox-$ffVersion.source.tar.bz2" ]; then
+elif [ ! -e "firefox-${ffVersion}esr.source.tar.bz2" ]; then
   echo "Getting the latest Firefox sources ..."
-  wget -t 3 $releasePath/source/firefox-$ffVersion.source.tar.bz2
+  wget -t 3 $releasePath/source/firefox-${ffVersion}esr.source.tar.bz2
   if [ ! $? -eq 0 ]; then
     echo "Error while retrieving the Firefox sources, exiting..."
     exit 1
   fi
 fi
 
-if [ ! -e "firefox-$ffVersion.source.tar.bz2.asc" ]; then
+if [ ! -e "firefox-${ffVersion}esr.source.tar.bz2.asc" ]; then
   echo "Getting the signature..."
-  wget -t 3 $releasePath/source/firefox-$ffVersion.source.tar.bz2.asc
+  wget -t 3 $releasePath/source/firefox-${ffVersion}esr.source.tar.bz2.asc
   if [ ! $? -eq 0 ]; then
     echo "Error while retrieving the signature, exiting..."
     exit 1
@@ -123,7 +123,7 @@ echo "Checking the signature of the sources..."
 # TODO: Implement a more generic routine her assuming the user has not yet
 # imported the Firefox key
 # gpg prints the verification success message to stderr
-gpgVerification firefox-$ffVersion.source.tar.bz2.asc
+gpgVerification firefox-${ffVersion}esr.source.tar.bz2.asc
 
 cd ..
 
@@ -133,8 +133,11 @@ if [ ! -d "build" ]; then
 fi
 
 # Assuming we got the verified FF source copied to tmp first...
-cd build && cp ../tmp/firefox-$ffVersion.source.tar.bz2 .
-tar -xjvf firefox-$ffVersion.source.tar.bz2
+cd build && cp ../tmp/firefox-${ffVersion}esr.source.tar.bz2 .
+tar -xjvf firefox-${ffVersion}esr.source.tar.bz2
+# We do not want to care about specific ESR versions, thus we rename the dir
+# to "mozilla-release".
+mv mozilla-esr* mozilla-release
 echo
 echo "Downloading the build config file..."
 svn cat $svnBrowser/build/.mozconfig_win32 > .mozconfig
@@ -161,7 +164,7 @@ for lang in $langs; do
       # Now, we do all the stuff needed for localized builds
       cd ../../tmp
       # Checking out the locale repo
-      hg clone -r FIREFOX_${ffVersion//./_}_RELEASE http://hg.mozilla.org/releases/l10n/mozilla-release/$lang 
+      hg clone -r FIREFOX_${ffVersion//./_}esr_RELEASE http://hg.mozilla.org/releases/l10n/mozilla-release/$lang 
       # We need the branding files in the locale repo as well
       rsync ../build/mozilla-release/browser/branding/jondobrowser/locales/en-US/brand* $lang/browser/branding/jondobrowser
       # Updating the .mozconfig
