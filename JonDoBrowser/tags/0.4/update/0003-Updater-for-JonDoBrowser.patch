@@ -1,0 +1,378 @@
+diff -r 53fc01ba93c2 browser/app/profile/firefox.js
+--- a/browser/app/profile/firefox.js	Wed Nov 28 20:28:26 2012 -0800
++++ b/browser/app/profile/firefox.js	Mon Dec 10 16:09:22 2012 +0100
+@@ -112,21 +112,20 @@ pref("app.update.cert.maxErrors", 5);
+ // present the following conditions apply for a successful update check:
+ // 1. the uri scheme must be https
+ // 2. the preference name must exist as an attribute name on the certificate and
+ //    the value for the name must be the same as the value for the attribute name
+ //    on the certificate.
+ // If these conditions aren't met it will be treated the same as when there is
+ // no update available. This validation will not be performed when using the
+ // |app.update.url.override| preference for update checking.
+-pref("app.update.certs.1.issuerName", "OU=Equifax Secure Certificate Authority,O=Equifax,C=US");
+-pref("app.update.certs.1.commonName", "aus3.mozilla.org");
+-
+-pref("app.update.certs.2.issuerName", "CN=Thawte SSL CA,O=\"Thawte, Inc.\",C=US");
+-pref("app.update.certs.2.commonName", "aus3.mozilla.org");
++pref("app.update.certs.1.issuerName", "serialNumber=07969287,CN=Go Daddy Secure Certification Authority,OU=http://certificates.godaddy.com/repository,O=\"GoDaddy.com, Inc.\",L=Scottsdale,ST=Arizona,C=US");
++pref("app.update.certs.1.commonName", "anonymous-proxy-servers.net");
++pref("app.update.certs.1.md5Fingerprint", "DD:75:D9:C7:A3:B5:9D:7A:E5:98:C4:FD:4D:2E:78:8A");
++pref("app.update.certs.1.sha1Fingerprint", "84:78:73:F0:9F:25:17:F3:08:3A:3D:DB:D1:C4:2C:BD:C7:3D:38:AA");
+ 
+ // Whether or not app updates are enabled
+ pref("app.update.enabled", true);
+ 
+ // This preference turns on app.update.mode and allows automatic download and
+ // install to take place. We use a separate boolean toggle for this to make
+ // the UI easier to construct.
+ pref("app.update.auto", true);
+@@ -145,17 +144,17 @@ pref("app.update.mode", 1);
+ // If set to true, the Update Service will present no UI for any event.
+ pref("app.update.silent", false);
+ 
+ // If set to true, the Update Service will apply updates in the background
+ // when it finishes downloading them.
+ pref("app.update.staging.enabled", true);
+ 
+ // Update service URL:
+-pref("app.update.url", "https://aus3.mozilla.org/update/3/%PRODUCT%/%VERSION%/%BUILD_ID%/%BUILD_TARGET%/%LOCALE%/%CHANNEL%/%OS_VERSION%/%DISTRIBUTION%/%DISTRIBUTION_VERSION%/update.xml");
++pref("app.update.url", "https://anonymous-proxy-servers.net/update/JonDoBrowser/%VERSION%/%BUILD_TARGET%/%LOCALE%/update.xml");
+ // app.update.url.manual is in branding section
+ // app.update.url.details is in branding section
+ 
+ // User-settable override to app.update.url for testing purposes.
+ //pref("app.update.url.override", "");
+ 
+ // app.update.interval is in branding section
+ // app.update.promptWaitTime is in branding section
+diff -r 53fc01ba93c2 toolkit/mozapps/update/nsUpdateService.js
+--- a/toolkit/mozapps/update/nsUpdateService.js	Wed Nov 28 20:28:26 2012 -0800
++++ b/toolkit/mozapps/update/nsUpdateService.js	Mon Dec 10 16:09:22 2012 +0100
+@@ -46,21 +46,21 @@ const PREF_APP_UPDATE_STAGE_ENABLED     
+ const PREF_APP_UPDATE_URL                 = "app.update.url";
+ const PREF_APP_UPDATE_URL_DETAILS         = "app.update.url.details";
+ const PREF_APP_UPDATE_URL_OVERRIDE        = "app.update.url.override";
+ const PREF_APP_UPDATE_SERVICE_ENABLED     = "app.update.service.enabled";
+ const PREF_APP_UPDATE_SERVICE_ERRORS      = "app.update.service.errors";
+ const PREF_APP_UPDATE_SERVICE_MAX_ERRORS  = "app.update.service.maxErrors";
+ 
+ const PREF_PARTNER_BRANCH                 = "app.partner.";
+-const PREF_APP_DISTRIBUTION               = "distribution.id";
+-const PREF_APP_DISTRIBUTION_VERSION       = "distribution.version";
+ 
+ const PREF_EM_HOTFIX_ID                   = "extensions.hotfix.id";
+ 
++const PREF_JONDOBROWSER_VERSION           = "extensions.jondofox.browser_version";
++
+ const URI_UPDATE_PROMPT_DIALOG  = "chrome://mozapps/content/update/updates.xul";
+ const URI_UPDATE_HISTORY_DIALOG = "chrome://mozapps/content/update/history.xul";
+ const URI_BRAND_PROPERTIES      = "chrome://branding/locale/brand.properties";
+ const URI_UPDATES_PROPERTIES    = "chrome://mozapps/locale/update/updates.properties";
+ const URI_UPDATE_NS             = "http://www.mozilla.org/2005/app-update";
+ 
+ const CATEGORY_UPDATE_TIMER               = "update-timer";
+ 
+@@ -185,146 +185,16 @@ XPCOMUtils.defineLazyGetter(this, "gABI"
+ #ifdef MOZ_SHARK
+   // Disambiguate optimised and shark nightlies
+   abi += "-shark"
+ #endif
+ #endif
+   return abi;
+ });
+ 
+-XPCOMUtils.defineLazyGetter(this, "gOSVersion", function aus_gOSVersion() {
+-  let osVersion;
+-  let sysInfo = Cc["@mozilla.org/system-info;1"].
+-                getService(Ci.nsIPropertyBag2);
+-  try {
+-    osVersion = sysInfo.getProperty("name") + " " + sysInfo.getProperty("version");
+-  }
+-  catch (e) {
+-    LOG("gOSVersion - OS Version unknown: updates are not possible.");
+-  }
+-
+-  if (osVersion) {
+-#ifdef XP_WIN
+-    const BYTE = ctypes.uint8_t;
+-    const WORD = ctypes.uint16_t;
+-    const DWORD = ctypes.uint32_t;
+-    const WCHAR = ctypes.jschar;
+-    const BOOL = ctypes.int;
+-
+-    // This structure is described at:
+-    // http://msdn.microsoft.com/en-us/library/ms724833%28v=vs.85%29.aspx
+-    const SZCSDVERSIONLENGTH = 128;
+-    const OSVERSIONINFOEXW = new ctypes.StructType('OSVERSIONINFOEXW',
+-        [
+-        {dwOSVersionInfoSize: DWORD},
+-        {dwMajorVersion: DWORD},
+-        {dwMinorVersion: DWORD},
+-        {dwBuildNumber: DWORD},
+-        {dwPlatformId: DWORD},
+-        {szCSDVersion: ctypes.ArrayType(WCHAR, SZCSDVERSIONLENGTH)},
+-        {wServicePackMajor: WORD},
+-        {wServicePackMinor: WORD},
+-        {wSuiteMask: WORD},
+-        {wProductType: BYTE},
+-        {wReserved: BYTE}
+-        ]);
+-
+-    // This structure is described at:
+-    // http://msdn.microsoft.com/en-us/library/ms724958%28v=vs.85%29.aspx
+-    const SYSTEM_INFO = new ctypes.StructType('SYSTEM_INFO',
+-        [
+-        {wProcessorArchitecture: WORD},
+-        {wReserved: WORD},
+-        {dwPageSize: DWORD},
+-        {lpMinimumApplicationAddress: ctypes.voidptr_t},
+-        {lpMaximumApplicationAddress: ctypes.voidptr_t},
+-        {dwActiveProcessorMask: DWORD.ptr},
+-        {dwNumberOfProcessors: DWORD},
+-        {dwProcessorType: DWORD},
+-        {dwAllocationGranularity: DWORD},
+-        {wProcessorLevel: WORD},
+-        {wProcessorRevision: WORD}
+-        ]);
+-
+-    let kernel32 = false;
+-    try {
+-      kernel32 = ctypes.open("Kernel32");
+-    } catch (e) {
+-      LOG("gOSVersion - Unable to open kernel32! " + e);
+-      osVersion += ".unknown (unknown)";
+-    }
+-
+-    if(kernel32) {
+-      try {
+-        // Get Service pack info
+-        try {
+-          let GetVersionEx = kernel32.declare("GetVersionExW",
+-                                              ctypes.default_abi,
+-                                              BOOL,
+-                                              OSVERSIONINFOEXW.ptr);
+-          let winVer = OSVERSIONINFOEXW();
+-          winVer.dwOSVersionInfoSize = OSVERSIONINFOEXW.size;
+-
+-          if(0 !== GetVersionEx(winVer.address())) {
+-            osVersion += "." + winVer.wServicePackMajor
+-                      +  "." + winVer.wServicePackMinor;
+-          } else {
+-            LOG("gOSVersion - Unknown failure in GetVersionEX (returned 0)");
+-            osVersion += ".unknown";
+-          }
+-        } catch (e) {
+-          LOG("gOSVersion - error getting service pack information. Exception: " + e);
+-          osVersion += ".unknown";
+-        }
+-
+-        // Get processor architecture
+-        let arch = "unknown";
+-        try {
+-          let GetNativeSystemInfo = kernel32.declare("GetNativeSystemInfo",
+-                                                     ctypes.default_abi,
+-                                                     ctypes.void_t,
+-                                                     SYSTEM_INFO.ptr);
+-          let sysInfo = SYSTEM_INFO();
+-          // Default to unknown
+-          sysInfo.wProcessorArchitecture = 0xffff;
+-
+-          GetNativeSystemInfo(sysInfo.address());
+-          switch(sysInfo.wProcessorArchitecture) {
+-            case 9:
+-              arch = "x64";
+-              break;
+-            case 6:
+-              arch = "IA64";
+-              break;
+-            case 0:
+-              arch = "x86";
+-              break;
+-          }
+-        } catch (e) {
+-          LOG("gOSVersion - error getting processor architecture.  Exception: " + e);
+-        } finally {
+-          osVersion += " (" + arch + ")";
+-        }
+-      } finally {
+-        kernel32.close();
+-      }
+-    }
+-#endif
+-
+-    try {
+-      osVersion += " (" + sysInfo.getProperty("secondaryLibrary") + ")";
+-    }
+-    catch (e) {
+-      // Not all platforms have a secondary widget library, so an error is nothing to worry about.
+-    }
+-    osVersion = encodeURIComponent(osVersion);
+-  }
+-  return osVersion;
+-});
+-
+ /**
+  * Tests to make sure that we can write to a given directory.
+  *
+  * @param updateTestFile a test file in the directory that needs to be tested.
+  * @param createDirectory whether a test directory should be created.
+  * @throws if we don't have right access to the directory.
+  */
+ function testWriteAccess(updateTestFile, createDirectory) {
+@@ -491,23 +361,16 @@ XPCOMUtils.defineLazyGetter(this, "gCanC
+   }
+ 
+   // If we don't know the binary platform we're updating, we can't update.
+   if (!gABI) {
+     LOG("gCanCheckForUpdates - unable to check for updates, unknown ABI");
+     return false;
+   }
+ 
+-  // If we don't know the OS version we're updating, we can't update.
+-  if (!gOSVersion) {
+-    LOG("gCanCheckForUpdates - unable to check for updates, unknown OS " +
+-        "version");
+-    return false;
+-  }
+-
+   LOG("gCanCheckForUpdates - able to check for updates");
+   return true;
+ });
+ 
+ /**
+  * Logs a string to the error console.
+  * @param   string
+  *          The string to write to the error console.
+@@ -897,29 +760,16 @@ function getUpdateChannel() {
+   }
+   catch (e) {
+     Components.utils.reportError(e);
+   }
+ 
+   return channel;
+ }
+ 
+-/* Get the distribution pref values, from defaults only */
+-function getDistributionPrefValue(aPrefName) {
+-  var prefValue = "default";
+-
+-  try {
+-    prefValue = Services.prefs.getDefaultBranch(null).getCharPref(aPrefName);
+-  } catch (e) {
+-    // use default when pref not found
+-  }
+-
+-  return prefValue;
+-}
+-
+ /**
+  * An enumeration of items in a JS array.
+  * @constructor
+  */
+ function ArrayEnumerator(aItems) {
+   this._index = 0;
+   if (aItems) {
+     for (var i = 0; i < aItems.length; ++i) {
+@@ -1860,24 +1710,23 @@ UpdateService.prototype = {
+       return null;
+ 
+     // Choose the newest of the available minor and major updates.
+     var majorUpdate = null;
+     var minorUpdate = null;
+     var vc = Services.vc;
+ 
+     updates.forEach(function(aUpdate) {
+-      // Ignore updates for older versions of the application and updates for
+-      // the same version of the application with the same build ID.
+-      if (vc.compare(aUpdate.appVersion, Services.appinfo.version) < 0 ||
+-          vc.compare(aUpdate.appVersion, Services.appinfo.version) == 0 &&
+-          aUpdate.buildID == Services.appinfo.appBuildID) {
++      // Ignore updates for older or the same versions of the application. If we
++      // ship an update its version is always incremented.
++      if (vc.compare(aUpdate.appVersion, Services.prefs.
++          getCharPref(PREF_JONDOBROWSER_VERSION)) <= 0) {
+         LOG("UpdateService:selectUpdate - skipping update because the " +
+-            "update's application version is less than the current " +
+-            "application version");
++            "update's application version is less than or equal to the " +
++            "current application version");
+         return;
+       }
+ 
+       // Skip the update if the user responded with "never" to this update's
+       // application version and the update specifies showNeverForVersion
+       // (see bug 350636).
+       let neverPrefName = PREF_APP_UPDATE_NEVER_BRANCH + aUpdate.appVersion;
+       if (aUpdate.showNeverForVersion &&
+@@ -2215,30 +2064,25 @@ UpdateService.prototype = {
+ 
+   /**
+    * See nsIUpdateService.idl
+    */
+   downloadUpdate: function AUS_downloadUpdate(update, background) {
+     if (!update)
+       throw Cr.NS_ERROR_NULL_POINTER;
+ 
+-    // Don't download the update if the update's version is less than the
+-    // current application's version or the update's version is the same as the
+-    // application's version and the build ID is the same as the application's
+-    // build ID.
+-    if (update.appVersion &&
+-        (Services.vc.compare(update.appVersion, Services.appinfo.version) < 0 ||
+-         update.buildID && update.buildID == Services.appinfo.appBuildID &&
+-         update.appVersion == Services.appinfo.version)) {
++    // Don't download the update if the update's version is less than or equal
++    // to the current application's version.
++    if (update.appVersion && Services.vc.compare(update.appVersion,
++        Services.prefs.getCharPref(PREF_JONDOBROWSER_VERSION)) <= 0) {
+       LOG("UpdateService:downloadUpdate - canceling download of update since " +
+-          "it is for an earlier or same application version and build ID.\n" +
+-          "current application version: " + Services.appinfo.version + "\n" +
+-          "update application version : " + update.appVersion + "\n" +
+-          "current build ID: " + Services.appinfo.appBuildID + "\n" +
+-          "update build ID : " + update.buildID);
++          "it is for an earlier or same application version.\n" +
++          "current application version: " + Services.prefs.
++          getCharPref(PREF_JONDOBROWSER_VERSION) + "\n" +
++          "update application version : " + update.appVersion + "\n");
+       cleanupActiveUpdate();
+       return STATE_NONE;
+     }
+ 
+     // If a download request is in progress vs. a download ready to resume
+     if (this.isDownloading) {
+       if (update.isCompleteUpdate == this._downloader.isCompleteUpdate &&
+           background == this._downloader.background) {
+@@ -2654,29 +2498,21 @@ Checker.prototype = {
+       }
+     }
+ 
+     if (!url || url == "") {
+       LOG("Checker:getUpdateURL - update URL not defined");
+       return null;
+     }
+ 
+-    url = url.replace(/%PRODUCT%/g, Services.appinfo.name);
+-    url = url.replace(/%VERSION%/g, Services.appinfo.version);
+-    url = url.replace(/%BUILD_ID%/g, Services.appinfo.appBuildID);
++    url = url.replace(/%VERSION%/g, Services.prefs.
++      getCharPref(PREF_JONDOBROWSER_VERSION));
+     url = url.replace(/%BUILD_TARGET%/g, Services.appinfo.OS + "_" + gABI);
+-    url = url.replace(/%OS_VERSION%/g, gOSVersion);
+     if (/%LOCALE%/.test(url))
+       url = url.replace(/%LOCALE%/g, getLocale());
+-    url = url.replace(/%CHANNEL%/g, getUpdateChannel());
+-    url = url.replace(/%PLATFORM_VERSION%/g, Services.appinfo.platformVersion);
+-    url = url.replace(/%DISTRIBUTION%/g,
+-                      getDistributionPrefValue(PREF_APP_DISTRIBUTION));
+-    url = url.replace(/%DISTRIBUTION_VERSION%/g,
+-                      getDistributionPrefValue(PREF_APP_DISTRIBUTION_VERSION));
+     url = url.replace(/\+/g, "%2B");
+ 
+     if (force)
+       url += (url.indexOf("?") != -1 ? "&" : "?") + "force=1";
+ 
+     LOG("Checker:getUpdateURL - update URL: " + url);
+     return url;
+   },

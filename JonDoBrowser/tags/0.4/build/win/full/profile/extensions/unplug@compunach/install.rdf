@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<RDF:RDF
+	xmlns:em="http://www.mozilla.org/2004/em-rdf#"
+	xmlns:NC="http://home.netscape.com/NC-rdf#"
+	xmlns:RDF="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+	<RDF:Description
+		RDF:about="urn:mozilla:install-manifest"
+		em:id="unplug@compunach"
+		em:version="2.052"
+		em:type="2"
+		em:name="UnPlug"
+		em:description="Find and download media from websites"
+		em:creator="h2g2bob &lt;unplug@dbatley.com&gt;"
+		em:homepageURL="http://unplug.dbatley.com/"
+		em:iconURL="chrome://unplug/skin/unplug-32.png"
+		em:optionsURL="chrome://unplug/content/config/config.xul" >
+		<em:translator>Ushi (de-DE)</em:translator>
+		<em:translator>DenB (fr-FR)</em:translator>
+		<em:translator>Juhász Zsolt (hu-HU)</em:translator>
+		<em:translator>Konradmb (pl-PL)</em:translator>
+		<em:translator>Mikael Hiort af Ornäs (sv-SE)</em:translator>
+		<em:targetApplication>
+			<Description>
+				<!-- Firefox -->
+				<em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id>
+				<em:minVersion>3.0</em:minVersion>
+				<em:maxVersion>16.*</em:maxVersion><!-- firefox -->
+			</Description>
+		</em:targetApplication>
+		<em:targetApplication>
+			<Description>
+				<!-- SeaMonkey -->
+				<em:id>{92650c4d-4b8e-4d2a-b7eb-24ecf4f6b63a}</em:id>
+				<em:minVersion>2.0</em:minVersion>
+				<em:maxVersion>2.9.*</em:maxVersion><!-- seamonkey -->
+			</Description>
+		</em:targetApplication>
+	</RDF:Description>
+</RDF:RDF>
