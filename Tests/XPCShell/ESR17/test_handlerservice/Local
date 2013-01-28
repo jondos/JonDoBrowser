@@ -1,0 +1,199 @@
+firefox-TravelMate-7740G:~/Updater/mozilla-esr17/obj-i686-pc-linux-gnu$ make SOLO_FILE="test_handlerService.js" -C uriloader/exthandler/tests/ check-one
+make: Gehe in Verzeichnis '/home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/uriloader/exthandler/tests'
+/home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_virtualenv/bin/python -u /home/firefox/Updater/mozilla-esr17/config/pythonpath.py \
+	  -I/home/firefox/Updater/mozilla-esr17/build \
+      -I../../../_tests/mozbase/mozinfo \
+	  /home/firefox/Updater/mozilla-esr17/testing/xpcshell/runxpcshelltests.py \
+	  --symbols-path=../../../dist/crashreporter-symbols \
+	  --build-info-json=../../../mozinfo.json \
+	  --test-path=test_handlerService.js \
+	  --testing-modules-dir=../../../_tests/modules \
+	  --profile-name=firefox \
+	  --verbose \
+	   \
+	  /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/dist/bin/xpcshell \
+	  ../../../_tests/xpcshell/uriloader/exthandler/tests/unit ../../../_tests/xpcshell/uriloader/exthandler/tests/unit_ipc
+TEST-INFO | profile dir is /tmp/firefox/xpcshellprofile
+TEST-INFO | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | running test ...
+TEST-INFO | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | full command: ['/home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/dist/bin/xpcshell', '-g', '/home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/dist/bin', '-a', '/home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/dist/bin', '-r', '/home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/dist/bin/components/httpd.manifest', '-m', '-n', '-s', '-e', 'const _HTTPD_JS_PATH = "/home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/dist/bin/components/httpd.js";', '-e', 'const _HEAD_JS_PATH = "/home/firefox/Updater/mozilla-esr17/testing/xpcshell/head.js";', '-e', 'const _TESTING_MODULES_DIR = "/home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/modules/";', '-f', '/home/firefox/Updater/mozilla-esr17/testing/xpcshell/head.js', '-e', 'const _SERVER_ADDR = "localhost"', '-e', 'const _HEAD_FILES = ["/home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/head_handlerService.js"];', '-e', 'const _TAIL_FILES = ["/home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/tail_handlerService.js"];', '-e', 'const _TEST_FILE = ["/home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js"];', '-e', '_execute_test(); quit(0);']
+TEST-INFO | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | current directory: '/home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit'
+TEST-INFO | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | environment: ['XPCSHELL_TEST_PROFILE_DIR=/tmp/firefox/xpcshellprofile', 'NS_TRACE_MALLOC_DISABLE_STACKS=1', 'LD_LIBRARY_PATH=/home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/dist/bin', 'XPCOM_MEM_LEAK_LOG=/tmp/firefox/xpcshellprofile/runxpcshelltests_leaks.log', 'XPCOM_DEBUG_BREAK=stack-and-abort', 'MOZ_CRASHREPORTER_NO_REPORT=1']
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | test passed (time: 1169.530ms)
+>>>>>>>
+*** HandlerServiceTest: getFile: requesting UMimTyp
+*** HandlerServiceTest: getFile: requesting CurProcD
+*** HandlerServiceTest: the following NS_ERROR_FAILURE exception in nsIDirectoryServiceProvider::getFile is expected, as we don't provide the 'CurProcD' file
+
+TEST-INFO | (xpcshell/head.js) | test 1 pending
+*** HandlerServiceTest: getFile: requesting ProfLDS
+*** HandlerServiceTest: the following NS_ERROR_FAILURE exception in nsIDirectoryServiceProvider::getFile is expected, as we don't provide the 'ProfLDS' file
+*** HandlerServiceTest: getFile: requesting ProfLDS
+*** HandlerServiceTest: the following NS_ERROR_FAILURE exception in nsIDirectoryServiceProvider::getFile is expected, as we don't provide the 'ProfLDS' file
+*** HandlerServiceTest: getFile: requesting ProfLDS
+*** HandlerServiceTest: the following NS_ERROR_FAILURE exception in nsIDirectoryServiceProvider::getFile is expected, as we don't provide the 'ProfLDS' file
+*** HandlerServiceTest: getFile: requesting TmpD
+*** HandlerServiceTest: the following NS_ERROR_FAILURE exception in nsIDirectoryServiceProvider::getFile is expected, as we don't provide the 'TmpD' file
+*** HandlerServiceTest: getFile: requesting Home
+*** HandlerServiceTest: the following NS_ERROR_FAILURE exception in nsIDirectoryServiceProvider::getFile is expected, as we don't provide the 'Home' file
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 85] true == true
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 87] nonexistent/type == nonexistent/type
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 90] nonexistent/type == nonexistent/type
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 93] 0 == 0
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 94] null == null
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 95] 0 == 0
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 96] true == true
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 100]  == 
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 101] false == false
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 102]  == 
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 124] 1 == 1
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 125] true == true
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 132] 0 == 0
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 133] false == false
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 142] 0 == 0
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 143] true == true
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 149] 2 == 2
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 157] false == false
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 163] 2 == 2
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 172] false == false
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 187] 2 == 2
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 188] true == true
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 208] 2 == 2
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 210] [xpconnect wrapped nsIHandlerApp] != null
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 212] object == object
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 213] Local Handler == Local Handler
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 214] true == true
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 216] /tmp == /tmp
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 218] false == false
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 233] 0 != -1
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 233] 0 != -1
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 233] 0 != -1
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 233] 2 != -1
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 233] 0 != -1
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 233] 0 != -1
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 236] 0 == 0
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 243] nonexistent/type != nonexistent/type2
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 243] webcal != nonexistent/type2
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 243] ircs != nonexistent/type2
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 243] mailto != nonexistent/type2
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 243] irc != nonexistent/type2
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 252] null == null
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 266] null == null
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 274] 0 == 0
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 281] 0 == 0
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 292] 2 == 2
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 314] Local Handler == Local Handler
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 315] true == true
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 316] Web Handler == Web Handler
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 317] true == true
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 325] 1 == 1
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 330] Web Handler == Web Handler
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 331] true == true
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 339] true == true
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 343] 0 == 0
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 345] 1 == 1
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 347] 2 == 2
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 348] true == true
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 349] true == true
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 350] false == false
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 352] 0 == 0
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 360] true == true
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 372] true == true
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 387] false == false
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 391] -test1 == -test1
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 393] -test2 == -test2
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 395] -test3 == -test3
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 405]  == 
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 411] false == false
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 417] false == false
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 419] true == true
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 442] application/lolcat == application/lolcat
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 446] 4 == 4
+
+TEST-PASS | /home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 447] sed == sed
+
+TEST-INFO | (xpcshell/head.js) | test 1 finished
+
+TEST-INFO | (xpcshell/head.js) | exiting test
+
+TEST-PASS | (xpcshell/head.js) | 74 (+ 0) check(s) passed
+
+TEST-INFO | (xpcshell/head.js) | 0 check(s) todo
+<<<<<<<
+INFO | Result summary:
+INFO | Passed: 1
+INFO | Failed: 0
+INFO | Todo: 0
+make: Verlasse Verzeichnis '/home/firefox/Updater/mozilla-esr17/obj-i686-pc-linux-gnu/uriloader/exthandler/tests'
