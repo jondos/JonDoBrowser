@@ -1,0 +1,63 @@
+make: Gehe in Verzeichnis '/home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/netwerk/test'
+/home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_virtualenv/bin/python -u /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/config/pythonpath.py \
+	  -I/home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/build \
+      -I../../_tests/mozbase/mozinfo \
+	  /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/testing/xpcshell/runxpcshelltests.py \
+	  --symbols-path=../../dist/crashreporter-symbols \
+	  --build-info-json=../../mozinfo.json \
+	  --test-path=test_bug455311.js \
+	  --testing-modules-dir=../../_tests/modules \
+	  --profile-name=firefox \
+	  --verbose \
+	   \
+	  /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/dist/bin/xpcshell \
+	  ../../_tests/xpcshell/netwerk/test/unit ../../_tests/xpcshell/netwerk/test/unit_ipc
+TEST-INFO | profile dir is /tmp/firefox/xpcshellprofile
+TEST-INFO | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/netwerk/test/unit/test_bug455311.js | running test ...
+TEST-INFO | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/netwerk/test/unit/test_bug455311.js | full command: ['/home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/dist/bin/xpcshell', '-g', '/home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/dist/bin', '-a', '/home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/dist/bin', '-r', '/home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/dist/bin/components/httpd.manifest', '-m', '-n', '-s', '-e', 'const _HTTPD_JS_PATH = "/home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/dist/bin/components/httpd.js";', '-e', 'const _HEAD_JS_PATH = "/home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/testing/xpcshell/head.js";', '-e', 'const _TESTING_MODULES_DIR = "/home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/modules/";', '-f', '/home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/testing/xpcshell/head.js', '-e', 'const _SERVER_ADDR = "localhost"', '-e', 'const _HEAD_FILES = ["/home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/netwerk/test/unit/head_channels.js", "/home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/netwerk/test/unit/head_cache.js"];', '-e', 'const _TAIL_FILES = [];', '-e', 'const _TEST_FILE = ["/home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/netwerk/test/unit/test_bug455311.js"];', '-e', '_execute_test(); quit(0);']
+TEST-INFO | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/netwerk/test/unit/test_bug455311.js | current directory: '/home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/netwerk/test/unit'
+TEST-INFO | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/netwerk/test/unit/test_bug455311.js | environment: ['LD_LIBRARY_PATH=/home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/dist/bin', 'XPCSHELL_TEST_PROFILE_DIR=/tmp/firefox/xpcshellprofile', 'NS_TRACE_MALLOC_DISABLE_STACKS=1', 'XPCOM_MEM_LEAK_LOG=/tmp/firefox/xpcshellprofile/runxpcshelltests_leaks.log', 'XPCOM_DEBUG_BREAK=stack-and-abort', 'MOZ_CRASHREPORTER_NO_REPORT=1']
+TEST-UNEXPECTED-FAIL | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/netwerk/test/unit/test_bug455311.js | test failed (with xpcshell return code: 0), see following log:
+>>>>>>>
+
+TEST-INFO | (xpcshell/head.js) | test 1 pending
+
+TEST-INFO | (xpcshell/head.js) | test 2 pending
+
+TEST-UNEXPECTED-FAIL | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/netwerk/test/unit/test_bug455311.js | [xpconnect wrapped nsIURI] == [xpconnect wrapped nsIURI] - See following stack:
+JS frame :: /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/testing/xpcshell/head.js :: do_throw :: line 451
+JS frame :: /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/testing/xpcshell/head.js :: _do_check_eq :: line 545
+JS frame :: /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/testing/xpcshell/head.js :: do_check_eq :: line 566
+JS frame :: /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/netwerk/test/unit/test_bug455311.js :: run_test :: line 122
+JS frame :: /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/testing/xpcshell/head.js :: _execute_test :: line 315
+JS frame :: -e :: <TOP_LEVEL> :: line 1
+
+TEST-INFO | (xpcshell/head.js) | exiting test
+<<<<<<<
+INFO | Result summary:
+INFO | Passed: 0
+INFO | Failed: 1
+INFO | Todo: 0
+make: *** [check-one] Fehler 1
+make: Verlasse Verzeichnis '/home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/netwerk/test'
+
+-------------------------------------------------------------------------------
+
+The issue is that linkURL is for some reason a link which gets resolved when
+creating the URI for the channel (see the constructor in: nsFileChannel.cpp for
+the rationale):
+
+Logging in nsFileChannel.cpp:
+=============================
+
+FileTarget is /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/netwerk/test/unit/test_link.desktop (the resolved one)
+
+We resolved the link we got (the resolving code path is triggered)
+
+Original Uri is file:///home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/netwerk/test/unit/test_link.desktop
+(the original spec)
+
+Testoutput:
+===========
+
+LinkURI is: file:///home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/netwerk/test/unit/test_link.desktop and channelURI is: file:///home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/netwerk/test/unit/test_link.desktop
