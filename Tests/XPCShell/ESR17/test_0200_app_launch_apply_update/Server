@@ -58,3 +58,83 @@ make: Verlasse Verzeichnis '/home/groeg/JonDoBrowser/stable/testing/mozilla-esr1
 
 X11 Forwarding needs to be enabled here (e.g. with the -X option when launching
 ssh)
+
+-------------------------------------------------------------------------------
+
+Another one:
+
+TEST-UNEXPECTED-FAIL | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/test_0200_app_launch_apply_update.js | test failed (with xpcshell return code: 3), see following log:
+>>>>>>>
+
+TEST-INFO | (xpcshell/head.js) | test 1 pending
+
+TEST-INFO | (xpcshell/head.js) | test 2 pending
+TEST-INFO | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/test_0200_app_launch_apply_update.js | [run_test : 78] update test directory path: /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/dist/bin/update_test
+
+TEST-UNEXPECTED-FAIL | xpcshell/head.js | [Exception... "Component returned failure code: 0x80520006 (NS_ERROR_FILE_TARGET_DOES_NOT_EXIST) [nsIFile.moveTo]"  nsresult: "0x80520006 (NS_ERROR_FILE_TARGET_DOES_NOT_EXIST)"  location: "JS frame :: /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/test_0200_app_launch_apply_update.js :: run_test :: line 100"  data: no]
+/home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/test_0200_app_launch_apply_update.js:135: TypeError: gProcess is undefined
+<<<<<<<
+
+-------------------------------------------------------------------------------
+
+And yet another one:
+
+TEST-INFO | profile dir is /tmp/firefox/xpcshellprofile
+TEST-INFO | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/test_0200_app_launch_apply_update.js | running test ...
+TEST-INFO | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/test_0200_app_launch_apply_update.js | full command: ['/home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/dist/bin/xpcshell', '-g', '/home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/dist/bin', '-a', '/home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/dist/bin', '-r', '/home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/dist/bin/components/httpd.manifest', '-m', '-n', '-s', '-e', 'const _HTTPD_JS_PATH = "/home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/dist/bin/components/httpd.js";', '-e', 'const _HEAD_JS_PATH = "/home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/testing/xpcshell/head.js";', '-e', 'const _TESTING_MODULES_DIR = "/home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/modules/";', '-f', '/home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/testing/xpcshell/head.js', '-e', 'const _SERVER_ADDR = "localhost"', '-e', 'const _HEAD_FILES = ["/home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/head_update.js"];', '-e', 'const _TAIL_FILES = [];', '-e', 'const _TEST_FILE = ["/home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/test_0200_app_launch_apply_update.js"];', '-e', '_execute_test(); quit(0);']
+TEST-INFO | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/test_0200_app_launch_apply_update.js | current directory: '/home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit'
+TEST-INFO | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/test_0200_app_launch_apply_update.js | environment: ['LD_LIBRARY_PATH=/home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/dist/bin', 'XPCSHELL_TEST_PROFILE_DIR=/tmp/firefox/xpcshellprofile', 'NS_TRACE_MALLOC_DISABLE_STACKS=1', 'XPCOM_MEM_LEAK_LOG=/tmp/firefox/xpcshellprofile/runxpcshelltests_leaks.log', 'XPCOM_DEBUG_BREAK=stack-and-abort', 'MOZ_CRASHREPORTER_NO_REPORT=1']
+TEST-UNEXPECTED-FAIL | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/test_0200_app_launch_apply_update.js | test failed (with xpcshell return code: 0), see following log:
+>>>>>>>
+
+TEST-INFO | (xpcshell/head.js) | test 1 pending
+
+TEST-INFO | (xpcshell/head.js) | test 2 pending
+TEST-INFO | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/test_0200_app_launch_apply_update.js | [run_test : 78] update test directory path: /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/dist/bin/update_test
+TEST-INFO | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/head_update.js | [getProcessArgs : 2619] created /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/launch.sh containing:
+#! /bin/sh
+/home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/dist/bin/firefox-bin -no-remote -process-updates  1> /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/0200_app_console_log 2>&1
+TEST-INFO | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/test_0200_app_launch_apply_update.js | [run_test : 117] launching /bin/sh /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/launch.sh
+TEST-INFO | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/head_update.js | [setEnvironment : 2878] removing the XPCOM_MEM_LEAK_LOG environment variable... previous value /tmp/firefox/xpcshellprofile/runxpcshelltests_leaks.log
+TEST-INFO | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/head_update.js | [setEnvironment : 2885] setting the XPCOM_DEBUG_BREAK environment variable to warn... previous value stack-and-abort
+TEST-INFO | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/head_update.js | [setEnvironment : 2911] setting MOZ_NO_SERVICE_FALLBACK environment variable to 1
+TEST-INFO | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/head_update.js | [resetEnvironment : 2931] setting the XPCOM_MEM_LEAK_LOG environment variable back to /tmp/firefox/xpcshellprofile/runxpcshelltests_leaks.log
+TEST-INFO | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/head_update.js | [resetEnvironment : 2937] setting the XPCOM_DEBUG_BREAK environment variable back to stack-and-abort
+TEST-INFO | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/head_update.js | [resetEnvironment : 2964] removing LD_LIBRARY_PATH environment variable
+TEST-INFO | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/head_update.js | [resetEnvironment : 2993] removing MOZ_NO_SERVICE_FALLBACK environment variable
+
+TEST-INFO | (xpcshell/head.js) | test 2 finished
+
+TEST-INFO | (xpcshell/head.js) | running event loop
+
+TEST-UNEXPECTED-FAIL | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/test_0200_app_launch_apply_update.js | launch application timer expired - See following stack:
+JS frame :: /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/testing/xpcshell/head.js :: do_throw :: line 451
+JS frame :: /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/test_0200_app_launch_apply_update.js :: TC_notify :: line 217
+
+TEST-INFO | (xpcshell/head.js) | exiting test
+TEST-INFO | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/test_0200_app_launch_apply_update.js | [PO_observe : 195] topic process-finished, process exitValue 256
+
+TEST-UNEXPECTED-FAIL | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/test_0200_app_launch_apply_update.js | Failed to launch application - See following stack:
+JS frame :: /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/testing/xpcshell/head.js :: do_throw :: line 451
+JS frame :: /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/test_0200_app_launch_apply_update.js :: PO_observe :: line 201
+
+TEST-INFO | (xpcshell/head.js) | exiting test
+TEST-INFO | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/test_0200_app_launch_apply_update.js | [end_test : 167] removing update test directory /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/dist/bin/update_test
+<<<<<<<
+INFO | Result summary:
+INFO | Passed: 0
+INFO | Failed: 1
+INFO | Todo: 0
+make: *** [check-one] Fehler 1
+
+-------------------------------------------------------------------------------
+
+This one seems to be a timeout issue. Maybe 15000ms is not enough with
+XForwarding enabled?
+
+Possibly related to:
+
+https://bugzilla.mozilla.org/show_bug.cgi?id=814535
+https://bugzilla.mozilla.org/show_bug.cgi?id=774014
+
+The former bug set the timeout first to 20000ms and later even to 120000ms.
