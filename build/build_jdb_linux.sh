@@ -106,7 +106,7 @@ do
     c) cleanup;;
     u) update="1";;
     h) echo '' 
-       echo "JonDoBrowser Build Script 1.1 (2012-2103 Copyright (c) JonDos \
+       echo "JonDoBrowser Build Script 1.1 (2012-2013 Copyright (c) JonDos \
 GmbH)"
        echo ''
        echo "usage: $0 [options]"
@@ -127,7 +127,6 @@ done
 # version.
 # When we are using 'wget' in this script we retry three times if necessary
 # as some mirrors of releases.mozilla.org seem to be not reachable at times...
-
 echo "Getting the latest Firefox source version..."
 ffVersion=$(wget -t 3 -qO - $releasePath/source | \
   grep -Eom 1 'firefox-[0-9]{2}\.[0-9](\.[0-9])*.source.tar.bz2' | tail -n1 | \
