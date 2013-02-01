@@ -270,12 +270,25 @@ for lang in $langs; do
   # We build the .mar file for the update mechanism
   if [ "$update" == "1" ]; then
     if [ ! -e "createJDBPrecomplete.py" ]; then
-      svn export $svnBrowser/build/update .  
-      # First we create the precomplete file
-      python createJDBPrecomplete.py
-      # Then we build the .mar file
-      bash make_full_JDB_update.sh $jdbFinal.mar $jdbDir
+      svn checkout $svnBrowser/build/update .  
     fi
+    # First we create the precomplete file
+    python createJDBPrecomplete.py
+    # Then we build the .mar file
+    bash make_full_JDB_update.sh $jdbFinal.mar $jdbDir
+    # Now, update the update.xml values
+    # TODO: We need to adapt that for partial updates
+    cp update.xml update_$jdbFinal.xml
+    sed -i "s/\" version=\"/\" version=\"$jdbVersion/g" \
+      update_$jdbFinal.xml
+    sed -i "s/tensionVersion=\"/tensionVersion=\"$jdbVersion/g" \ 
+      update_$jdbFinal.xml
+    sed -i "s/downloads\//downloads\/$jdbFinal.mar/g" \
+      update_$jdbFinal.xml
+    sed -i "s/hashValue=\"/hashValue=\"$(openssl dgst -sha512 $jdbFinal.mar | \
+      awk '{print $2}')/g" update_$jdbFinal.xml
+    sed -i "s/size=\"/size=\"$(ls -al $jdbFinal.mar | \
+      awk '{print $5}')/g" update_$jdbFinal.xml
   fi
   tar -cf $jdbFinal.tar $jdbDir
   bzip2 -z9 $jdbFinal.tar
