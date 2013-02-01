@@ -31,8 +31,8 @@
 # Afterwards the browser profiles are prepared and JonDoBrowser for Linux is
 # built.
 
-svnProfile=https://svn.jondos.de/svnpub/JonDoFox_Profile/trunk/full/profile
-svnBrowser=https://svn.jondos.de/svnpub/JonDoBrowser/trunk
+svnProfile="https://svn.jondos.de/svnpub/JonDoFox_Profile/trunk/full/profile"
+svnBrowser="https://svn.jondos.de/svnpub/JonDoBrowser/trunk"
 # The locales we support. en-US must be first as all the other localized builds
 # are actually only a repackaging of the en-US one.
 langs="en-US de"
@@ -43,8 +43,10 @@ jdbVersion="0.4"
 # TODO: Shouldn't we check whether this one is still used/valid before actually
 # building? Maybe that's something which is related to the more generic routine
 # for the case the key was not imported yet which is mentioned below.
-mozKey=247CA658AA95F6171EB0F13EA7D75CC7C52175E2
-releasePath=http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/latest-esr
+mozKey="247CA658AA95F6171EB0F13EA7D75CC7C52175E2"
+releasePath="http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/latest-esr"
+# Do we have update packaging (mar generation etc.) enabled?
+update="0"
 
 prepareProfile() {
   echo "Fetching sources..."
@@ -77,7 +79,7 @@ prepareLinuxProfiles() {
   local profileDir
 
   for lang in $langs; do
-    profileDir=$jdbDir-$lang/Data/profile
+    profileDir="$jdbDir-$lang/Data/profile"
     mkdir -p $jdbDir-$lang/App/Firefox
     mkdir -p $jdbDir-$lang/Data/plugins
     cp -rf profile $jdbDir-$lang/Data
@@ -96,18 +98,22 @@ cleanup() {
   exit 0
 }
 
-OPTSTR="ch"
+OPTSTR="cuh"
 getopts "${OPTSTR}" CMD_OPT
 while [ $? -eq 0 ];
 do
   case ${CMD_OPT} in
     c) cleanup;;
+    u) update="1";;
     h) echo '' 
-       echo 'JonDoBrowser Build Script 1.0 (2012 Copyright (c) JonDos GmbH)'
+       echo "JonDoBrowser Build Script 1.1 (2012-2013 Copyright (c) JonDos \
+GmbH)"
+       echo ''
        echo "usage: $0 [options]"
        echo ''
        echo 'Possible options are:'
        echo '-c removes old build cruft.'
+       echo '-u enables the update packaging.'
        echo '-h prints this help text.'
        echo ''
        exit 0
@@ -261,6 +267,16 @@ for lang in $langs; do
   jdbFinal=JonDoBrowser-$jdbVersion-$platform-$lang
   cp -rf firefox/* $jdbDir-$lang/App/Firefox
   mv $jdbDir-$lang $jdbDir
+  # We build the .mar file for the update mechanism
+  if [ "$update" == "1" ]; then
+    if [ ! -e "createJDBPrecomplete.py" ]; then
+      svn export $svnBrowser/build/update .  
+      # First we create the precomplete file
+      python createJDBPrecomplete.py
+      # Then we build the .mar file
+      bash make_full_JDB_update.sh $jdbFinal.mar $jdbDir
+    fi
+  fi
   tar -cf $jdbFinal.tar $jdbDir
   bzip2 -z9 $jdbFinal.tar
   mv $jdbFinal.tar.bz2 ../
