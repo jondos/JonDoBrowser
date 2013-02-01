@@ -31,8 +31,8 @@
 # Afterwards the browser profiles are prepared and JonDoBrowser for Linux is
 # built.
 
-svnProfile=https://svn.jondos.de/svnpub/JonDoFox_Profile/trunk/full/profile
-svnBrowser=https://svn.jondos.de/svnpub/JonDoBrowser/trunk
+svnProfile="https://svn.jondos.de/svnpub/JonDoFox_Profile/trunk/full/profile"
+svnBrowser="https://svn.jondos.de/svnpub/JonDoBrowser/trunk"
 # The locales we support. en-US must be first as all the other localized builds
 # are actually only a repackaging of the en-US one.
 langs="en-US de"
@@ -43,10 +43,10 @@ jdbVersion="0.4"
 # TODO: Shouldn't we check whether this one is still used/valid before actually
 # building? Maybe that's something which is related to the more generic routine
 # for the case the key was not imported yet which is mentioned below.
-mozKey=247CA658AA95F6171EB0F13EA7D75CC7C52175E2
-releasePath=http://releases.mozilla.org/pub/mozilla.org/firefox/releases/latest
+mozKey="247CA658AA95F6171EB0F13EA7D75CC7C52175E2"
+releasePath="http://releases.mozilla.org/pub/mozilla.org/firefox/releases/latest"
 # Do we have update packaging (mar generation etc.) enabled?
-update=false
+update="0"
 
 prepareProfile() {
   echo "Fetching sources..."
@@ -79,7 +79,7 @@ prepareLinuxProfiles() {
   local profileDir
 
   for lang in $langs; do
-    profileDir=$jdbDir-$lang/Data/profile
+    profileDir="$jdbDir-$lang/Data/profile"
     mkdir -p $jdbDir-$lang/App/Firefox
     mkdir -p $jdbDir-$lang/Data/plugins
     cp -rf profile $jdbDir-$lang/Data
@@ -104,7 +104,7 @@ while [ $? -eq 0 ];
 do
   case ${CMD_OPT} in
     c) cleanup;;
-    u) $update=true;;
+    u) update="1";;
     h) echo '' 
        echo "JonDoBrowser Build Script 1.1 (2012-2103 Copyright (c) JonDos \
 GmbH)"
@@ -127,6 +127,7 @@ done
 # version.
 # When we are using 'wget' in this script we retry three times if necessary
 # as some mirrors of releases.mozilla.org seem to be not reachable at times...
+
 echo "Getting the latest Firefox source version..."
 ffVersion=$(wget -t 3 -qO - $releasePath/source | \
   grep -Eom 1 'firefox-[0-9]{2}\.[0-9](\.[0-9])*.source.tar.bz2' | tail -n1 | \
@@ -265,7 +266,7 @@ for lang in $langs; do
   cp -rf firefox/* $jdbDir-$lang/App/Firefox
   mv $jdbDir-$lang $jdbDir
   # We build the .mar file for the update mechanism
-  if [$update == "true" ]; then
+  if [ "$update" == "1" ]; then
     if [ ! -e "createJDBPrecomplete.py" ]; then
       svn export $svnBrowser/build/update .  
       # First we create the precomplete file
