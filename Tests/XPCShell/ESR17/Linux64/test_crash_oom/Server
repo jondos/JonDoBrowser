@@ -13,3 +13,6 @@ JS frame :: -e :: <TOP_LEVEL> :: line 1
 TEST-INFO | (xpcshell/head.js) | exiting test
 <<<<<<<
 
+-------------------------------------------------------------------------------
+
+This happened after applying the patch in /Linux32/test_content_annotation

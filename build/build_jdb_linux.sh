@@ -45,6 +45,8 @@ jdbVersion="0.4"
 # for the case the key was not imported yet which is mentioned below.
 mozKey=247CA658AA95F6171EB0F13EA7D75CC7C52175E2
 releasePath=http://releases.mozilla.org/pub/mozilla.org/firefox/releases/latest
+# Do we have update packaging (mar generation etc.) enabled?
+update=false
 
 prepareProfile() {
   echo "Fetching sources..."
@@ -96,18 +98,22 @@ cleanup() {
   exit 0
 }
 
-OPTSTR="ch"
+OPTSTR="cuh"
 getopts "${OPTSTR}" CMD_OPT
 while [ $? -eq 0 ];
 do
   case ${CMD_OPT} in
     c) cleanup;;
+    u) $update=true;;
     h) echo '' 
-       echo 'JonDoBrowser Build Script 1.0 (2012 Copyright (c) JonDos GmbH)'
+       echo "JonDoBrowser Build Script 1.1 (2012-2103 Copyright (c) JonDos \
+GmbH)"
+       echo ''
        echo "usage: $0 [options]"
        echo ''
        echo 'Possible options are:'
        echo '-c removes old build cruft.'
+       echo '-u enables the update packaging.'
        echo '-h prints this help text.'
        echo ''
        exit 0
