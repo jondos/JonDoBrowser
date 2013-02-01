@@ -1,0 +1,187 @@
+19a20
+> var _profileInitialized = false;
+38c39,40
+< // Disable IPv6 lookups for 'localhost' on windows.
+---
+> // Determine if we're running on parent or child
+> let runningInParent = true;
+40,47c42,59
+<   if ("@mozilla.org/windows-registry-key;1" in Components.classes) {
+<     let processType = Components.classes["@mozilla.org/xre/runtime;1"].
+<       getService(Components.interfaces.nsIXULRuntime).processType;
+<     if (processType == Components.interfaces.nsIXULRuntime.PROCESS_TYPE_DEFAULT) {
+<       let (prefs = Components.classes["@mozilla.org/preferences-service;1"]
+<                    .getService(Components.interfaces.nsIPrefBranch)) {
+<         prefs.setCharPref("network.dns.ipv4OnlyDomains", "localhost");
+<       }
+---
+>   runningInParent = Components.classes["@mozilla.org/xre/runtime;1"].
+>                     getService(Components.interfaces.nsIXULRuntime).processType
+>                     == Components.interfaces.nsIXULRuntime.PROCESS_TYPE_DEFAULT;
+> } 
+> catch (e) { }
+> 
+> try {
+>   if (runningInParent) {
+>     let prefs = Components.classes["@mozilla.org/preferences-service;1"]
+>                 .getService(Components.interfaces.nsIPrefBranch);
+> 
+>     // disable necko IPC security checks for xpcshell, as they lack the
+>     // docshells needed to pass them
+>     prefs.setBoolPref("network.disable.ipc.security", true);
+> 
+>     // Disable IPv6 lookups for 'localhost' on windows.
+>     if ("@mozilla.org/windows-registry-key;1" in Components.classes) {
+>       prefs.setCharPref("network.dns.ipv4OnlyDomains", "localhost");
+59,61c71
+<   let processType = Components.classes["@mozilla.org/xre/runtime;1"].
+<     getService(Components.interfaces.nsIXULRuntime).processType;
+<   if (processType == Components.interfaces.nsIXULRuntime.PROCESS_TYPE_DEFAULT &&
+---
+>   if (runningInParent &&
+731,739c741,756
+<   // Since we have a profile, we will notify profile shutdown topics at
+<   // the end of the current test, to ensure correct cleanup on shutdown.
+<   do_register_cleanup(function() {
+<     let obsSvc = Components.classes["@mozilla.org/observer-service;1"].
+<                  getService(Components.interfaces.nsIObserverService);
+<     obsSvc.notifyObservers(null, "profile-change-net-teardown", null);
+<     obsSvc.notifyObservers(null, "profile-change-teardown", null);
+<     obsSvc.notifyObservers(null, "profile-before-change", null);
+<   });
+---
+>   if (!runningInParent) {
+>     _dump("TEST-INFO | (xpcshell/head.js) | Ignoring profile creation from child process.\n");
+>     return null;
+>   }
+> 
+>   if (!_profileInitialized) {
+>     // Since we have a profile, we will notify profile shutdown topics at
+>     // the end of the current test, to ensure correct cleanup on shutdown.
+>     do_register_cleanup(function() {
+>       let obsSvc = Components.classes["@mozilla.org/observer-service;1"].
+>                    getService(Components.interfaces.nsIObserverService);
+>       obsSvc.notifyObservers(null, "profile-change-net-teardown", null);
+>       obsSvc.notifyObservers(null, "profile-change-teardown", null);
+>       obsSvc.notifyObservers(null, "profile-before-change", null);
+>     });
+>   }
+771c788,796
+<   // The methods of 'provider' will entrain this scope so null out everything
+---
+>   let obsSvc = Components.classes["@mozilla.org/observer-service;1"].
+>         getService(Components.interfaces.nsIObserverService);
+> 
+>   if (!_profileInitialized) {
+>     obsSvc.notifyObservers(null, "profile-do-change", "xpcshell-do-get-profile");
+>     _profileInitialized = true;
+>   }
+> 
+>   // The methods of 'provider' will retain this scope so null out everything
+776a802
+>   obsSvc = null;
+791,795c817
+<   var runtime = Components.classes["@mozilla.org/xre/app-info;1"]
+<                   .getService(Components.interfaces.nsIXULRuntime);
+<   if (runtime.processType != 
+<             Components.interfaces.nsIXULRuntime.PROCESS_TYPE_DEFAULT) 
+<   {
+---
+>   if (!runningInParent) {
+866c888
+< let gTests = [];
+---
+> let _gTests = [];
+868c890
+<   gTests.push(func);
+---
+>   _gTests.push([false, func]);
+871a894,942
+> // We lazy import Task.jsm so we don't incur a run-time penalty for all tests.
+> let _Task;
+> 
+> /**
+>  * Add a test function which is a Task function.
+>  *
+>  * Task functions are functions fed into Task.jsm's Task.spawn(). They are
+>  * generators that emit promises.
+>  *
+>  * If an exception is thrown, a do_check_* comparison fails, or if a rejected
+>  * promise is yielded, the test function aborts immediately and the test is
+>  * reported as a failure.
+>  *
+>  * Unlike add_test(), there is no need to call run_next_test(). The next test
+>  * will run automatically as soon the task function is exhausted. To trigger
+>  * premature (but successful) termination of the function, simply return or
+>  * throw a Task.Result instance.
+>  *
+>  * Example usage:
+>  *
+>  * add_task(function test() {
+>  *   let result = yield Promise.resolve(true);
+>  *
+>  *   do_check_true(result);
+>  *
+>  *   let secondary = yield someFunctionThatReturnsAPromise(result);
+>  *   do_check_eq(secondary, "expected value");
+>  * });
+>  *
+>  * add_task(function test_early_return() {
+>  *   let result = yield somethingThatReturnsAPromise();
+>  *
+>  *   if (!result) {
+>  *     // Test is ended immediately, with success.
+>  *     return;
+>  *   }
+>  *
+>  *   do_check_eq(result, "foo");
+>  * });
+>  */
+> function add_task(func) {
+>   if (!_Task) {
+>     let ns = {};
+>     _Task = Components.utils.import("resource://gre/modules/Task.jsm", ns).Task;
+>   }
+> 
+>   _gTests.push([true, func]);
+> }
+> 
+875,876c946,947
+< let gRunningTest = null;
+< let gTestIndex = 0; // The index of the currently running test.
+---
+> let _gRunningTest = null;
+> let _gTestIndex = 0; // The index of the currently running test.
+881c952
+<     if (gTestIndex < gTests.length) {
+---
+>     if (_gTestIndex < _gTests.length) {
+883,891c954,967
+<       gRunningTest = gTests[gTestIndex++];
+<       print("TEST-INFO | " + _TEST_FILE + " | Starting " +
+<             gRunningTest.name);
+<       // Exceptions do not kill asynchronous tests, so they'll time out.
+<       try {
+<         gRunningTest();
+<       }
+<       catch (e) {
+<         do_throw(e);
+---
+>       let _isTask;
+>       [_isTask, _gRunningTest] = _gTests[_gTestIndex++];
+>       print("TEST-INFO | " + _TEST_FILE + " | Starting " + _gRunningTest.name);
+> 
+>       if (_isTask) {
+>         _Task.spawn(_gRunningTest)
+>              .then(run_next_test, do_report_unexpected_exception);
+>       } else {
+>         // Exceptions do not kill asynchronous tests, so they'll time out.
+>         try {
+>           _gRunningTest();
+>         } catch (e) {
+>           do_throw(e);
+>         }
+902c978
+<   if (gRunningTest !== null) {
+---
+>   if (_gRunningTest !== null) {

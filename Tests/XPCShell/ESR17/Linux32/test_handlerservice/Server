@@ -1,0 +1,98 @@
+groeg@lucid-build:~/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu$ make SOLO_FILE="test_handlerService.js" -C uriloader/exthandler/tests/ check-one
+make: Gehe in Verzeichnis '/home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/uriloader/exthandler/tests'
+/home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_virtualenv/bin/python -u /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/config/pythonpath.py \
+	  -I/home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/build \
+      -I../../../_tests/mozbase/mozinfo \
+	  /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/testing/xpcshell/runxpcshelltests.py \
+	  --symbols-path=../../../dist/crashreporter-symbols \
+	  --build-info-json=../../../mozinfo.json \
+	  --test-path=test_handlerService.js \
+	  --testing-modules-dir=../../../_tests/modules \
+	  --profile-name=firefox \
+	  --verbose \
+	   \
+	  /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/dist/bin/xpcshell \
+	  ../../../_tests/xpcshell/uriloader/exthandler/tests/unit ../../../_tests/xpcshell/uriloader/exthandler/tests/unit_ipc
+TEST-INFO | profile dir is /tmp/firefox/xpcshellprofile
+TEST-INFO | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | running test ...
+TEST-INFO | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | full command: ['/home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/dist/bin/xpcshell', '-g', '/home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/dist/bin', '-a', '/home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/dist/bin', '-r', '/home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/dist/bin/components/httpd.manifest', '-m', '-n', '-s', '-e', 'const _HTTPD_JS_PATH = "/home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/dist/bin/components/httpd.js";', '-e', 'const _HEAD_JS_PATH = "/home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/testing/xpcshell/head.js";', '-e', 'const _TESTING_MODULES_DIR = "/home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/modules/";', '-f', '/home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/testing/xpcshell/head.js', '-e', 'const _SERVER_ADDR = "localhost"', '-e', 'const _HEAD_FILES = ["/home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/head_handlerService.js"];', '-e', 'const _TAIL_FILES = ["/home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/tail_handlerService.js"];', '-e', 'const _TEST_FILE = ["/home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js"];', '-e', '_execute_test(); quit(0);']
+TEST-INFO | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | current directory: '/home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit'
+TEST-INFO | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | environment: ['LD_LIBRARY_PATH=/home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/dist/bin', 'XPCSHELL_TEST_PROFILE_DIR=/tmp/firefox/xpcshellprofile', 'NS_TRACE_MALLOC_DISABLE_STACKS=1', 'XPCOM_MEM_LEAK_LOG=/tmp/firefox/xpcshellprofile/runxpcshelltests_leaks.log', 'XPCOM_DEBUG_BREAK=stack-and-abort', 'MOZ_CRASHREPORTER_NO_REPORT=1']
+TEST-UNEXPECTED-FAIL | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | test failed (with xpcshell return code: 0), see following log:
+>>>>>>>
+*** HandlerServiceTest: getFile: requesting UMimTyp
+*** HandlerServiceTest: getFile: requesting CurProcD
+*** HandlerServiceTest: the following NS_ERROR_FAILURE exception in nsIDirectoryServiceProvider::getFile is expected, as we don't provide the 'CurProcD' file
+
+TEST-INFO | (xpcshell/head.js) | test 1 pending
+*** HandlerServiceTest: getFile: requesting ProfLDS
+*** HandlerServiceTest: the following NS_ERROR_FAILURE exception in nsIDirectoryServiceProvider::getFile is expected, as we don't provide the 'ProfLDS' file
+*** HandlerServiceTest: getFile: requesting ProfLDS
+*** HandlerServiceTest: the following NS_ERROR_FAILURE exception in nsIDirectoryServiceProvider::getFile is expected, as we don't provide the 'ProfLDS' file
+*** HandlerServiceTest: getFile: requesting ProfLDS
+*** HandlerServiceTest: the following NS_ERROR_FAILURE exception in nsIDirectoryServiceProvider::getFile is expected, as we don't provide the 'ProfLDS' file
+*** HandlerServiceTest: getFile: requesting TmpD
+*** HandlerServiceTest: the following NS_ERROR_FAILURE exception in nsIDirectoryServiceProvider::getFile is expected, as we don't provide the 'TmpD' file
+*** HandlerServiceTest: getFile: requesting Home
+*** HandlerServiceTest: the following NS_ERROR_FAILURE exception in nsIDirectoryServiceProvider::getFile is expected, as we don't provide the 'Home' file
+
+TEST-PASS | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 85] true == true
+
+TEST-PASS | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 87] nonexistent/type == nonexistent/type
+
+TEST-PASS | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 90] nonexistent/type == nonexistent/type
+
+TEST-PASS | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 93] 0 == 0
+
+TEST-PASS | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 94] null == null
+
+TEST-PASS | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 95] 0 == 0
+
+TEST-PASS | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 96] true == true
+
+TEST-PASS | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 100]  == 
+
+TEST-PASS | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 101] false == false
+
+TEST-PASS | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 102]  == 
+
+TEST-PASS | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 124] 1 == 1
+
+TEST-PASS | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 125] true == true
+
+TEST-PASS | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | [run_test : 132] 0 == 0
+
+TEST-UNEXPECTED-FAIL | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js | true == false - See following stack:
+JS frame :: /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/testing/xpcshell/head.js :: do_throw :: line 451
+JS frame :: /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/testing/xpcshell/head.js :: _do_check_eq :: line 545
+JS frame :: /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/testing/xpcshell/head.js :: do_check_eq :: line 566
+JS frame :: /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/testing/xpcshell/head.js :: do_check_false :: line 594
+JS frame :: /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/uriloader/exthandler/tests/unit/test_handlerService.js :: run_test :: line 133
+JS frame :: /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/testing/xpcshell/head.js :: _execute_test :: line 315
+JS frame :: -e :: <TOP_LEVEL> :: line 1
+
+TEST-INFO | (xpcshell/head.js) | exiting test
+<<<<<<<
+INFO | Result summary:
+INFO | Passed: 0
+INFO | Failed: 1
+INFO | Todo: 0
+make: *** [check-one] Fehler 1
+make: Verlasse Verzeichnis '/home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/uriloader/exthandler/tests'
+
+-------------------------------------------------------------------------------
+
+See: https://mxr.mozilla.org/mozilla-central/source/uriloader/exthandler/nsExternalHelperAppService.cpp#983
+
+On the server |GetProtocolHandlerInfoFromOS()| returns |false| and locally
+|true|. This has the observed test failure as consequence (see:
+https://mxr.mozilla.org/mozilla-central/source/uriloader/exthandler/nsExternalHelperAppService.cpp#1020 ff.
+
+* installing gconf-defaults-service does not help
+* registering the http protocol in gconf does not help either:
+  gconftool-2 -s /desktop/gnome/url-handlers/http/command '/path/to/app %s' \
+  --type String
+  gconftool-2 -s /desktop/gnome/url-handlers/http/enabled --type Boolean true 
+* using dbus-launch and exporting DBUS_SESSION_BUS_ADDRESS and
+  DBUS_SESSION_BUS_PID solves this failure
+
