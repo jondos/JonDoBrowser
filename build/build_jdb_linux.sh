@@ -264,6 +264,16 @@ for lang in $langs; do
   jdbFinal=JonDoBrowser-$jdbVersion-$platform-$lang
   cp -rf firefox/* $jdbDir-$lang/App/Firefox
   mv $jdbDir-$lang $jdbDir
+  # We build the .mar file for the update mechanism
+  if [$update == "true" ]; then
+    if [ ! -e "createJDBPrecomplete.py" ]; then
+      svn export $svnBrowser/build/update .  
+      # First we create the precomplete file
+      python createJDBPrecomplete.py
+      # Then we build the .mar file
+      bash make_full_JDB_update.sh $jdbFinal.mar $jdbDir
+    fi
+  fi
   tar -cf $jdbFinal.tar $jdbDir
   bzip2 -z9 $jdbFinal.tar
   mv $jdbFinal.tar.bz2 ../
