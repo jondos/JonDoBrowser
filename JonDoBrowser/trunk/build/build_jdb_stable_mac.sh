@@ -37,7 +37,7 @@ jdbVersion="0.4"
 title="JonDoBrowser"
 size="200000"
 mozKey=247CA658AA95F6171EB0F13EA7D75CC7C52175E2
-releasePath=http://releases.mozilla.org/pub/mozilla.org/firefox/releases/latest-esr
+releasePath=http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/latest-esr
 source="JDB"
 backgroundPictureName="background.png"
 
