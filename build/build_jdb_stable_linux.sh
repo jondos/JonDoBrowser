@@ -281,7 +281,7 @@ for lang in $langs; do
     cp update.xml update_$jdbFinal.xml
     sed -i "s/\" version=\"/\" version=\"$jdbVersion/g" \
       update_$jdbFinal.xml
-    sed -i "s/tensionVersion=\"/tensionVersion=\"$jdbVersion/g" \ 
+    sed -i "s/tensionVersion=\"/tensionVersion=\"$jdbVersion/g" \
       update_$jdbFinal.xml
     sed -i "s/downloads\//downloads\/$jdbFinal.mar/g" \
       update_$jdbFinal.xml
