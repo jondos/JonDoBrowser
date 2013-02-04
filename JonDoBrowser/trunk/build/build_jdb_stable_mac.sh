@@ -300,7 +300,7 @@ for macPlatform in $macPlatforms; do
        
     fi
     if [ "$lang" == "en-US" ]; then
-      make -f client.mk build
+      make -f client.mk build && make -C mac_build_$macPlatform package
     else   
       # Now, we do all the stuff needed for localized builds
       cd ../../tmp
@@ -344,7 +344,11 @@ for macPlatform in $macPlatforms; do
     cd ../..
     jdbDir=JonDoBrowser-$lang
     cp -rf tmp/$jdbDir .
-    cp -rf build/mozilla-release/mac_build_${macPlatform}/dist/JonDoBrowser.app/* $jdbDir/Contents/MacOS/Firefox.app
+    # Now we unpack the .dmg file created during the packaging phase in order
+    # to benfit from the packaging step (e.g. omni.ja) creation AND be able to
+    # ship our own dmg files + having no langpack extension
+    build/mozilla-release/build/package/mac_osx/unpack-diskimage build/mozilla-release/mac_build_$macPlatform/dist/*.dmg testing . 
+    cp -rf tmp/JonDoBrowser.app/* $jdbDir/Contents/MacOS/Firefox.app
     mv $jdbDir JonDoBrowser.app
     # Preparing everything for generating the dmg image...
     if [ ! -d $source ]; then
@@ -356,6 +360,7 @@ for macPlatform in $macPlatforms; do
     mv JonDoBrowser.app $source/
     generateDmgImage $macPlatform $lang
     rm -rf $source
+    rm -rf tmp/JonDoBrowser.app
     # TODO: Only needed if we have to build another (localized) build...
     cd build/mozilla-release
   done

@@ -1,6 +1,6 @@
-diff -r 53fc01ba93c2 browser/app/profile/firefox.js
---- a/browser/app/profile/firefox.js	Wed Nov 28 20:28:26 2012 -0800
-+++ b/browser/app/profile/firefox.js	Mon Dec 10 16:09:22 2012 +0100
+diff -r e3e008015298 browser/app/profile/firefox.js
+--- a/browser/app/profile/firefox.js	Wed Jan 23 11:46:06 2013 -0800
++++ b/browser/app/profile/firefox.js	Mon Feb 04 15:26:33 2013 +0100
 @@ -112,21 +112,20 @@ pref("app.update.cert.maxErrors", 5);
  // present the following conditions apply for a successful update check:
  // 1. the uri scheme must be https
@@ -46,9 +46,21 @@ diff -r 53fc01ba93c2 browser/app/profile/firefox.js
  
  // app.update.interval is in branding section
  // app.update.promptWaitTime is in branding section
-diff -r 53fc01ba93c2 toolkit/mozapps/update/nsUpdateService.js
---- a/toolkit/mozapps/update/nsUpdateService.js	Wed Nov 28 20:28:26 2012 -0800
-+++ b/toolkit/mozapps/update/nsUpdateService.js	Mon Dec 10 16:09:22 2012 +0100
+@@ -1170,8 +1169,11 @@ pref("image.mem.max_decoded_image_kb", 2
+ pref("social.manifest.facebook", "{\"origin\":\"https://www.facebook.com\",\"name\":\"Facebook Messenger\",\"workerURL\":\"https://www.facebook.com/desktop/fbdesktop2/socialfox/fbworker.js.php\",\"iconURL\":\"data:image/x-icon;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8%2F9hAAAAX0lEQVQ4jWP4%2F%2F8%2FAyUYTFhHzjgDxP9JxGeQDSBVMxgTbUBCxer%2Fr999%2BQ8DJBuArJksA9A10s8AXIBoA0B%2BR%2FY%2FjD%2BEwoBoA1yT5v3PbdmCE8MAshhID%2FUMoDgzUYIBj0Cgi7ar4coAAAAASUVORK5CYII%3D\",\"sidebarURL\":\"https://www.facebook.com/desktop/fbdesktop2/?socialfox=true\"}");
+ // Comma-separated list of nsIURI::prePaths that are allowed to activate
+ // built-in social functionality.
+ pref("social.activation.whitelist", "https://www.facebook.com");
+ pref("social.sidebar.open", true);
+ pref("social.sidebar.unload_timeout_ms", 10000);
+ pref("social.active", false);
+ pref("social.toast-notifications.enabled", true);
++
++// JonDoBrowser version
++pref("jondobrowser.version", "0.5");
+diff -r e3e008015298 toolkit/mozapps/update/nsUpdateService.js
+--- a/toolkit/mozapps/update/nsUpdateService.js	Wed Jan 23 11:46:06 2013 -0800
++++ b/toolkit/mozapps/update/nsUpdateService.js	Mon Feb 04 15:26:33 2013 +0100
 @@ -46,21 +46,21 @@ const PREF_APP_UPDATE_STAGE_ENABLED     
  const PREF_APP_UPDATE_URL                 = "app.update.url";
  const PREF_APP_UPDATE_URL_DETAILS         = "app.update.url.details";
