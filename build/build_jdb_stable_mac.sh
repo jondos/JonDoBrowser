@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright (C) 2012 Jondos GmbH
+# Copyright (C) 2012-2013 Jondos GmbH
 
 # All rights reserved.
 
@@ -307,7 +307,7 @@ for macPlatform in $macPlatforms; do
       # Checking out the locale repo if it is not existing already
       if [ ! -d $lang ]; then
         # TODO: Can we make it even more sure that no one tampered with the
-        # repo(s)? It seems as tags are not signed yet...
+        # repo(s)? It seems not as tags are not signed yet...
         hg clone -r FIREFOX_${ffVersion//./_}esr_RELEASE https://hg.mozilla.org/releases/l10n/mozilla-release/$lang 
         cd $lang
         echo "Verifying the source repo..."
@@ -347,7 +347,7 @@ for macPlatform in $macPlatforms; do
     # Now we unpack the .dmg file created during the packaging phase in order
     # to benfit from the packaging step (e.g. omni.ja) creation AND be able to
     # ship our own dmg files + having no langpack extension
-    build/mozilla-release/build/package/mac_osx/unpack-diskimage build/mozilla-release/mac_build_$macPlatform/dist/*.dmg testing tmp
+    build/mozilla-release/build/package/mac_osx/unpack-diskimage build/mozilla-release/mac_build_$macPlatform/dist/firefox-${ffVersion}.$lang.*.dmg testing tmp
     cp -rf tmp/JonDoBrowser.app/* $jdbDir/Contents/MacOS/Firefox.app
     mv $jdbDir JonDoBrowser.app
     # Preparing everything for generating the dmg image...
