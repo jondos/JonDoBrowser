@@ -347,7 +347,7 @@ for macPlatform in $macPlatforms; do
     # Now we unpack the .dmg file created during the packaging phase in order
     # to benfit from the packaging step (e.g. omni.ja) creation AND be able to
     # ship our own dmg files + having no langpack extension
-    build/mozilla-release/build/package/mac_osx/unpack-diskimage build/mozilla-release/mac_build_$macPlatform/dist/*.dmg testing . 
+    build/mozilla-release/build/package/mac_osx/unpack-diskimage build/mozilla-release/mac_build_$macPlatform/dist/*.dmg testing tmp
     cp -rf tmp/JonDoBrowser.app/* $jdbDir/Contents/MacOS/Firefox.app
     mv $jdbDir JonDoBrowser.app
     # Preparing everything for generating the dmg image...
