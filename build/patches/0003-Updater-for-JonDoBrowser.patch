@@ -1,6 +1,6 @@
 diff -r e3e008015298 browser/app/profile/firefox.js
 --- a/browser/app/profile/firefox.js	Wed Jan 23 11:46:06 2013 -0800
-+++ b/browser/app/profile/firefox.js	Mon Feb 04 17:00:20 2013 +0100
++++ b/browser/app/profile/firefox.js	Wed Feb 06 10:08:31 2013 +0100
 @@ -112,21 +112,20 @@ pref("app.update.cert.maxErrors", 5);
  // present the following conditions apply for a successful update check:
  // 1. the uri scheme must be https
@@ -58,9 +58,51 @@ diff -r e3e008015298 browser/app/profile/firefox.js
 +
 +// JonDoBrowser version
 +pref("jondobrowser.version", "0.5");
+diff -r e3e008015298 toolkit/mozapps/update/content/updates.js
+--- a/toolkit/mozapps/update/content/updates.js	Wed Jan 23 11:46:06 2013 -0800
++++ b/toolkit/mozapps/update/content/updates.js	Wed Feb 06 10:08:31 2013 +0100
+@@ -484,17 +484,18 @@ var gUpdates = {
+   getShouldCheckAddonCompatibility: function(aCallback) {
+     // this early return should never happen
+     if (!this.update) {
+       aCallback(false);
+       return;
+     }
+ 
+     if (!this.update.appVersion ||
+-        Services.vc.compare(this.update.appVersion, Services.appinfo.version) == 0) {
++        Services.vc.compare(this.update.platformVersion,
++        Services.appinfo.version) == 0) {
+       aCallback(false);
+       return;
+     }
+ 
+     try {
+       var hotfixID = Services.prefs.getCharPref(PREF_EM_HOTFIX_ID);
+     }
+     catch (e) { }
+@@ -524,17 +525,17 @@ var gUpdates = {
+         // getting the scope property of a plugin breaks in some environments
+         // (see bug 566787). The hotfix add-on is also ignored as it shouldn't
+         // block the user from upgrading.
+         try {
+           if (addon.type != "plugin" && addon.id != hotfixID &&
+               !addon.appDisabled && !addon.userDisabled &&
+               addon.scope != AddonManager.SCOPE_APPLICATION &&
+               addon.isCompatible &&
+-              !addon.isCompatibleWith(self.update.appVersion,
++              !addon.isCompatibleWith(self.update.platformVersion,
+                                       self.update.platformVersion))
+             self.addons.push(addon);
+         }
+         catch (e) {
+           Components.utils.reportError(e);
+         }
+       });
+ 
 diff -r e3e008015298 toolkit/mozapps/update/nsUpdateService.js
 --- a/toolkit/mozapps/update/nsUpdateService.js	Wed Jan 23 11:46:06 2013 -0800
-+++ b/toolkit/mozapps/update/nsUpdateService.js	Mon Feb 04 17:00:20 2013 +0100
++++ b/toolkit/mozapps/update/nsUpdateService.js	Wed Feb 06 10:08:31 2013 +0100
 @@ -46,21 +46,21 @@ const PREF_APP_UPDATE_STAGE_ENABLED     
  const PREF_APP_UPDATE_URL                 = "app.update.url";
  const PREF_APP_UPDATE_URL_DETAILS         = "app.update.url.details";
@@ -390,7 +432,7 @@ diff -r e3e008015298 toolkit/mozapps/update/nsUpdateService.js
    },
 diff -r e3e008015298 toolkit/xre/nsUpdateDriver.cpp
 --- a/toolkit/xre/nsUpdateDriver.cpp	Wed Jan 23 11:46:06 2013 -0800
-+++ b/toolkit/xre/nsUpdateDriver.cpp	Mon Feb 04 17:00:20 2013 +0100
++++ b/toolkit/xre/nsUpdateDriver.cpp	Wed Feb 06 10:08:31 2013 +0100
 @@ -608,58 +608,43 @@ ApplyUpdate(nsIFile *greDir, nsIFile *up
    
    nsCAutoString updaterPath;
