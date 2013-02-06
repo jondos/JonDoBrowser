@@ -206,6 +206,11 @@ if [ ! -d "patches" ]; then
   svn export $svnBrowser/build/patches 1>/dev/null
 fi
 
+if [ "$update" == "0" ]; then
+  echo "Removing the udpate patch as this version is built without an updater."
+  rm patches/0003*
+fi
+
 cp patches/*.patch mozilla-release/ && cd mozilla-release
 
 if [ "$platform" == "linux-x86_64" ]; then
@@ -220,6 +225,9 @@ for i in *patch; do patch -tp1 <$i || exit 1; done
 echo "Building JonDoBrowser..."
 for lang in $langs; do
   cp -f ../.mozconfig .
+  if [ "$update" == "0" ]; then
+    echo "ac_add_options --disable-updater" >> .mozconfig
+  fi
   if [ "$lang" == "en-US" ]; then
     make -f client.mk build
     echo "Creating the final packages..."
