@@ -1,8 +1,7 @@
 <?xml version="1.0"?>
 
 <updates>
-  <update type="major" version="" extensionVersion="" 
-          detailsURL="http://www.foo.com/1.0.4/whatsnew.html">
+  <update type="minor" appVersion="" platformVersion="">
           <patch type="complete" URL="http://anonymous-proxy-servers.net/downloads/"
            hashFunction="sha512" hashValue="" size=""/>
   </update>
