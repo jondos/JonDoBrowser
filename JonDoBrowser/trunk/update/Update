@@ -51,11 +51,45 @@ Funktionsweise:
           gAppUpdater.update = gAppupdater.aus.selectUpdate(aUpdates,
             aUpdates.length) ["aus" = UpdateService() definiert in
             nsUpdateService.js]
-                       |
-                     Check, ob Channel-Wechsel; wenn, dann automatisch erstes
-                     Update zurückgeben
-          
-
+                 |     |
+                 |   Check, ob Channel-Wechsel; wenn, dann automatisch erstes
+                 |    Update zurückgeben
+                 | 
+          gAppUpdate.checkAddonCompatibility()
+                        |
+                      Check, ob kompatibel mit appVersion/platformVersion; wnn
+                      nicht, dann self.checkAddonsForUpdates()-Pfad; sonst
+                      self.startDownload()-Pfad
+                              |
+                            let state = this.aus.downloadUpdate(this.update,
+                                false);
+                                    |
+                                  this._downloader =
+                                    new Downloader(background);
+                                  return this._downloader.
+                                    downloadUpdate(update);
+                                        |
+                                      onStartRequest(request, context);
+                                      onProgress(request, context, progress,
+                                                 maxProgress);
+                                      onStopRequest(request, context, status);
+                                            |
+                                          Components.isSuccessCode(status))
+                                            |    |
+                                            |  this._verifyDownload()
+                                          [...]  
+                                            |
+                                          applyUpdateInBackground(this.
+                                              _update);
+                                                |
+                                              processUpdate(update) (in
+                                                  nsIUpdateProcessor, in
+                                                  nsUpdateDriver.cpp)
+                                                |
+                                              nsUpdateProcessor::
+                                                StartbackgroundUpdate()
+                                                |
+                                              ProcessUpdates()
 
 Sachen, die geändert werden müssen
 ==================================

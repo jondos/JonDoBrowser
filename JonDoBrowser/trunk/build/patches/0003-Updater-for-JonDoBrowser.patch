@@ -1,6 +1,6 @@
 diff -r e3e008015298 browser/app/profile/firefox.js
 --- a/browser/app/profile/firefox.js	Wed Jan 23 11:46:06 2013 -0800
-+++ b/browser/app/profile/firefox.js	Mon Feb 11 11:03:23 2013 +0100
++++ b/browser/app/profile/firefox.js	Mon Feb 11 15:45:27 2013 +0100
 @@ -112,21 +112,20 @@ pref("app.update.cert.maxErrors", 5);
  // present the following conditions apply for a successful update check:
  // 1. the uri scheme must be https
@@ -60,7 +60,7 @@ diff -r e3e008015298 browser/app/profile/firefox.js
 +pref("jondobrowser.version", "0.5");
 diff -r e3e008015298 browser/base/content/aboutDialog.js
 --- a/browser/base/content/aboutDialog.js	Wed Jan 23 11:46:06 2013 -0800
-+++ b/browser/base/content/aboutDialog.js	Mon Feb 11 11:03:23 2013 +0100
++++ b/browser/base/content/aboutDialog.js	Mon Feb 11 15:45:27 2013 +0100
 @@ -304,17 +304,16 @@ appUpdater.prototype =
          gAppUpdater.selectPanel("noUpdatesFound");
          return;
@@ -100,7 +100,7 @@ diff -r e3e008015298 browser/base/content/aboutDialog.js
        self.addonsTotalCount = self.addons.length;
 diff -r e3e008015298 toolkit/mozapps/update/nsUpdateService.js
 --- a/toolkit/mozapps/update/nsUpdateService.js	Wed Jan 23 11:46:06 2013 -0800
-+++ b/toolkit/mozapps/update/nsUpdateService.js	Mon Feb 11 11:03:23 2013 +0100
++++ b/toolkit/mozapps/update/nsUpdateService.js	Mon Feb 11 15:45:27 2013 +0100
 @@ -46,21 +46,21 @@ const PREF_APP_UPDATE_STAGE_ENABLED     
  const PREF_APP_UPDATE_URL                 = "app.update.url";
  const PREF_APP_UPDATE_URL_DETAILS         = "app.update.url.details";
@@ -430,7 +430,7 @@ diff -r e3e008015298 toolkit/mozapps/update/nsUpdateService.js
    },
 diff -r e3e008015298 toolkit/xre/nsUpdateDriver.cpp
 --- a/toolkit/xre/nsUpdateDriver.cpp	Wed Jan 23 11:46:06 2013 -0800
-+++ b/toolkit/xre/nsUpdateDriver.cpp	Mon Feb 11 11:03:23 2013 +0100
++++ b/toolkit/xre/nsUpdateDriver.cpp	Mon Feb 11 15:45:27 2013 +0100
 @@ -608,58 +608,43 @@ ApplyUpdate(nsIFile *greDir, nsIFile *up
    
    nsCAutoString updaterPath;
@@ -497,3 +497,90 @@ diff -r e3e008015298 toolkit/xre/nsUpdateDriver.cpp
    nsAutoString updateDirPathW;
    rv = updateDir->GetPath(updateDirPathW);
  
+@@ -826,16 +811,19 @@ ProcessUpdates(nsIFile *greDir, nsIFile 
+     if (backgroundUpdate && *backgroundUpdate) {
+       restart = false;
+       pid = &dummyPID;
+     }
+   }
+ 
+   nsCOMPtr<nsIFile> statusFile;
+   UpdateStatus status = GetUpdateStatus(updatesDir, statusFile);
++  nsCAutoString path;
++  updatesDir->GetNativePath(path);
++  printf("We are before the switch command and updates dir is %s", path.get());
+   switch (status) {
+   case ePendingUpdate:
+   case ePendingService: {
+     nsCOMPtr<nsIFile> versionFile;
+     // Remove the update if the update application version file doesn't exist
+     // or if the update's application version is less than the current
+     // application version.
+     if (!GetVersionFile(updatesDir, versionFile) ||
+@@ -932,16 +920,31 @@ nsUpdateProcessor::ProcessUpdate(nsIUpda
+     argc = 1;
+     nsCOMPtr<nsIFile> binary;
+     rv = ds->Get(XRE_EXECUTABLE_FILE, NS_GET_IID(nsIFile),
+                  getter_AddRefs(binary));
+     NS_ASSERTION(NS_SUCCEEDED(rv), "Can't get the binary path");
+     binary->GetNativePath(binPath);
+   }
+ 
++  // Updating JonDoBrowser means having a different update root.
++#if defined(XP_MACOSX)
++  // XXX: Not implemented yet.
++#else
++  // XXX: Only Linux currently.
++  nsCOMPtr<nsIFile> parentDir1, parentDir2;
++  nsresult rv = updRoot->GetParent(getter_AddRefs(parentDir1));
++  if (NS_FAILED(rv))
++    printf("We did not get the parent dir!\n");
++  rv = parentDir1->GetParent(getter_AddRefs(parentDir2));
++  if (NS_FAILED(rv))
++    printf("We did not get the grandparent dir!\n");
++  updRoot = parentDir2;
++#endif  
++
+   // Copy the parameters to the BackgroundUpdateInfo structure shared with the
+   // watcher thread.
+   mInfo.mGREDir = greDir;
+   mInfo.mAppDir = appDir;
+   mInfo.mUpdateRoot = updRoot;
+   mInfo.mArgc = argc;
+   mInfo.mArgv = new char*[argc];
+   if (dirProvider) {
+@@ -952,29 +955,34 @@ nsUpdateProcessor::ProcessUpdate(nsIUpda
+     }
+   } else {
+     MOZ_ASSERT(argc == 1); // see above
+     const size_t length = binPath.Length();
+     mInfo.mArgv[0] = new char[length + 1];
+     strcpy(mInfo.mArgv[0], binPath.get());
+   }
+   mInfo.mAppVersion = appVersion;
++  printf("Here we go with appVersion %s", appVersion.get());
++  nsCAutoString path;
++  mInfo.mUpdateRoot->GetNativePath(path);
++  printf("updateroot is %s", path.get());
+ 
+   mUpdate = aUpdate;
+ 
+   NS_ABORT_IF_FALSE(NS_IsMainThread(), "not main thread");
+   return NS_NewThread(getter_AddRefs(mProcessWatcher),
+                       NS_NewRunnableMethod(this, &nsUpdateProcessor::StartBackgroundUpdate));
+ }
+ 
+ void
+ nsUpdateProcessor::StartBackgroundUpdate()
+ {
+   NS_ABORT_IF_FALSE(!NS_IsMainThread(), "main thread");
+ 
++  //fprintf("We are in StartBackgroundUpdate()...");
+   nsresult rv = ProcessUpdates(mInfo.mGREDir,
+                                mInfo.mAppDir,
+                                mInfo.mUpdateRoot,
+                                mInfo.mArgc,
+                                mInfo.mArgv,
+                                mInfo.mAppVersion.get(),
+                                false,
+                                &mUpdaterPID);
