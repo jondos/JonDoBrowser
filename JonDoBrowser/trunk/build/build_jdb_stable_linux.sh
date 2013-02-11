@@ -287,9 +287,9 @@ for lang in $langs; do
     # Now, update the update.xml values
     # TODO: We need to adapt that for partial updates
     cp update.xml update_$jdbFinal.xml
-    sed -i "s/appVersion=\"/\appVersion=\"$jdbVersion/g" \
+    sed -i "s/pVersion=\"/\pVersion=\"$jdbVersion/g" \
       update_$jdbFinal.xml
-    sed -i "s/formVersion=\"/formVersion=\"$ffVersion/g" \
+    sed -i "s/mVersion=\"/mVersion=\"$ffVersion/g" \
       update_$jdbFinal.xml
     sed -i "s/downloads\//downloads\/$jdbFinal.mar/g" \
       update_$jdbFinal.xml
