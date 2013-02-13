@@ -1,6 +1,6 @@
 diff -r e3e008015298 browser/app/profile/firefox.js
 --- a/browser/app/profile/firefox.js	Wed Jan 23 11:46:06 2013 -0800
-+++ b/browser/app/profile/firefox.js	Tue Feb 12 07:50:01 2013 +0100
++++ b/browser/app/profile/firefox.js	Wed Feb 13 10:45:17 2013 +0100
 @@ -112,21 +112,20 @@ pref("app.update.cert.maxErrors", 5);
  // present the following conditions apply for a successful update check:
  // 1. the uri scheme must be https
@@ -60,7 +60,7 @@ diff -r e3e008015298 browser/app/profile/firefox.js
 +pref("jondobrowser.version", "0.5");
 diff -r e3e008015298 browser/base/content/aboutDialog.js
 --- a/browser/base/content/aboutDialog.js	Wed Jan 23 11:46:06 2013 -0800
-+++ b/browser/base/content/aboutDialog.js	Tue Feb 12 07:50:01 2013 +0100
++++ b/browser/base/content/aboutDialog.js	Wed Feb 13 10:45:17 2013 +0100
 @@ -304,17 +304,16 @@ appUpdater.prototype =
          gAppUpdater.selectPanel("noUpdatesFound");
          return;
@@ -100,7 +100,7 @@ diff -r e3e008015298 browser/base/content/aboutDialog.js
        self.addonsTotalCount = self.addons.length;
 diff -r e3e008015298 toolkit/mozapps/update/nsUpdateService.js
 --- a/toolkit/mozapps/update/nsUpdateService.js	Wed Jan 23 11:46:06 2013 -0800
-+++ b/toolkit/mozapps/update/nsUpdateService.js	Tue Feb 12 07:50:01 2013 +0100
++++ b/toolkit/mozapps/update/nsUpdateService.js	Wed Feb 13 10:45:17 2013 +0100
 @@ -46,21 +46,21 @@ const PREF_APP_UPDATE_STAGE_ENABLED     
  const PREF_APP_UPDATE_URL                 = "app.update.url";
  const PREF_APP_UPDATE_URL_DETAILS         = "app.update.url.details";
@@ -449,8 +449,61 @@ diff -r e3e008015298 toolkit/mozapps/update/nsUpdateService.js
          // TODO: use more informative error code here
 diff -r e3e008015298 toolkit/xre/nsUpdateDriver.cpp
 --- a/toolkit/xre/nsUpdateDriver.cpp	Wed Jan 23 11:46:06 2013 -0800
-+++ b/toolkit/xre/nsUpdateDriver.cpp	Tue Feb 12 07:50:01 2013 +0100
-@@ -608,58 +608,43 @@ ApplyUpdate(nsIFile *greDir, nsIFile *up
++++ b/toolkit/xre/nsUpdateDriver.cpp	Wed Feb 13 10:45:17 2013 +0100
+@@ -412,45 +412,42 @@ SwitchToUpdatedApp(nsIFile *greDir, nsIF
+ 
+   nsCAutoString updaterPath;
+   rv = updater->GetNativePath(updaterPath);
+   if (NS_FAILED(rv))
+     return;
+ 
+ #endif
+ 
+-  // Get the directory to which the update will be applied. On Mac OSX we need
+-  // to apply the update to the Updated.app directory under the Foo.app
+-  // directory which is the parent of the parent of the appDir. On other
+-  // platforms we will just apply to the appDir/updated.
++  // Get the directory to which the update will be applied. For JonDoBrowser on
++  // Linux we need to apply the update to the parent of the parent of the
++  // appDir.
+   nsCOMPtr<nsIFile> updatedDir;
+ #if defined(XP_MACOSX)
++  // XXX: Not implemented yet.
++#else
++  // XXX: Only Linux currently.
+   nsCAutoString applyToDir;
+   {
+     nsCOMPtr<nsIFile> parentDir1, parentDir2;
+     rv = appDir->GetParent(getter_AddRefs(parentDir1));
+     if (NS_FAILED(rv))
+       return;
+     rv = parentDir1->GetParent(getter_AddRefs(parentDir2));
+     if (NS_FAILED(rv))
+       return;
+-    if (!GetFile(parentDir2, NS_LITERAL_CSTRING("Updated.app"), updatedDir))
++    if (!GetFile(parentDir2, NS_LITERAL_CSTRING("updated"), updatedDir))
+       return;
+-    rv = updatedDir->GetNativePath(applyToDir);
+   }
+-#else
+-  if (!GetFile(appDir, NS_LITERAL_CSTRING("updated"), updatedDir))
+-    return;
+ #if defined(XP_WIN)
+   nsAutoString applyToDirW;
+   rv = updatedDir->GetPath(applyToDirW);
+ 
+   NS_ConvertUTF16toUTF8 applyToDir(applyToDirW);
+ #else
+-  nsCAutoString applyToDir;
+   rv = updatedDir->GetNativePath(applyToDir);
+ #endif
+ #endif
+   if (NS_FAILED(rv))
+     return;
+ 
+   // Make sure that the updated directory exists
+   bool updatedDirExists = false;
+@@ -608,56 +605,50 @@ ApplyUpdate(nsIFile *greDir, nsIFile *up
    
    nsCAutoString updaterPath;
    rv = updater->GetNativePath(updaterPath);
@@ -483,12 +536,15 @@ diff -r e3e008015298 toolkit/xre/nsUpdateDriver.cpp
      if (restart) {
        // Use the correct directory if we're not applying the update in the
        // background.
-       rv = parentDir2->GetNativePath(applyToDir);
+-      rv = parentDir2->GetNativePath(applyToDir);
++      rv = parentDir2->Clone(getter_AddRefs(updatedDir));
++      if (NS_FAILED(rv))
++        return;
      } else {
 -      if (!GetFile(parentDir2, NS_LITERAL_CSTRING("Updated.app"), updatedDir))
 +      if (!GetFile(parentDir2, NS_LITERAL_CSTRING("updated"), updatedDir))
          return;
-       rv = updatedDir->GetNativePath(applyToDir);
+-      rv = updatedDir->GetNativePath(applyToDir);
      }
    }
 -#else
@@ -499,24 +555,40 @@ diff -r e3e008015298 toolkit/xre/nsUpdateDriver.cpp
 -  } else if (!GetFile(appDir, NS_LITERAL_CSTRING("updated"), updatedDir)) {
 -    return;
 -  }
--#if defined(XP_WIN)
--  nsAutoString applyToDirW;
--  rv = updatedDir->GetPath(applyToDirW);
--
--  NS_ConvertUTF16toUTF8 applyToDir(applyToDirW);
--#else
+ #if defined(XP_WIN)
+   nsAutoString applyToDirW;
+   rv = updatedDir->GetPath(applyToDirW);
+ 
+   NS_ConvertUTF16toUTF8 applyToDir(applyToDirW);
+ #else
 -  nsCAutoString applyToDir;
--  rv = updatedDir->GetNativePath(applyToDir);
--#endif
+   rv = updatedDir->GetNativePath(applyToDir);
+ #endif
  #endif
    if (NS_FAILED(rv))
      return;
  
  #if defined(XP_WIN)
    nsAutoString updateDirPathW;
-   rv = updateDir->GetPath(updateDirPathW);
+@@ -701,16 +692,17 @@ ApplyUpdate(nsIFile *greDir, nsIFile *up
  
-@@ -826,27 +811,32 @@ ProcessUpdates(nsIFile *greDir, nsIFile 
+   int argc = appArgc + 5;
+   char **argv = new char*[argc + 1];
+   if (!argv)
+     return;
+   argv[0] = (char*) updaterPath.get();
+   argv[1] = (char*) updateDirPath.get();
+   argv[2] = (char*) applyToDir.get();
++  printf("Arguments are: %s, %s, %s\n", argv[0], argv[1], argv[2]);
+   argv[3] = (char*) pid.get();
+   if (restart && appArgc) {
+     argv[4] = workingDirPath;
+     argv[5] = (char*) appFilePath.get();
+     for (int i = 1; i < appArgc; ++i)
+       argv[5 + i] = appArgv[i];
+     argc = 5 + appArgc;
+     argv[argc] = NULL;
+@@ -826,27 +818,32 @@ ProcessUpdates(nsIFile *greDir, nsIFile 
      if (backgroundUpdate && *backgroundUpdate) {
        restart = false;
        pid = &dummyPID;
@@ -549,7 +621,7 @@ diff -r e3e008015298 toolkit/xre/nsUpdateDriver.cpp
    case eAppliedUpdate:
    case eAppliedService:
      // An update was applied in the background, so we need to switch to using
-@@ -952,29 +942,34 @@ nsUpdateProcessor::ProcessUpdate(nsIUpda
+@@ -952,29 +949,34 @@ nsUpdateProcessor::ProcessUpdate(nsIUpda
      }
    } else {
      MOZ_ASSERT(argc == 1); // see above
