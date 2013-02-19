@@ -277,6 +277,9 @@ for lang in $langs; do
   mv $jdbDir-$lang $jdbDir
   # We build the .mar file for the update mechanism
   if [ "$update" == "1" ]; then
+    # We are not touching the Data dir currently. Move it before creating the
+    # precomplete and the .mar file.
+    mv $jdbDir/Data .
     if [ ! -e "createJDBPrecomplete.py" ]; then
       svn checkout $svnBrowser/build/update .  
     fi
@@ -284,6 +287,8 @@ for lang in $langs; do
     python createJDBPrecomplete.py
     # Then we build the .mar file
     bash make_full_JDB_update.sh $jdbFinal.mar $jdbDir
+    # Move the Data dir back
+    mv Data $jdbDir
     # Now, update the update.xml values
     # TODO: We need to adapt that for partial updates
     cp update.xml update_$jdbFinal.xml
