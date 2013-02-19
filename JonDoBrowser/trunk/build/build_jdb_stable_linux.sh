@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright (C) 2012 Jondos GmbH
+# Copyright (C) 2012-2013 Jondos GmbH
 
 # All rights reserved.
 
