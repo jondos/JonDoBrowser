@@ -16,8 +16,10 @@ import os
 
 def get_build_entries(root_path):
     """ Iterates through the root_path, creating a list for each file and
-        directory. Excludes any path starting with extensions or distribution
-        and paths ending with channel-prefs.js.
+        directory. Excludes any path starting with "extensions" or
+        "distribution" and paths ending with "channel-prefs.js". We exclude
+        paths starting with "Data" as well as we do not want to touch the user's
+        profile directory (yet)
     """
     rel_file_path_set = set()
     rel_dir_path_set = set()
@@ -28,6 +30,7 @@ def get_build_entries(root_path):
             rel_path_file = rel_path_file.replace("\\", "/")
             if not (rel_path_file.startswith("distribution/") or
                     rel_path_file.startswith("extensions/") or
+                    rel_path_file.startswith("Data/") or
                     rel_path_file.endswith("channel-prefs.js")):
                 rel_file_path_set.add(rel_path_file)
 
@@ -36,6 +39,7 @@ def get_build_entries(root_path):
             rel_path_dir = os.path.join(parent_dir_rel_path, dir_name)
             rel_path_dir = rel_path_dir.replace("\\", "/")+"/"
             if not (rel_path_dir.startswith("distribution/") or
+                    rel_path_dir.startswith("Data/") or
                     rel_path_dir.startswith("extensions/")):
                 rel_dir_path_set.add(rel_path_dir)
 
