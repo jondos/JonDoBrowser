@@ -34,7 +34,7 @@
 svnBrowser=https://svn.jondos.de/svnpub/JonDoBrowser/trunk
 mozKey=247CA658AA95F6171EB0F13EA7D75CC7C52175E2
 releasePath=http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/latest-esr
-gpg="/c/Program Files (x86)/GNU/GnuPG/pub/gpg"
+gpg="/c/Program Files/GNU/GnuPG/pub/gpg"
 # These are the languages we support with JonDoBrowser
 langs="en-US de"
 # These languages need a special treatment (i.e. a non-default localized build
