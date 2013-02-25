@@ -85,7 +85,7 @@ ShowInstDetails show
 
 # Program Details
 Name "${NAME}"
-OutFile "..\..\..\${NAME}-win-${JDB_VERSION}.paf.exe"
+OutFile "..\..\..\${NAME}-${JDB_VERSION}-win.paf.exe"
 InstallDir "\${NAME}"
 Caption "${NAME}"
 VIProductVersion "${VERSION}"
