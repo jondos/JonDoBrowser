@@ -62,9 +62,9 @@ Var update
 Var httpsForcedDomains
 Var httpsForcedDomainsExceptions
 
-!define JDB_VERSION "0.4"
+!define JDB_VERSION "0.5"
 !define NAME "JonDoBrowser"
-!define VERSION "0.4.0.0"
+!define VERSION "0.5.0.0"
 !define INSTALLERCOMMENTS "For additional details, visit anonymous-proxy-servers.net"
 !define INSTALLERADDITIONALTRADEMARKS "PortableApps.com is a Trademark of Rare Ideas, LLC. JonDoBrowser is a trademark of JonDos GmbH. Firefox is a Trademark of the Mozilla Foundation. " ;end this entry with a period and a space if used
 !define INSTALLERLEGALCOPYRIGHT "JonDos GmbH"
@@ -272,9 +272,8 @@ Section JFPortable
   File /r /x .svn "..\..\..\full\profile\extensions\{73a6fe31-595d-460b-a920-fcc0f8843232}.xpi"
 
   # UnPlug
-  StrCpy $extensionGUID "unplug@compunach"
-  SetOutPath "$profileExtensionPath\$extensionGUID"
-  File /r /x .svn "..\..\..\full\profile\extensions\unplug@compunach\*.*"
+  SetOutPath "$profileExtensionPath"
+  File /r /x .svn "..\..\..\full\profile\extensions\unplug@compunach.xpi"
 
   ${If} $LANGUAGE == "1031"
     # German language strings
