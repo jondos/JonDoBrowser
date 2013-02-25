@@ -1,3 +1,15 @@
+Version 0.5 2013-02-25
+  * disabled WebRTC via configure switch as WebRTC can open UDP sockets which
+    bypass JonDonym
+  * set selected panel in Add-ons window to addons://list/extension to avoid
+    contacting AMO for further Add-on suggestions
+  * removed hushmail bookmark and added neomailbox.com  
+  * updated extensions
+  * updated preferences (noscript.version, extensions.adblockplus.currentVersion
+    and extensions.jondofox.browser_version to the latest version and
+    browser.startup.homepage_override.mstone + extensions.lastAppVersion to
+    "17.0.3")
+
 Version 0.4 2013-01-14
   * switched to ESR versions of Firefox as base for JonDoBrowser
   * updated extensions
