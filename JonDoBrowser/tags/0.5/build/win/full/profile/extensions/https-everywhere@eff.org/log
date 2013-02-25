@@ -1,0 +1,11 @@
+SSL Observatory: Got observatory url + nonce: https://check.torproject.org/?TorButton=true#0.57523305273325480.6580678796874384
+SSL Observatory: in getProxySettings()
+SSL Observatory: CASE: try localhost:9050
+SSL Observatory: Using proxy: socks,localhost,9050
+SSL Observatory: Specifying proxy: [xpconnect wrapped nsIProxyInfo]
+Got http-on-modify-request: https://check.torproject.org/?TorButton=true#0.57523305273325480.6580678796874384
+exploded getting DOMWin for https://check.torproject.org/?TorButton=true#0.57523305273325480.6580678796874384
+No applicable list rewriting https://check.torproject.org/?TorButton=true#0.57523305273325480.6580678796874384
+Processing https://check.torproject.org/?TorButton=true#0.57523305273325480.6580678796874384
+Potentially applicable rules for check.torproject.org:
+  Tor Project
