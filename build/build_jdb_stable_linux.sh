@@ -47,6 +47,10 @@ mozKey="247CA658AA95F6171EB0F13EA7D75CC7C52175E2"
 releasePath="http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/latest-esr"
 # Do we have update packaging (mar generation etc.) enabled?
 update="0"
+# Partial updates?
+partial="0"
+updateXML=""
+updateFinal=""
 
 prepareProfile() {
   echo "Fetching sources..."
@@ -98,13 +102,14 @@ cleanup() {
   exit 0
 }
 
-OPTSTR="cuh"
+OPTSTR="cuph"
 getopts "${OPTSTR}" CMD_OPT
 while [ $? -eq 0 ];
 do
   case ${CMD_OPT} in
     c) cleanup;;
     u) update="1";;
+    p) partial="1";;
     h) echo '' 
        echo "JonDoBrowser Build Script 1.1 (2012-2013 Copyright (c) JonDos \
 GmbH)"
@@ -276,7 +281,7 @@ for lang in $langs; do
   cp -rf firefox/* $jdbDir-$lang/App/Firefox
   mv $jdbDir-$lang $jdbDir
   # We build the .mar file for the update mechanism
-  if [ "$update" == "1" ]; then
+  if [ "$update" = "1" ]; then
     if [ ! -e "createJDBPrecomplete.py" ]; then
       svn checkout $svnBrowser/build/update .  
     fi
@@ -284,19 +289,28 @@ for lang in $langs; do
     python createJDBPrecomplete.py
     # Then we build the .mar file
     bash make_full_JDB_update.sh $jdbFinal.mar $jdbDir
+    if [ "partial" = "1" ]; then
+      # We'd want to have partial updates
+      $updateXML="update-partial.xml"
+      $updateFinal="${jdbFinal}-partial"
+    else
+      # We'd want to have full updates
+      $updateXML="update.xml"
+      $updateFinal="$jdbFinal"
+    fi
     # Now, update the update.xml values
     # TODO: We need to adapt that for partial updates
-    cp update.xml update_$jdbFinal.xml
+    cp $updateXML update_$updateFinal.xml
     sed -i "s/pVersion=\"/\pVersion=\"$jdbVersion/g" \
-      update_$jdbFinal.xml
+      update_$updateFinal.xml
     sed -i "s/mVersion=\"/mVersion=\"$ffVersion/g" \
-      update_$jdbFinal.xml
-    sed -i "s/downloads\//downloads\/$jdbFinal.mar/g" \
-      update_$jdbFinal.xml
-    sed -i "s/hashValue=\"/hashValue=\"$(openssl dgst -sha512 $jdbFinal.mar | \
-      awk '{print $2}')/g" update_$jdbFinal.xml
-    sed -i "s/size=\"/size=\"$(ls -al $jdbFinal.mar | \
-      awk '{print $5}')/g" update_$jdbFinal.xml
+      update_$updateFinal.xml
+    sed -i "s/downloads\//downloads\/$updateFinal.mar/g" \
+      update_$updateFinal.xml
+    sed -i "s/hashValue=\"/hashValue=\"$(openssl dgst -sha512 $updateFinal.mar | \
+      awk '{print $2}')/g" update_$updateFinal.xml
+    sed -i "s/size=\"/size=\"$(ls -al $updateFinal.mar | \
+      awk '{print $5}')/g" update_$updateFinal.xml
   fi
   tar -cf $jdbFinal.tar $jdbDir
   bzip2 -z9 $jdbFinal.tar
