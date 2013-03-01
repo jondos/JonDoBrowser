@@ -289,14 +289,15 @@ for lang in $langs; do
     python createJDBPrecomplete.py
     # Then we build the .mar file
     bash make_full_JDB_update.sh $jdbFinal.mar $jdbDir
-    if [ "partial" = "1" ]; then
+    if [ "$partial" = "1" ]; then
       # We'd want to have partial updates
-      $updateXML="update-partial.xml"
-      $updateFinal="${jdbFinal}-partial"
+      updateXML="update-partial.xml"
+      updateFinal="${jdbFinal}-partial"
+      # We need to build the partial .mar file as well
     else
       # We'd want to have full updates
-      $updateXML="update.xml"
-      $updateFinal="$jdbFinal"
+      updateXML="update.xml"
+      updateFinal="$jdbFinal"
     fi
     # Now, update the update.xml values
     # TODO: We need to adapt that for partial updates
