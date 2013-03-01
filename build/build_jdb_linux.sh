@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright (C) 2012 Jondos GmbH
+# Copyright (C) 2012-2013 Jondos GmbH
 
 # All rights reserved.
 
@@ -39,7 +39,7 @@ langs="en-US de"
 # Allowing 32bit and 64bit JonDoBrowser builds
 platform="linux-$(uname -m)"
 jdbDir="JonDoBrowser"
-jdbVersion="0.4"
+jdbVersion="0.5"
 # TODO: Shouldn't we check whether this one is still used/valid before actually
 # building? Maybe that's something which is related to the more generic routine
 # for the case the key was not imported yet which is mentioned below.
@@ -273,11 +273,12 @@ for lang in $langs; do
     python createJDBPrecomplete.py
     # Then we build the .mar file
     bash make_full_JDB_update.sh $jdbFinal.mar $jdbDir
+    # Now, update the update.xml values
     # TODO: We need to adapt that for partial updates
     cp update.xml update_$jdbFinal.xml
-    sed -i "s/\" version=\"/\" version=\"$jdbVersion/g" \
+    sed -i "s/pVersion=\"/\pVersion=\"$jdbVersion/g" \
       update_$jdbFinal.xml
-    sed -i "s/tensionVersion=\"/tensionVersion=\"$jdbVersion/g" \ 
+    sed -i "s/mVersion=\"/mVersion=\"$ffVersion/g" \
       update_$jdbFinal.xml
     sed -i "s/downloads\//downloads\/$jdbFinal.mar/g" \
       update_$jdbFinal.xml
