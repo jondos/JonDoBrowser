@@ -1,6 +1,6 @@
-diff -r e3e008015298 browser/app/profile/firefox.js
---- a/browser/app/profile/firefox.js	Wed Jan 23 11:46:06 2013 -0800
-+++ b/browser/app/profile/firefox.js	Wed Feb 13 10:45:17 2013 +0100
+diff -r 323e068142c4 browser/app/profile/firefox.js
+--- a/browser/app/profile/firefox.js	Tue Feb 26 09:16:10 2013 -0500
++++ b/browser/app/profile/firefox.js	Fri Mar 01 14:15:19 2013 +0100
 @@ -112,21 +112,20 @@ pref("app.update.cert.maxErrors", 5);
  // present the following conditions apply for a successful update check:
  // 1. the uri scheme must be https
@@ -16,9 +16,9 @@ diff -r e3e008015298 browser/app/profile/firefox.js
 -pref("app.update.certs.2.issuerName", "CN=Thawte SSL CA,O=\"Thawte, Inc.\",C=US");
 -pref("app.update.certs.2.commonName", "aus3.mozilla.org");
 +pref("app.update.certs.1.issuerName", "serialNumber=07969287,CN=Go Daddy Secure Certification Authority,OU=http://certificates.godaddy.com/repository,O=\"GoDaddy.com, Inc.\",L=Scottsdale,ST=Arizona,C=US");
-+pref("app.update.certs.1.commonName", "anonymous-proxy-servers.net");
-+pref("app.update.certs.1.md5Fingerprint", "DD:75:D9:C7:A3:B5:9D:7A:E5:98:C4:FD:4D:2E:78:8A");
-+pref("app.update.certs.1.sha1Fingerprint", "84:78:73:F0:9F:25:17:F3:08:3A:3D:DB:D1:C4:2C:BD:C7:3D:38:AA");
++pref("app.update.certs.1.commonName", "anonym-surfen.de");
++pref("app.update.certs.1.md5Fingerprint", "AD:49:DF:DD:81:3E:C4:74:89:E4:51:C5:57:DB:BA:91");
++pref("app.update.certs.1.sha1Fingerprint", "89:33:DD:4C:45:AA:33:CD:21:38:5E:79:8B:7A:38:FE:11:A8:10:A3");
  
  // Whether or not app updates are enabled
  pref("app.update.enabled", true);
@@ -58,9 +58,9 @@ diff -r e3e008015298 browser/app/profile/firefox.js
 +
 +// JonDoBrowser version
 +pref("jondobrowser.version", "0.5");
-diff -r e3e008015298 browser/base/content/aboutDialog.js
---- a/browser/base/content/aboutDialog.js	Wed Jan 23 11:46:06 2013 -0800
-+++ b/browser/base/content/aboutDialog.js	Wed Feb 13 10:45:17 2013 +0100
+diff -r 323e068142c4 browser/base/content/aboutDialog.js
+--- a/browser/base/content/aboutDialog.js	Tue Feb 26 09:16:10 2013 -0500
++++ b/browser/base/content/aboutDialog.js	Fri Mar 01 14:15:19 2013 +0100
 @@ -304,17 +304,16 @@ appUpdater.prototype =
          gAppUpdater.selectPanel("noUpdatesFound");
          return;
@@ -98,9 +98,9 @@ diff -r e3e008015298 browser/base/content/aboutDialog.js
          }
        });
        self.addonsTotalCount = self.addons.length;
-diff -r e3e008015298 toolkit/mozapps/update/nsUpdateService.js
---- a/toolkit/mozapps/update/nsUpdateService.js	Wed Jan 23 11:46:06 2013 -0800
-+++ b/toolkit/mozapps/update/nsUpdateService.js	Wed Feb 13 10:45:17 2013 +0100
+diff -r 323e068142c4 toolkit/mozapps/update/nsUpdateService.js
+--- a/toolkit/mozapps/update/nsUpdateService.js	Tue Feb 26 09:16:10 2013 -0500
++++ b/toolkit/mozapps/update/nsUpdateService.js	Fri Mar 01 14:15:19 2013 +0100
 @@ -46,21 +46,21 @@ const PREF_APP_UPDATE_STAGE_ENABLED     
  const PREF_APP_UPDATE_URL                 = "app.update.url";
  const PREF_APP_UPDATE_URL_DETAILS         = "app.update.url.details";
@@ -447,9 +447,9 @@ diff -r e3e008015298 toolkit/mozapps/update/nsUpdateService.js
          state = STATE_DOWNLOAD_FAILED;
  
          // TODO: use more informative error code here
-diff -r e3e008015298 toolkit/xre/nsUpdateDriver.cpp
---- a/toolkit/xre/nsUpdateDriver.cpp	Wed Jan 23 11:46:06 2013 -0800
-+++ b/toolkit/xre/nsUpdateDriver.cpp	Wed Feb 13 10:45:17 2013 +0100
+diff -r 323e068142c4 toolkit/xre/nsUpdateDriver.cpp
+--- a/toolkit/xre/nsUpdateDriver.cpp	Tue Feb 26 09:16:10 2013 -0500
++++ b/toolkit/xre/nsUpdateDriver.cpp	Fri Mar 01 14:15:19 2013 +0100
 @@ -412,45 +412,42 @@ SwitchToUpdatedApp(nsIFile *greDir, nsIF
  
    nsCAutoString updaterPath;
