@@ -1,6 +1,6 @@
 diff -r 323e068142c4 browser/app/profile/firefox.js
 --- a/browser/app/profile/firefox.js	Tue Feb 26 09:16:10 2013 -0500
-+++ b/browser/app/profile/firefox.js	Fri Mar 01 14:15:19 2013 +0100
++++ b/browser/app/profile/firefox.js	Fri Mar 01 15:29:56 2013 +0100
 @@ -112,21 +112,20 @@ pref("app.update.cert.maxErrors", 5);
  // present the following conditions apply for a successful update check:
  // 1. the uri scheme must be https
@@ -60,7 +60,7 @@ diff -r 323e068142c4 browser/app/profile/firefox.js
 +pref("jondobrowser.version", "0.5");
 diff -r 323e068142c4 browser/base/content/aboutDialog.js
 --- a/browser/base/content/aboutDialog.js	Tue Feb 26 09:16:10 2013 -0500
-+++ b/browser/base/content/aboutDialog.js	Fri Mar 01 14:15:19 2013 +0100
++++ b/browser/base/content/aboutDialog.js	Fri Mar 01 15:29:56 2013 +0100
 @@ -304,17 +304,16 @@ appUpdater.prototype =
          gAppUpdater.selectPanel("noUpdatesFound");
          return;
@@ -100,7 +100,7 @@ diff -r 323e068142c4 browser/base/content/aboutDialog.js
        self.addonsTotalCount = self.addons.length;
 diff -r 323e068142c4 toolkit/mozapps/update/nsUpdateService.js
 --- a/toolkit/mozapps/update/nsUpdateService.js	Tue Feb 26 09:16:10 2013 -0500
-+++ b/toolkit/mozapps/update/nsUpdateService.js	Fri Mar 01 14:15:19 2013 +0100
++++ b/toolkit/mozapps/update/nsUpdateService.js	Fri Mar 01 15:29:56 2013 +0100
 @@ -46,21 +46,21 @@ const PREF_APP_UPDATE_STAGE_ENABLED     
  const PREF_APP_UPDATE_URL                 = "app.update.url";
  const PREF_APP_UPDATE_URL_DETAILS         = "app.update.url.details";
@@ -115,7 +115,7 @@ diff -r 323e068142c4 toolkit/mozapps/update/nsUpdateService.js
  
  const PREF_EM_HOTFIX_ID                   = "extensions.hotfix.id";
  
-+const PREF_JONDOBROWSER_VERSION           = "extensions.jondofox.browser_version";
++const PREF_JONDOBROWSER_VERSION           = "jondobrowser.version";
 +
  const URI_UPDATE_PROMPT_DIALOG  = "chrome://mozapps/content/update/updates.xul";
  const URI_UPDATE_HISTORY_DIALOG = "chrome://mozapps/content/update/history.xul";
@@ -449,7 +449,7 @@ diff -r 323e068142c4 toolkit/mozapps/update/nsUpdateService.js
          // TODO: use more informative error code here
 diff -r 323e068142c4 toolkit/xre/nsUpdateDriver.cpp
 --- a/toolkit/xre/nsUpdateDriver.cpp	Tue Feb 26 09:16:10 2013 -0500
-+++ b/toolkit/xre/nsUpdateDriver.cpp	Fri Mar 01 14:15:19 2013 +0100
++++ b/toolkit/xre/nsUpdateDriver.cpp	Fri Mar 01 15:29:56 2013 +0100
 @@ -412,45 +412,42 @@ SwitchToUpdatedApp(nsIFile *greDir, nsIF
  
    nsCAutoString updaterPath;
