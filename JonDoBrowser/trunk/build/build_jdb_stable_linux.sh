@@ -111,14 +111,16 @@ do
     u) update="1";;
     p) partial="1";;
     h) echo '' 
-       echo "JonDoBrowser Build Script 1.1 (2012-2013 Copyright (c) JonDos \
+       echo "JonDoBrowser Build Script 1.2 (2012-2013 Copyright (c) JonDos \
 GmbH)"
        echo ''
        echo "usage: $0 [options]"
        echo ''
        echo 'Possible options are:'
        echo '-c removes old build cruft.'
-       echo '-u enables the update packaging.'
+       echo "-u enables the update packaging. Creates complete updates by \
+default."
+       echo '   -p creates partial updates.'
        echo '-h prints this help text.'
        echo ''
        exit 0
