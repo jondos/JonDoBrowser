@@ -1,5 +1,5 @@
 /*
- Copyright (c) 2012, JonDos GmbH
+ Copyright (c) 2012-2013, JonDos GmbH
  All rights reserved.
  Redistribution and use in source and binary forms, with or without modification,
  are permitted provided that the following conditions are met:
@@ -243,6 +243,12 @@ Section JFPortable
   SetOutPath $INSTDIR\Data\profile\searchplugins
 
   File /x .svn "..\..\..\full\profile\searchplugins\*"
+
+  # The AdBlock subscriptions...
+
+  SetOutPath $INSTDIR\Data\profile\adblockplus
+
+  File /x .svn "..\..\..\full\profile\adblockplus\*"
 
   # Now the extensions:
   # ===================
