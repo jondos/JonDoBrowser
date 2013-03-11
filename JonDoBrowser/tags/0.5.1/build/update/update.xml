@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+
+<updates>
+  <update type="minor" displayVersion="" appVersion="" platformVersion="">
+          <patch type="complete" URL="http://anonymous-proxy-servers.net/downloads/"
+           hashFunction="sha512" hashValue="" size=""/>
+  </update>
+</updates>

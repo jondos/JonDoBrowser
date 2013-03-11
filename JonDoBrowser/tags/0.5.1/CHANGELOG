@@ -1,0 +1,77 @@
+Version 0.5.1 2013-03-11
+  * fixed bug in Windows build script (the AdBlock filters were missing)
+  * updated HTTPS Everywhere and NoScript
+  * updated preferences (noscript.version and
+    extensions.jondofox.browser_version to the latest version and
+    browser.startup.homepage_override.mstone + extensions.lastAppVersion to
+    "17.0.4")
+  * fixed 0.5 CHANGELOG entry
+
+Version 0.5 2013-02-25
+  * disabled WebRTC via configure switch as WebRTC can open UDP sockets which
+    bypass JonDonym
+  * set selected panel in Add-ons window to addons://list/extension to avoid
+    contacting AMO for further Add-on suggestions
+  * removed hushmail bookmark and added neomailbox.com  
+  * updated extensions
+  * updated preferences (noscript.version, extensions.adblockplus.currentVersion
+    and extensions.jondofox.browser_version to the latest version and
+    browser.startup.homepage_override.mstone + extensions.lastAppVersion to
+    "17.0.3")
+  * included missing omni.ja on Mac OS X which improves performance
+
+Version 0.4 2013-01-14
+  * switched to ESR versions of Firefox as base for JonDoBrowser
+  * updated extensions
+  * updated preferences (noscript.version and
+    extensions.jondofox.browser_version to the latest version and
+    browser.startup.homepage_override.mstone + extensions.lastAppVersion to
+    "17.0.2")
+
+Version 0.3.1 2012-12-03
+  * bugfix release including extension updates
+
+Version 0.3 2012-11-22
+  * fixed stability issues on Linux
+  * building now universal binaries on Mac OS X with 10.6.0 as minimum
+    requirement
+  * changed naming scheme for JonDoBrowser versions
+  * updated extensions
+  * updated preferences (noscript.version and
+    extensions.jondofox.browser_version to the latest version and
+    browser.startup.homepage_override.mstone + extensions.lastAppVersion to
+    "17.0")
+  * disabled unnecessary requests accompanied by the ABE feature in NoScript
+    (set "noscript.ABE.wanIpAsLocal" to "false")
+  * disabled loading of NoScript's homepage after version upgrade (set
+    "noscript.firstRunRedirection" to "false")
+  * disabled the history of the download manager (set
+    "browser.download.manager.retention" to "0")  
+
+Version 0.2.2 2012-10-29
+  * bugfix release including extension updates
+
+Version 0.2.1 2012-10-22
+  * bugfix release for Windows users that added missing libraries and updated
+    NoScript and HTTPS Everyhwere
+
+Version 0.2 2012-10-15
+  * made caching preferences more coherent ("browser.cache.disk.enable",
+    "browser.cache.offline.enable" and "browser.cache.disk_cache_ssl" are set
+    to "false" now)
+  * set "security.ssl.enable_false_start" to "true" to speed up TLS handshakes
+  * set "extensions.adblockplus.patternsbackups" to "0" to avoid unnecessary
+    disk access (thanks to User Jon for pointing this out in the chat)
+  * set "security.warn_viewing_mixed" to "true"
+  * set "browser.newtab.url" to "about:blank"
+  * disabled NoScript's XSS protection for cashU payment page in order to give
+    users a smoother payment experience if they use cashU  
+  * fixed bug in windows installer (german umlauts) 
+  * added option to backup and import saved bookmarks etc. during installation
+    of a new JonDoBrowser before overwriting the old version on Windows
+  * fixed glitch in Mac-Installer on OS X 10.6.8
+  * updated build scripts to include this CHANGELOG file into JonDoBrowser
+
+Version 0.1 2012-09-12
+
+ * initial release

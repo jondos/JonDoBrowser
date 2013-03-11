@@ -1,0 +1,7 @@
+LangString LauncherFileNotFound ${LANG_GERMAN} "${PORTABLEAPPNAME} kann nicht gestartet werden. Bitte installieren Sie die Anwendung ggf. neu. (FEHLER: $MISSINGFILEORPATH wurde nicht gefunden.)"
+LangString LauncherAlreadyRunning ${LANG_GERMAN} "Es läuft bereits eine andere Instanz von Firefox. Soll Firefox beendet und ${APPNAME} gestartet werden?"
+LangString LauncherCouldNotCloseRunning ${LANG_GERMAN} "Firefox konnte nicht beendet werden! Fehlercode: $R0"
+LangString LauncherAskCopyLocal ${LANG_GERMAN} "${PORTABLEAPPNAME} scheint an einem Ort ohne Schreib-Zugriff zu laufen. Möchten Sie eine temporäre Kopie auf Ihrer lokalen Festplatte erstellen und das Programm von dort aus starten?$\n$\nHinweis zum Datenschutz: Wenn Sie Ja sagen, werden Ihre persönlichen Daten aus ${PORTABLEAPPNAME} temporär auf Ihre lokale Festplatte kopiert. Diese Daten werden zwar wieder gelöscht, sobald Sie ${PORTABLEAPPNAME} schliessen, können aber unter Umständen trotzdem von Dritten gelesen werden."
+LangString LauncherNoReadOnly ${LANG_GERMAN} "${PORTABLEAPPNAME} kann nicht direkt von einem Ort ohne Schreib-Zugriff gestartet werden und wird jetzt geschlossen."
+LangString LauncherPathTooLong ${LANG_GERMAN} "Der Pfad zu ${PORTABLEAPPNAME} ist zu lang.  Bitte verkürze Sie den Pfad durch die Auslassen einiger über dieser Anwendung liegenden Verzeichnissse oder durch Kürzen der Verzeichnisnamen."
+LangString LauncherNextButton ${LANG_GERMAN} "&Weiter >"
