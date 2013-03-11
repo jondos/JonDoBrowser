@@ -1,3 +1,11 @@
+Version 0.5.1 2013-03-11
+  * fixed bug in Windows build script (the AdBlock filters were missing)
+  * updated HTTPS Everywhere
+  * updated preferences (extensions.jondofox.browser_version to the latest
+    version and browser.startup.homepage_override.mstone +
+    extensions.lastAppVersion to "17.0.4")
+  * fixed 0.5 CHANEGLOG entry
+
 Version 0.5 2013-02-25
   * disabled WebRTC via configure switch as WebRTC can open UDP sockets which
     bypass JonDonym
@@ -9,6 +17,7 @@ Version 0.5 2013-02-25
     and extensions.jondofox.browser_version to the latest version and
     browser.startup.homepage_override.mstone + extensions.lastAppVersion to
     "17.0.3")
+  * included missing omni.ja on Mac OS X which improves performance
 
 Version 0.4 2013-01-14
   * switched to ESR versions of Firefox as base for JonDoBrowser

@@ -90,6 +90,36 @@ Funktionsweise:
                                                 StartbackgroundUpdate()
                                                 |
                                               ProcessUpdates()
+                                               /          \
+                                              /            \
+                                    ----------             |
+                                    |                      |
+                                  pending                applied
+                                  -------                -------
+                                 /                         |
+                              ApplyUpdate                SwitchToUpdatedApp
+                                 |
+                              update path mod
+                                 |
+                              NS_main (updater.cpp)
+                                 |
+                              applying
+                                 |
+                        background update > update.log
+                                 |
+                ensure_remove_recursive(gDestinationPath)
+                                 |
+                            UpdateThreadFunc
+                                 |
+                          CopyInstallDirToDestDir()
+                                 |
+                              DoUpdate
+
+                             refreshUpdateStatus 
+                                |
+                       applied > cleanUpUpdatesDir
+                                      |
+                         update.log > last-update.log
 
 -------------------------------------------------------------------------------
 -------------
