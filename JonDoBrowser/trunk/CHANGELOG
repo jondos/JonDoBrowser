@@ -1,10 +1,11 @@
 Version 0.5.1 2013-03-11
   * fixed bug in Windows build script (the AdBlock filters were missing)
-  * updated HTTPS Everywhere
-  * updated preferences (extensions.jondofox.browser_version to the latest
-    version and browser.startup.homepage_override.mstone +
-    extensions.lastAppVersion to "17.0.4")
-  * fixed 0.5 CHANEGLOG entry
+  * updated HTTPS Everywhere and NoScript
+  * updated preferences (noscript.version and
+    extensions.jondofox.browser_version to the latest version and
+    browser.startup.homepage_override.mstone + extensions.lastAppVersion to
+    "17.0.4")
+  * fixed 0.5 CHANGELOG entry
 
 Version 0.5 2013-02-25
   * disabled WebRTC via configure switch as WebRTC can open UDP sockets which
