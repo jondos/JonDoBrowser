@@ -45,12 +45,6 @@ jdbVersion="0.5.1"
 # for the case the key was not imported yet which is mentioned below.
 mozKey="247CA658AA95F6171EB0F13EA7D75CC7C52175E2"
 releasePath="http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/latest-esr"
-# Do we have update packaging (mar generation etc.) enabled?
-update="0"
-# Partial updates?
-partial="0"
-updateXML=""
-updateFinal=""
 
 prepareProfile() {
   echo "Fetching sources..."
@@ -102,14 +96,12 @@ cleanup() {
   exit 0
 }
 
-OPTSTR="cuph"
+OPTSTR="ch"
 getopts "${OPTSTR}" CMD_OPT
 while [ $? -eq 0 ];
 do
   case ${CMD_OPT} in
     c) cleanup;;
-    u) update="1";;
-    p) partial="1";;
     h) echo '' 
        echo "JonDoBrowser Build Script 1.2 (2012-2013 Copyright (c) JonDos \
 GmbH)"
@@ -118,9 +110,6 @@ GmbH)"
        echo ''
        echo 'Possible options are:'
        echo '-c removes old build cruft.'
-       echo "-u enables the update packaging. Creates complete updates by \
-default."
-       echo '   -p creates partial updates.'
        echo '-h prints this help text.'
        echo ''
        exit 0
@@ -213,11 +202,6 @@ if [ ! -d "patches" ]; then
   svn export $svnBrowser/build/patches 1>/dev/null
 fi
 
-if [ "$update" == "0" ]; then
-  echo "Removing the udpate patch as this version is built without an updater."
-  rm patches/0003*
-fi
-
 cp patches/*.patch mozilla-release/ && cd mozilla-release
 
 if [ "$platform" == "linux-x86_64" ]; then
@@ -232,9 +216,6 @@ for i in *patch; do patch -tp1 <$i || exit 1; done
 echo "Building JonDoBrowser..."
 for lang in $langs; do
   cp -f ../.mozconfig .
-  if [ "$update" == "0" ]; then
-    echo "ac_add_options --disable-updater" >> .mozconfig
-  fi
   if [ "$lang" == "en-US" ]; then
     make -f client.mk build
     echo "Creating the final packages..."
@@ -282,41 +263,6 @@ for lang in $langs; do
   jdbFinal=JonDoBrowser-$jdbVersion-$platform-$lang
   cp -rf firefox/* $jdbDir-$lang/App/Firefox
   mv $jdbDir-$lang $jdbDir
-  # We build the .mar file for the update mechanism
-  if [ "$update" = "1" ]; then
-    if [ ! -e "createJDBPrecomplete.py" ]; then
-      svn checkout $svnBrowser/build/update .  
-    fi
-    # First we create the precomplete file
-    python createJDBPrecomplete.py
-    # Then we build the .mar file
-    bash make_full_JDB_update.sh $jdbFinal.mar $jdbDir
-    if [ "$partial" = "1" ]; then
-      # We'd want to have partial updates
-      updateXML="update-partial.xml"
-      updateFinal="${jdbFinal}-partial"
-      # We need to build the partial .mar file as well
-    else
-      # We'd want to have full updates
-      updateXML="update.xml"
-      updateFinal="$jdbFinal"
-    fi
-    # Now, update the update.xml values
-    # TODO: We need to adapt that for partial updates
-    cp $updateXML update_$updateFinal.xml
-    sed -i "s/pVersion=\"/\pVersion=\"$jdbVersion/g" \
-      update_$updateFinal.xml
-    sed -i "s/yVersion=\"/\yVersion=\"$jdbVersion beta/g" \
-      update_$updateFinal.xml
-    sed -i "s/mVersion=\"/mVersion=\"$ffVersion/g" \
-      update_$updateFinal.xml
-    sed -i "s/downloads\//downloads\/$updateFinal.mar/g" \
-      update_$updateFinal.xml
-    sed -i "s/hashValue=\"/hashValue=\"$(openssl dgst -sha512 $updateFinal.mar | \
-      awk '{print $2}')/g" update_$updateFinal.xml
-    sed -i "s/size=\"/size=\"$(ls -al $updateFinal.mar | \
-      awk '{print $5}')/g" update_$updateFinal.xml
-  fi
   tar -cf $jdbFinal.tar $jdbDir
   bzip2 -z9 $jdbFinal.tar
   mv $jdbFinal.tar.bz2 ../
