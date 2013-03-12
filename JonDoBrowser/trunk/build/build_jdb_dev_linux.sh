@@ -213,7 +213,7 @@ if [ ! -d "patches" ]; then
   svn export $svnBrowser/build/patches 1>/dev/null
   if [ "$update" == "1" ]; then
     cd patches
-    svn export $svnBrowser/build/patches/update/0003-Updater-for-JonDoBrowser.patch 1>/dev/null
+    svn export $svnBrowser/build/patches/updater/0003-Updater-for-JonDoBrowser.patch 1>/dev/null
     cd ..
   fi
 fi
