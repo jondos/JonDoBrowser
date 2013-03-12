@@ -39,14 +39,18 @@ langs="en-US de"
 # Allowing 32bit and 64bit JonDoBrowser builds
 platform="linux-$(uname -m)"
 jdbDir="JonDoBrowser"
-jdbVersion="0.5"
+jdbVersion="0.5.1"
 # TODO: Shouldn't we check whether this one is still used/valid before actually
 # building? Maybe that's something which is related to the more generic routine
 # for the case the key was not imported yet which is mentioned below.
 mozKey="247CA658AA95F6171EB0F13EA7D75CC7C52175E2"
-releasePath="http://releases.mozilla.org/pub/mozilla.org/firefox/releases/latest"
+releasePath="http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/latest-esr"
 # Do we have update packaging (mar generation etc.) enabled?
 update="0"
+# Partial updates?
+partial="0"
+updateXML=""
+updateFinal=""
 
 prepareProfile() {
   echo "Fetching sources..."
@@ -98,22 +102,25 @@ cleanup() {
   exit 0
 }
 
-OPTSTR="cuh"
+OPTSTR="cuph"
 getopts "${OPTSTR}" CMD_OPT
 while [ $? -eq 0 ];
 do
   case ${CMD_OPT} in
     c) cleanup;;
     u) update="1";;
+    p) partial="1";;
     h) echo '' 
-       echo "JonDoBrowser Build Script 1.1 (2012-2013 Copyright (c) JonDos \
+       echo "JonDoBrowser Build Script 1.2 (2012-2013 Copyright (c) JonDos \
 GmbH)"
        echo ''
        echo "usage: $0 [options]"
        echo ''
        echo 'Possible options are:'
        echo '-c removes old build cruft.'
-       echo '-u enables the update packaging.'
+       echo "-u enables the update packaging. Creates complete updates by \
+default."
+       echo '   -p creates partial updates.'
        echo '-h prints this help text.'
        echo ''
        exit 0
@@ -129,7 +136,7 @@ done
 # as some mirrors of releases.mozilla.org seem to be not reachable at times...
 echo "Getting the latest Firefox source version..."
 ffVersion=$(wget -t 3 -qO - $releasePath/source | \
-  grep -Eom 1 'firefox-[0-9]{2}\.[0-9](\.[0-9])*.source.tar.bz2' | tail -n1 | \
+  grep -Eom 1 'firefox-[0-9]{2}\.[0-9](\.[0-9])*esr.source.tar.bz2' | tail -n1 | \
    grep -Eom 1 '[0-9]{2}\.[0-9](\.[0-9])*')
 
 gpgVerification() {
@@ -153,18 +160,18 @@ cd tmp
 if [ "$ffVersion" = "" ]; then
   echo "We got no version extracted, thus exiting..."
   exit 1
-elif [ ! -e "firefox-$ffVersion.source.tar.bz2" ]; then
+elif [ ! -e "firefox-${ffVersion}esr.source.tar.bz2" ]; then
   echo "Getting the latest Firefox sources ..."
-  wget -t 3 $releasePath/source/firefox-$ffVersion.source.tar.bz2
+  wget -t 3 $releasePath/source/firefox-${ffVersion}esr.source.tar.bz2
   if [ ! $? -eq 0 ]; then
     echo "Error while retrieving the Firefox sources, exiting..."
     exit 1
   fi
 fi
 
-if [ ! -e "firefox-$ffVersion.source.tar.bz2.asc" ]; then
+if [ ! -e "firefox-${ffVersion}esr.source.tar.bz2.asc" ]; then
   echo "Getting the signature..."
-  wget -t 3 $releasePath/source/firefox-$ffVersion.source.tar.bz2.asc
+  wget -t 3 $releasePath/source/firefox-${ffVersion}esr.source.tar.bz2.asc
   if [ ! $? -eq 0 ]; then
     echo "Error while retrieving the signature, exiting..."
     exit 1
@@ -175,7 +182,7 @@ echo "Checking the signature of the sources..."
 # TODO: Implement a more generic routine here assuming the user has not yet
 # imported the Firefox key
 # gpg prints the verification success message to stderr
-gpgVerification firefox-$ffVersion.source.tar.bz2.asc
+gpgVerification firefox-${ffVersion}esr.source.tar.bz2.asc
 
 echo "Retrieving commonly used resources preparing the profiles..."
 prepareProfile
@@ -191,16 +198,24 @@ if [ ! -d "build" ]; then
   mkdir build
 fi
 
-cd build && cp ../tmp/firefox-$ffVersion.source.tar.bz2 .
-tar -xjvf firefox-$ffVersion.source.tar.bz2
+cd build && cp ../tmp/firefox-${ffVersion}esr.source.tar.bz2 .
+tar -xjvf firefox-${ffVersion}esr.source.tar.bz2
+# We do not want to care about specific ESR versions, thus we rename the dir
+# to "mozilla-release".
+mv mozilla-esr* mozilla-release
 echo
 echo "Downloading the build config file..."
-svn cat $svnBrowser/build/.mozconfig_$platform > .mozconfig
+svn cat $svnBrowser/build/.mozconfig_${platform}_dev > .mozconfig
 echo
 echo "Patching JonDoBrowser..."
 
 if [ ! -d "patches" ]; then
   svn export $svnBrowser/build/patches 1>/dev/null
+  if [ "$update" == "1" ]; then
+    cd patches
+    svn export $svnBrowser/build/patches/update/0003-Updater-for-JonDoBrowser.patch 1>/dev/null
+    cd ..
+  fi
 fi
 
 cp patches/*.patch mozilla-release/ && cd mozilla-release
@@ -217,6 +232,9 @@ for i in *patch; do patch -tp1 <$i || exit 1; done
 echo "Building JonDoBrowser..."
 for lang in $langs; do
   cp -f ../.mozconfig .
+  if [ "$update" == "0" ]; then
+    echo "ac_add_options --disable-updater" >> .mozconfig
+  fi
   if [ "$lang" == "en-US" ]; then
     make -f client.mk build
     echo "Creating the final packages..."
@@ -227,7 +245,7 @@ for lang in $langs; do
     # Checking out the locale repo
     # TODO: Can we make it even more sure that no one tampered with the repo(s)?
     # It seems as tags are not signed yet...
-    hg clone -r FIREFOX_${ffVersion//./_}_RELEASE https://hg.mozilla.org/releases/l10n/mozilla-release/$lang 
+    hg clone -r FIREFOX_${ffVersion//./_}esr_RELEASE https://hg.mozilla.org/releases/l10n/mozilla-release/$lang 
     cd $lang
     echo "Verifying the source repo..."
     hg verify
@@ -265,7 +283,7 @@ for lang in $langs; do
   cp -rf firefox/* $jdbDir-$lang/App/Firefox
   mv $jdbDir-$lang $jdbDir
   # We build the .mar file for the update mechanism
-  if [ "$update" == "1" ]; then
+  if [ "$update" = "1" ]; then
     if [ ! -e "createJDBPrecomplete.py" ]; then
       svn checkout $svnBrowser/build/update .  
     fi
@@ -273,19 +291,31 @@ for lang in $langs; do
     python createJDBPrecomplete.py
     # Then we build the .mar file
     bash make_full_JDB_update.sh $jdbFinal.mar $jdbDir
+    if [ "$partial" = "1" ]; then
+      # We'd want to have partial updates
+      updateXML="update-partial.xml"
+      updateFinal="${jdbFinal}-partial"
+      # We need to build the partial .mar file as well
+    else
+      # We'd want to have full updates
+      updateXML="update.xml"
+      updateFinal="$jdbFinal"
+    fi
     # Now, update the update.xml values
     # TODO: We need to adapt that for partial updates
-    cp update.xml update_$jdbFinal.xml
+    cp $updateXML update_$updateFinal.xml
     sed -i "s/pVersion=\"/\pVersion=\"$jdbVersion/g" \
-      update_$jdbFinal.xml
+      update_$updateFinal.xml
+    sed -i "s/yVersion=\"/\yVersion=\"$jdbVersion beta/g" \
+      update_$updateFinal.xml
     sed -i "s/mVersion=\"/mVersion=\"$ffVersion/g" \
-      update_$jdbFinal.xml
-    sed -i "s/downloads\//downloads\/$jdbFinal.mar/g" \
-      update_$jdbFinal.xml
-    sed -i "s/hashValue=\"/hashValue=\"$(openssl dgst -sha512 $jdbFinal.mar | \
-      awk '{print $2}')/g" update_$jdbFinal.xml
-    sed -i "s/size=\"/size=\"$(ls -al $jdbFinal.mar | \
-      awk '{print $5}')/g" update_$jdbFinal.xml
+      update_$updateFinal.xml
+    sed -i "s/downloads\//downloads\/$updateFinal.mar/g" \
+      update_$updateFinal.xml
+    sed -i "s/hashValue=\"/hashValue=\"$(openssl dgst -sha512 $updateFinal.mar | \
+      awk '{print $2}')/g" update_$updateFinal.xml
+    sed -i "s/size=\"/size=\"$(ls -al $updateFinal.mar | \
+      awk '{print $5}')/g" update_$updateFinal.xml
   fi
   tar -cf $jdbFinal.tar $jdbDir
   bzip2 -z9 $jdbFinal.tar
