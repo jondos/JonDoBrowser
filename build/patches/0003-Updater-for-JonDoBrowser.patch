@@ -1,6 +1,6 @@
 diff -r 323e068142c4 browser/app/profile/firefox.js
 --- a/browser/app/profile/firefox.js	Tue Feb 26 09:16:10 2013 -0500
-+++ b/browser/app/profile/firefox.js	Fri Mar 01 19:11:25 2013 +0100
++++ b/browser/app/profile/firefox.js	Tue Mar 12 11:41:21 2013 +0100
 @@ -112,21 +112,20 @@ pref("app.update.cert.maxErrors", 5);
  // present the following conditions apply for a successful update check:
  // 1. the uri scheme must be https
@@ -60,7 +60,7 @@ diff -r 323e068142c4 browser/app/profile/firefox.js
 +pref("jondobrowser.version", "0.5");
 diff -r 323e068142c4 browser/base/content/aboutDialog.js
 --- a/browser/base/content/aboutDialog.js	Tue Feb 26 09:16:10 2013 -0500
-+++ b/browser/base/content/aboutDialog.js	Fri Mar 01 19:11:25 2013 +0100
++++ b/browser/base/content/aboutDialog.js	Tue Mar 12 11:41:21 2013 +0100
 @@ -304,17 +304,16 @@ appUpdater.prototype =
          gAppUpdater.selectPanel("noUpdatesFound");
          return;
@@ -100,7 +100,7 @@ diff -r 323e068142c4 browser/base/content/aboutDialog.js
        self.addonsTotalCount = self.addons.length;
 diff -r 323e068142c4 toolkit/mozapps/update/nsUpdateService.js
 --- a/toolkit/mozapps/update/nsUpdateService.js	Tue Feb 26 09:16:10 2013 -0500
-+++ b/toolkit/mozapps/update/nsUpdateService.js	Fri Mar 01 19:11:25 2013 +0100
++++ b/toolkit/mozapps/update/nsUpdateService.js	Tue Mar 12 11:41:21 2013 +0100
 @@ -46,21 +46,21 @@ const PREF_APP_UPDATE_STAGE_ENABLED     
  const PREF_APP_UPDATE_URL                 = "app.update.url";
  const PREF_APP_UPDATE_URL_DETAILS         = "app.update.url.details";
@@ -296,7 +296,60 @@ diff -r 323e068142c4 toolkit/mozapps/update/nsUpdateService.js
   * Logs a string to the error console.
   * @param   string
   *          The string to write to the error console.
-@@ -897,29 +760,16 @@ function getUpdateChannel() {
+@@ -645,23 +508,28 @@ function getUpdatesDir() {
+ /**
+  * Get the Active Updates directory inside the directory where we apply the
+  * background updates.
+  * @return The active updates directory inside the updated directory, as a
+  *         nsIFile object.
+  */
+ function getUpdatesDirInApplyToDir() {
+   var dir = FileUtils.getDir(KEY_APPDIR, []);
++  // TODO: tested Linux-only currently
+ #ifdef XP_MACOSX
+-  dir = dir.parent.parent; // the bundle directory
++#else
++  dir = dir.parent.parent;
+ #endif
+   dir.append(UPDATED_DIR);
+ #ifdef XP_MACOSX
+   dir.append("Contents");
+   dir.append("MacOS");
++#else
++  dir.append("App");
++  dir.append("Firefox");
+ #endif
+   dir.append(DIR_UPDATES);
+   if (!dir.exists()) {
+     dir.create(Ci.nsILocalFile.DIRECTORY_TYPE, 0755);
+   }
+   return dir;
+ }
+ #endif
+@@ -786,16 +654,22 @@ function cleanUpUpdatesDir(aBackgroundUp
+           }
+           catch (e) {
+             LOG("cleanUpUpdatesDir - failed to rename file " + logFile.path +
+                 " to " + FILE_BACKUP_LOG);
+           }
+         }
+         f.moveTo(dir, FILE_LAST_LOG);
+         if (aBackgroundUpdate) {
++          // TODO: That is currently a hack to get a proper last-update.log
++          // after the update got applied...
++          dir.append("0");
++          if (dir.exists()) {
++            dir.remove(true);
++          }
+           // We're not going to delete any files, so we can just
+           // bail out of the loop right now.
+           break;
+         } else {
+           continue;
+         }
+       }
+       catch (e) {
+@@ -897,29 +771,16 @@ function getUpdateChannel() {
    }
    catch (e) {
      Components.utils.reportError(e);
@@ -326,7 +379,7 @@ diff -r 323e068142c4 toolkit/mozapps/update/nsUpdateService.js
    this._index = 0;
    if (aItems) {
      for (var i = 0; i < aItems.length; ++i) {
-@@ -1860,24 +1710,23 @@ UpdateService.prototype = {
+@@ -1860,24 +1721,23 @@ UpdateService.prototype = {
        return null;
  
      // Choose the newest of the available minor and major updates.
@@ -357,7 +410,7 @@ diff -r 323e068142c4 toolkit/mozapps/update/nsUpdateService.js
        // (see bug 350636).
        let neverPrefName = PREF_APP_UPDATE_NEVER_BRANCH + aUpdate.appVersion;
        if (aUpdate.showNeverForVersion &&
-@@ -2051,17 +1900,17 @@ UpdateService.prototype = {
+@@ -2051,17 +1911,17 @@ UpdateService.prototype = {
          // getting the scope property of a plugin breaks in some environments
          // (see bug 566787). The hotfix add-on is also ignored as it shouldn't
          // block the user from upgrading.
@@ -376,7 +429,7 @@ diff -r 323e068142c4 toolkit/mozapps/update/nsUpdateService.js
          }
        });
  
-@@ -2215,30 +2064,25 @@ UpdateService.prototype = {
+@@ -2215,30 +2075,25 @@ UpdateService.prototype = {
  
    /**
     * See nsIUpdateService.idl
@@ -415,7 +468,7 @@ diff -r 323e068142c4 toolkit/mozapps/update/nsUpdateService.js
      if (this.isDownloading) {
        if (update.isCompleteUpdate == this._downloader.isCompleteUpdate &&
            background == this._downloader.background) {
-@@ -2654,29 +2498,21 @@ Checker.prototype = {
+@@ -2654,29 +2509,21 @@ Checker.prototype = {
        }
      }
  
@@ -447,7 +500,7 @@ diff -r 323e068142c4 toolkit/mozapps/update/nsUpdateService.js
      LOG("Checker:getUpdateURL - update URL: " + url);
      return url;
    },
-@@ -3265,17 +3101,17 @@ Downloader.prototype = {
+@@ -3265,17 +3112,17 @@ Downloader.prototype = {
          // We only need to explicitly show the prompt if this is a background
          // download, since otherwise some kind of UI is already visible and
          // that UI will notify.
@@ -466,9 +519,49 @@ diff -r 323e068142c4 toolkit/mozapps/update/nsUpdateService.js
          state = STATE_DOWNLOAD_FAILED;
  
          // TODO: use more informative error code here
+diff -r 323e068142c4 toolkit/mozapps/update/updater/updater.cpp
+--- a/toolkit/mozapps/update/updater/updater.cpp	Tue Feb 26 09:16:10 2013 -0500
++++ b/toolkit/mozapps/update/updater/updater.cpp	Tue Mar 12 11:41:21 2013 +0100
+@@ -2248,16 +2248,17 @@ int NS_main(int argc, NS_tchar **argv)
+       sBackgroundUpdate = true;
+     } else if (NS_tstrstr(argv[3], NS_T("/replace"))) {
+       // We're processing a request to replace a version of the application
+       // with an updated version applied in the background.
+       sReplaceRequest = true;
+     }
+   }
+ 
++  // TODO: Linux-only currently...
+   if (sReplaceRequest) {
+     // If we're attempting to replace the application, try to append to the
+     // log generated when staging the background update.
+     NS_tchar installDir[MAXPATHLEN];
+     if (!GetInstallationDir(installDir)) {
+       fprintf(stderr, "Could not get the installation directory\n");
+       return 1;
+     }
+@@ -2265,17 +2266,17 @@ int NS_main(int argc, NS_tchar **argv)
+ #ifdef XP_WIN
+     NS_tchar* logDir = gSourcePath;
+ #else
+     NS_tchar logDir[MAXPATHLEN];
+     NS_tsnprintf(logDir, sizeof(logDir)/sizeof(logDir[0]),
+ #ifdef XP_MACOSX
+                  NS_T("%s/Updated.app/Contents/MacOS/updates"),
+ #else
+-                 NS_T("%s/updated/updates"),
++                 NS_T("%s/updated/App/Firefox/updates"),
+ #endif
+                  installDir);
+ #endif
+ 
+     LogInitAppend(logDir, NS_T("last-update.log"), NS_T("update.log"));
+   } else {
+     LogInit(gSourcePath, NS_T("update.log"));
+   }
 diff -r 323e068142c4 toolkit/xre/nsUpdateDriver.cpp
 --- a/toolkit/xre/nsUpdateDriver.cpp	Tue Feb 26 09:16:10 2013 -0500
-+++ b/toolkit/xre/nsUpdateDriver.cpp	Fri Mar 01 19:11:25 2013 +0100
++++ b/toolkit/xre/nsUpdateDriver.cpp	Tue Mar 12 11:41:21 2013 +0100
 @@ -412,45 +412,42 @@ SwitchToUpdatedApp(nsIFile *greDir, nsIF
  
    nsCAutoString updaterPath;
