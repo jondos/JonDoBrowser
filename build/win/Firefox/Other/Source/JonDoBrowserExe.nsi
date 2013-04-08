@@ -22,7 +22,7 @@
 !define NAME "JonDoBrowser"
 !define APPNAME "${NAME}"
 !define PORTABLEAPPNAME "${NAME}"
-!define VER "0.5.1.0"
+!define VER "0.6.0.0"
 !define WEBSITE "anonymous-proxy-servers.net/en/jondobrowser"
 !define DEFAULTEXE "firefox.exe"
 !define DEFAULTAPPDIR "firefox"
