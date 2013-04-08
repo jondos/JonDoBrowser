@@ -238,6 +238,8 @@ Section JFPortable
     File "/oname=places.sqlite" "..\..\..\full\profile\places.sqlite_en-US"
   ${EndIf}
 
+  File "..\..\..\full\profile\localstore.rdf"
+
   # The search plugins...
 
   SetOutPath $INSTDIR\Data\profile\searchplugins
