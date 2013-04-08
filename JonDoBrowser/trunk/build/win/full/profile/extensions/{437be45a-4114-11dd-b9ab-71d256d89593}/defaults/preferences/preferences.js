@@ -2,7 +2,6 @@
 pref("extensions.jondofox.last_version", "");
 // Debug pref
 pref("extensions.jondofox.debug.enabled", false);
-pref("extensions.jondofox.new_profile", true);
 // Proxy state 
 pref("extensions.jondofox.proxy.state", "jondo");
 pref("extensions.jondofox.alwaysUseJonDo", false);
@@ -11,9 +10,6 @@ pref("extensions.jondofox.firstStart", true);
 
 // Autostart of JonDo
 // pref("extensions.jondofox.autostartJonDo", false);
-
-// We still need that as Cookie Monster has no toolbar icon as in 1.0.5
-pref("extensions.jondofox.showAddon-bar", true);
 
 // Helping the EFF and its observatory
 pref("extensions.jondofox.observatory.cache_submitted", true);
@@ -229,6 +225,9 @@ pref("extensions.jondofox.noscript_showDomain", false);
 
 // Mozilla shall not be able to deactivate one of our extensions
 pref("extensions.jondofox.blocklist.enabled", false);
+
+// No WebRTC UDP sockets for JonDoFox user
+pref("extensions.jondofox.peerconnection.enabled", false);
 
 //JonDoBrowser
 pref("extensions.jondofox.advanced_menu", false);

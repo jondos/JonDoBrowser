@@ -211,7 +211,7 @@ svn export $svnBrowser/build/langPatches/prefs_browser_en-US.js
 
 # Building the files...
 cd ../../Firefox/Other/Source
-# TODO: Why does that not work wiht the NSIS tool in mozilla-build?
+# TODO: Why does that not work with the NSIS tool in mozilla-build?
 # echo "Building the JonDoBrowser launcher..."
 # makensisu-2.46.exe JonDoBrowserExe.nsi
 echo "Building the JonDoBrowser installer..."
