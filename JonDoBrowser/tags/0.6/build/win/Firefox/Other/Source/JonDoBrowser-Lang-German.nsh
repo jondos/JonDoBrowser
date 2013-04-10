@@ -1,0 +1,8 @@
+LangString FF30Win9x ${LANG_GERMAN} "Diese Version des JonDoBrowser ist nicht kompatibel mit Win9x und WinME!"
+LangString SelectJonDoBrowser ${LANG_GERMAN} "Wählen Sie den Ordner für JonDoBrowser."
+LangString JonDoBrowserDetected ${LANG_GERMAN} "JonDoBrowser läuft noch. Wollen Sie das Programm jetzt beenden?"
+LangString JonDoBrowserDeleteError ${LANG_GERMAN} "Ihr JonDoBrowser kann nicht vollständig gelöscht werden, wenn er noch läuft! Wählen Sie bitte ein anderes Installationsverzeichnis, wenn Sie JonDoBrowser im Augenblick nicht beenden möchten."
+LangString OverwriteProfile ${LANG_GERMAN} "Das existierende Profil wird überschrieben, fortfahren? (Lesezeichen, Zertifikatsdatenbank, HTTPS-Everyhwere-Regeln und Strict-Transport-Security-Domains werden gesichert)"
+LangString BackupBookmarksCerts ${LANG_GERMAN} "Sichern der Lesezeichen, Zertifikatsdatenbank, HTTPS-Everyhwere-Regeln und Strict-Transport-Security-Domains..."
+LangString BackupError ${LANG_GERMAN} "Beim Erstellen des Backups trat ein Fehler auf, die Installation wird abgebrochen."
+LangString RestoreError ${LANG_GERMAN} "Beim Wiedereinspielen der gespeicherten Lesezeichen und der Zertifikatsdatenbank trat ein Fehler auf!"

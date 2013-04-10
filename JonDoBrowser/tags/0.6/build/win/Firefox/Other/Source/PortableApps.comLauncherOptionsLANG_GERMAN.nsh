@@ -1,0 +1,8 @@
+LangString LauncherOptionsHeader ${LANG_GERMAN} "Setup Typ"
+LangString LauncherOptionsHeader2 ${LANG_GERMAN} "Bitte wählen Sie die Setup Optionen"
+LangString LauncherOptionsIntro ${LANG_GERMAN} "Die Sitzungsspeicherung von Firefox gestattet es Ihren, Ihre Fenster, Tabs und den Text in Fomularen zwischen Browsersitzungen zu speichern. Dies kann aber Leistungsprobleme auf langsamen USB-Geräten hervorrufen."
+LangString LauncherOptionsOption1 ${LANG_GERMAN} "Sitzungsspeicherung aktivieren (Standard)"
+LangString LauncherOptionsOption1Description ${LANG_GERMAN} "Empfohlen für Festplatten und schnelle USB-Laufwerke"
+LangString LauncherOptionsOption2 ${LANG_GERMAN} "Sitzungsspeicherung deaktivieren"
+LangString LauncherOptionsOption2Description ${LANG_GERMAN} "Empfohlen für langsame USB-Laufwerke"
+LangString LauncherOptionsOutro ${LANG_GERMAN} "Sie können die Sitzungsspeicherung auch jederzeit später aktivieren oder deaktivieren indem Sie JonDoFox neu installieren. Ihre JonDoFox-Bookmarks bleiben bei jeder Neuinstallation erhalten."
