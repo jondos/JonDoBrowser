@@ -6,9 +6,7 @@
 # longer present in a complete update. The current working directory is used for
 # the location to enumerate and to create the precomplete file.
 
-# This file is a slightly adapted version of Mozilla's createprecomplete.py
-# which my be found here:
-# https://mxr.mozilla.org/mozilla-central/source/config/createprecomplete.py
+# This file is a slightly adapted version of Mozilla's createprecomplete.py.
 # Done by JonDos GmbH 2013.
 
 import sys
@@ -50,11 +48,12 @@ def get_build_entries(root_path):
 
     return rel_file_path_list, rel_dir_path_list
 
-def generate_precomplete(root_path):
+def generate_precomplete():
     """ Creates the precomplete file containing the remove and rmdir
-        application update instructions. The given directory is used
+        application update instructions. The JonDoBrowser directory is used
         for the location to enumerate and to create the precomplete file.
     """
+    root_path = os.path.join(os.getcwd(), 'JonDoBrowser')
     # If inside a Mac bundle use the root of the bundle for the path.
     if os.path.basename(root_path) == "MacOS":
         root_path = os.path.abspath(os.path.join(root_path, '../../'))
@@ -72,4 +71,4 @@ def generate_precomplete(root_path):
     precomplete_file.close()
 
 if __name__ == "__main__":
-    generate_precomplete(os.path.join(os.getcwd(), 'JonDoBrowser'))
+    generate_precomplete()
