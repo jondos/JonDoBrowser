@@ -9,22 +9,22 @@
 #
 #  * Redistributions of source code must retain the above copyright notice, this
 #    list of conditions and the following disclaimer.
-#  * Redistributions in binary form must reproduce the above copyright notice, 
-#    this list of conditions and the following disclaimer in the documentation 
+#  * Redistributions in binary form must reproduce the above copyright notice,
+#    this list of conditions and the following disclaimer in the documentation
 #    and/or other materials provided with the distribution.
-#  * Neither the name of the JonDos GmbH nor the names of its contributors may 
-#    be used to endorse or promote products derived from this software without 
+#  * Neither the name of the JonDos GmbH nor the names of its contributors may
+#    be used to endorse or promote products derived from this software without
 #    specific prior written permission.
 
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-# ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
-# WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
+# ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+# WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
 # DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
-# ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES 
-# (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
-# LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON 
-# ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT 
-# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
+# ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+# (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+# LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+# ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 # This script fetches the latest sources of a Firefox release and verifies them.
@@ -67,7 +67,7 @@ prepareProfile() {
   # We do not need ProfileSwitcher in our JonDoBrowser, thus removing it.
   rm -rf profile/extensions/\{fa8476cf-a98c-4e08-99b4-65a69cb4b7d4\}.xpi
   # Patching the profile xpi to be optimized for JDB, sigh...
-  unzip -d profile/extensions/\{437be45a-4114-11dd-b9ab-71d256d89593\} -o jondofox.xpi 
+  unzip -d profile/extensions/\{437be45a-4114-11dd-b9ab-71d256d89593\} -o jondofox.xpi
   # TODO: Why does -f or -s not work? And removing the .xpi in the extensions folder if it exists...
   #if [ -f "profile/extensions/\{437be45a-4114-11dd-b9ab-71d256d89593\}.xpi" ]
   #then
@@ -75,7 +75,7 @@ prepareProfile() {
   #fi
   # Cruft from the old JonDoFox-Profile...
   rm -f profile/prefs_portable*
-  rm -f profile/bookmarks* 
+  rm -f profile/bookmarks*
 }
 
 prepareLinuxProfiles() {
@@ -110,7 +110,7 @@ do
     c) cleanup;;
     u) update="1";;
     p) partial="1";;
-    h) echo '' 
+    h) echo ''
        echo "JonDoBrowser Build Script 1.2 (2012-2013 Copyright (c) JonDos \
 GmbH)"
        echo ''
@@ -148,7 +148,7 @@ gpgVerification() {
   else
     echo "Wrong signature, aborting..."
     exit 1
-  fi 
+  fi
 }
 
 if [ ! -d "tmp" ]; then
@@ -213,7 +213,7 @@ if [ ! -d "patches" ]; then
   svn export $svnBrowser/build/patches 1>/dev/null
   if [ "$update" == "1" ]; then
     cd patches
-    svn export $svnBrowser/build/patches/updater/0003-Updater-for-JonDoBrowser.patch 1>/dev/null
+    svn export $svnBrowser/build/patches/update/0003-Updater-for-JonDoBrowser.patch 1>/dev/null
     cd ..
   fi
 fi
@@ -245,7 +245,7 @@ for lang in $langs; do
     # Checking out the locale repo
     # TODO: Can we make it even more sure that no one tampered with the repo(s)?
     # It seems as tags are not signed yet...
-    hg clone -r FIREFOX_${ffVersion//./_}esr_RELEASE https://hg.mozilla.org/releases/l10n/mozilla-release/$lang 
+    hg clone -r FIREFOX_${ffVersion//./_}esr_RELEASE https://hg.mozilla.org/releases/l10n/mozilla-release/$lang
     cd $lang
     echo "Verifying the source repo..."
     hg verify
@@ -265,7 +265,7 @@ for lang in $langs; do
     # Reconfiguring the build to be aware of the locale other than en-US
     make -f client.mk configure
     # Now we go and repack the binary
-    cd linux_build/browser/locales   
+    cd linux_build/browser/locales
     # We are supposed to need the compare-locales tool for the merge-$lang
     # target. BUT it seems we can omit that which results in an error (127) but
     # adds the german language strings, though. Going this route for now as this
@@ -285,11 +285,12 @@ for lang in $langs; do
   # We build the .mar file for the update mechanism
   if [ "$update" = "1" ]; then
     if [ ! -e "createJDBPrecomplete.py" ]; then
-      svn checkout $svnBrowser/build/update .  
+      svn checkout $svnBrowser/build/update .
     fi
     # First we create the precomplete file
     python createJDBPrecomplete.py
     # Then we build the .mar file
+    # TODO: Put that into the else clause below...
     bash make_full_JDB_update.sh $jdbFinal.mar $jdbDir
     if [ "$partial" = "1" ]; then
       # We'd want to have partial updates

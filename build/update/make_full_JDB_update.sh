@@ -7,7 +7,7 @@
 # This tool generates full update packages for the update system.
 # Author: Darin Fisher
 #
-# Slightly modified to JonDoBrowser needs by JonDos GmbH 2013.
+# Slightly adapted to JonDoBrowser needs by JonDos GmbH 2013.
 
 . $(dirname "$0")/commonJDB.sh
 
