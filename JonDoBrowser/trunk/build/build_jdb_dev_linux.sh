@@ -39,7 +39,7 @@ langs="en-US de"
 # Allowing 32bit and 64bit JonDoBrowser builds
 platform="linux-$(uname -m)"
 jdbDir="JonDoBrowser"
-jdbVersion="0.5.1"
+jdbVersion="0.6"
 # TODO: Shouldn't we check whether this one is still used/valid before actually
 # building? Maybe that's something which is related to the more generic routine
 # for the case the key was not imported yet which is mentioned below.
@@ -134,7 +134,7 @@ done
 # version.
 # When we are using 'wget' in this script we retry three times if necessary
 # as some mirrors of releases.mozilla.org seem to be not reachable at times...
-echo "Getting the latest Firefox source version..."
+echo "Getting the latest Firefox ESR source version..."
 ffVersion=$(wget -t 3 -qO - $releasePath/source | \
   grep -Eom 1 'firefox-[0-9]{2}\.[0-9](\.[0-9])*esr.source.tar.bz2' | tail -n1 | \
    grep -Eom 1 '[0-9]{2}\.[0-9](\.[0-9])*')
