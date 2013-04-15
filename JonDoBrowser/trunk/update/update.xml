@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<updates>
+    <update type="minor" version="13.0a1" extensionVersion="13.0a1" buildID="20120212031149">
+        <patch type="complete" URL="http://ftp.mozilla.org/pub/mozilla.org/firefox/nightly/2012/02/2012-02-12-03-11-49-mozilla-central/firefox-13.0a1.en-US.linux-i686.complete.mar" hashFunction="sha512" hashValue="c3caafb5dd80948aa33ad80b72946eb1bfda513bbfbba23e5933bf5a18523b01351d2f28c51bd2db2bd6e3c12204ea8952e3f67a48ad396ed3339c99405caa9e" size="18235480"/>
+        <patch type="partial" URL="http://ftp.mozilla.org/pub/mozilla.org/firefox/nightly/2012/02/2012-02-12-03-11-49-mozilla-central/firefox-13.0a1.en-US.linux-i686.partial.20120211031145-20120212031149.mar" hashFunction="sha512" hashValue="0d2ca8384e505af7d5b8800d57766ea371838f040cb59aaa01601934512b288599be1f1b462bb82f2782486063b7b610bd367ab3810903b45b63bc93b77adb68" size="2008424"/>
+    </update>
+</updates>
