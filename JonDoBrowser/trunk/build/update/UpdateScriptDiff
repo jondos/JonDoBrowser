@@ -1,4 +1,4 @@
-diff common.sh commonJDB.sh
+diff make_full_update.sh make_full_JDB_update.sh
 9a10
 > # Slightly adapted to JonDoBrowser needs by JonDos GmbH 2013.
 11c12
@@ -6,7 +6,15 @@ diff common.sh commonJDB.sh
 ---
 > . $(dirname "$0")/commonJDB.sh
 
-diff make_full_update.sh make_full_JDB_update.sh
+diff make_incremental_update.sh make_incremental_JDB_update.sh
+9a10
+> # Slightly adapted to JonDoBrowser needs by JonDos GmbH 2013.
+11c12
+< . $(dirname "$0")/common.sh
+---
+> . $(dirname "$0")/commonJDB.sh
+
+diff common.sh commonJDB.sh
 9a10
 > # Slightly adapted to JonDoBrowser needs by JonDos GmbH 2013.
 141a143,146
