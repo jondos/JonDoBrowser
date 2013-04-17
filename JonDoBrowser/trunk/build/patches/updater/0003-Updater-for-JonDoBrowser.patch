@@ -57,7 +57,7 @@ diff -r 323e068142c4 browser/app/profile/firefox.js
  pref("social.toast-notifications.enabled", true);
 +
 +// JonDoBrowser version
-+pref("jondobrowser.version", "0.5");
++pref("jondobrowser.version", "0.6");
 diff -r 323e068142c4 browser/base/content/aboutDialog.js
 --- a/browser/base/content/aboutDialog.js	Tue Feb 26 09:16:10 2013 -0500
 +++ b/browser/base/content/aboutDialog.js	Tue Mar 12 11:41:21 2013 +0100
