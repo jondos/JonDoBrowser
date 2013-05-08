@@ -1,3 +1,7 @@
+Version 0.7 XXXX-XX-XX
+  * changed compression algorithm for Linux binaries (bzip2 -> xz) in build
+    scripts
+
 Version 0.6 2013-04-08
   * updated browser to Firefox 17.0.5 ESR
   * disabled unsafe use of SSL ("security.enable_ssl3" is set to "false")
