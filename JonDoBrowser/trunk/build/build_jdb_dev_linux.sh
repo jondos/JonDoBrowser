@@ -40,10 +40,15 @@ langs="en-US de"
 platform="linux-$(uname -m)"
 jdbDir="JonDoBrowser"
 jdbVersion="0.6"
+# Needed to get the full .mar file out of the proper tag to build the partial
+# .mar file.
+jdbPreviousVersion=""
 # TODO: Shouldn't we check whether this one is still used/valid before actually
 # building? Maybe that's something which is related to the more generic routine
 # for the case the key was not imported yet which is mentioned below.
 mozKey="247CA658AA95F6171EB0F13EA7D75CC7C52175E2"
+# Mmm... we don't get the full fingerprint with --verify in this case...
+jonKey="F1305880"
 releasePath="http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/latest-esr"
 # Do we have update packaging (mar generation etc.) enabled?
 update="0"
@@ -140,14 +145,24 @@ ffVersion=$(wget -t 3 -qO - $releasePath/source | \
    grep -Eom 1 '[0-9]{2}\.[0-9](\.[0-9])*')
 
 gpgVerification() {
-  sigKey=$(gpg --verify $1 2>&1 | \
-    grep -Eom 2 '([A-Z0-9]{4}\s*){10}' | tail -n1 | tr -d ' ')
-
-  if [ "$sigKey" = "$mozKey" ]; then
-    echo "Successful verification!"
-  else
-    echo "Wrong signature, aborting..."
-    exit 1
+  if [ "$2" = "moz" ]; then
+    sigKey=$(gpg --verify $1 2>&1 | \
+      grep -Eom 2 '([A-Z0-9]{4}\s*){10}' | tail -n1 | tr -d ' ')
+    if [ "$sigKey" = "$mozKey" ]; then
+      echo "Successful verification with the Mozilla key!"
+    else
+      echo "Wrong signature (moz), aborting..."
+      exit 1
+    fi
+  elif [ "$2" = "jon" ]; then
+    sigKey=$(gpg --verify $1 2>&1 | \
+      grep -Eom 1 '[A-Z0-9]{8}' | tail -n1 | tr -d ' ')
+    if [ "$sigkey" = "$jonKey" ]; then
+      echo "Successful verification with the JonDos key!"
+    else
+      echo "Wrong signature (jon), aborting..."
+      exit 1
+    fi
   fi
 }
 
@@ -182,7 +197,7 @@ echo "Checking the signature of the sources..."
 # TODO: Implement a more generic routine here assuming the user has not yet
 # imported the Firefox key
 # gpg prints the verification success message to stderr
-gpgVerification firefox-${ffVersion}esr.source.tar.bz2.asc
+gpgVerification firefox-${ffVersion}esr.source.tar.bz2.asc "moz"
 
 echo "Retrieving commonly used resources preparing the profiles..."
 prepareProfile
@@ -290,13 +305,26 @@ for lang in $langs; do
     # First we create the precomplete file
     python createJDBPrecomplete.py
     # Then we build the .mar file
-    # TODO: Put that into the else clause below...
+    # We need to build the .mar file of the new JonDoBrowser version at any
+    # rate. Either we are delivering full updates or we need it to create
+    # partial updates during building the next JonDoBrowser version.
     bash make_full_JDB_update.sh $jdbFinal.mar $jdbDir
     if [ "$partial" = "1" ]; then
       # We'd want to have partial updates
       updateXML="update-partial.xml"
       updateFinal="${jdbFinal}-partial"
-      # We need to build the partial .mar file as well
+      # We need to build the partial .mar file out of the full .mar file of the
+      # previous JonDoBrowser version + the current one.
+      # TODO: Use the proper tag in the release version!
+      # svn export https://svn.jondos.de/svnpub/JonDoBrowser/tags/$jdbPreviousVersion/build/mar/$platform.mar
+      # svn export https://svn.jondos.de/svnpub/JonDoBrowser/tags/$jdbPreviousVersion/build/mar/$platform.mar.asc
+      # TODO: Do that earlier in the script when we are downloading all the
+      # other (generic) stuff.
+      svn export $svnBrowser/build/mar/$platform.mar
+      svn export $svnBrowser/build/mar/$platform.mar.asc
+      gpgVerification $platform.mar.asc "jon"
+      mkdir old && cd old && perl ../unwrap_full_update.pl ../$platform.mar
+      cd .. && bash make_incremental_JDB_update.sh $updateFinal.mar old $jdbDir
     else
       # We'd want to have full updates
       updateXML="update.xml"
