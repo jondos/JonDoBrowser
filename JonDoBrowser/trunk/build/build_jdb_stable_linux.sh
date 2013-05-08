@@ -264,8 +264,8 @@ for lang in $langs; do
   cp -rf firefox/* $jdbDir-$lang/App/Firefox
   mv $jdbDir-$lang $jdbDir
   tar -cf $jdbFinal.tar $jdbDir
-  bzip2 -z9 $jdbFinal.tar
-  mv $jdbFinal.tar.bz2 ../
+  xz $jdbFinal.tar
+  mv $jdbFinal.tar.xz ../
   rm -rf $jdbDir
   # TODO: Only needed if we need to build another localized build...
   cd ../build/mozilla-release

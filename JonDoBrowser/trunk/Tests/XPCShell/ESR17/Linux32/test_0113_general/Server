@@ -743,7 +743,7 @@ make: Verlasse Verzeichnis '/home/groeg/JonDoBrowser/stable/testing/mozilla-esr1
 -------------------------------------------------------------------------------
 
 The updated permissions are wrong on our server (644 instead of 664)
-See: https://mxr.mozilla.org/mozilla-esr17/source/toolkit/mozapps/update/test/TestAUSHelper.cpp 
+See: https://mxr.mozilla.org/mozilla-esr17/source/toolkit/mozapps/update/test/TestAUSHelper.cpp
 for code that may be responsible here.
 
 Indeed createSymLinks() creates the target with the wrong permissions.

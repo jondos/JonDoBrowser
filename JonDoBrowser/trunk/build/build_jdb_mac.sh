@@ -9,22 +9,22 @@
 #
 #  * Redistributions of source code must retain the above copyright notice, this
 #    list of conditions and the following disclaimer.
-#  * Redistributions in binary form must reproduce the above copyright notice, 
-#    this list of conditions and the following disclaimer in the documentation 
+#  * Redistributions in binary form must reproduce the above copyright notice,
+#    this list of conditions and the following disclaimer in the documentation
 #    and/or other materials provided with the distribution.
-#  * Neither the name of the JonDos GmbH nor the names of its contributors may 
-#    be used to endorse or promote products derived from this software without 
+#  * Neither the name of the JonDos GmbH nor the names of its contributors may
+#    be used to endorse or promote products derived from this software without
 #    specific prior written permission.
 
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-# ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
-# WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
+# ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+# WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
 # DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
-# ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES 
-# (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
-# LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON 
-# ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT 
-# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
+# ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+# (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+# LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+# ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 svnProfile=https://svn.jondos.de/svnpub/JonDoFox_Profile/trunk/full/profile
@@ -45,14 +45,14 @@ generateDmgImage() {
   # Function for creating JonDoBrowser dmg on Mac OS X based on:
   # http://stackoverflow.com/questions/96882/how-do-i-create-a-nice-looking-
   # dmg-for-mac-os-x-using-command-line-tools
-   
+
   # To make this work you need to set source and $backgroundPictureName.
   # The $source directory should contain the .background directory with the
   # background image inside.
   #
   # Adapted for JonDoBrowser's needs by Georg Koppen, JonDos GmbH 2012.
 
-  # We want to have just "JonDoBrowser" shown. 
+  # We want to have just "JonDoBrowser" shown.
   applicationName="JonDoBrowser.app"
   finalDMGName="JonDoBrowser-$jdbVersion-$1-$2.dmg"
   # TODO GeKo: Why does the backslash as a line delimiter not work but result in an error?
@@ -76,7 +76,7 @@ generateDmgImage() {
            set background picture of theViewOptions to file ".background:'${backgroundPictureName}'"
            make new alias file at container window to POSIX file "/Applications" with properties {name:"Applications"}
            set position of item "'${applicationName}'" of container window to {100, 120}
-           set position of item "Applications" of container window to {375, 120} 
+           set position of item "Applications" of container window to {375, 120}
            close
            open
            update without registering applications
@@ -111,7 +111,7 @@ prepareProfile() {
   # We do not need ProfileSwitcher in our JonDoBrowser, thus removing it.
   rm -rf profile/extensions/\{fa8476cf-a98c-4e08-99b4-65a69cb4b7d4\}.xpi
   # Patching the profile xpi to be optimized for JDB, sigh...
-  unzip -d profile/extensions/\{437be45a-4114-11dd-b9ab-71d256d89593\} -o jondofox.xpi 
+  unzip -d profile/extensions/\{437be45a-4114-11dd-b9ab-71d256d89593\} -o jondofox.xpi
   # TODO: Why does -f or -s not work? And removing the .xpi in the extensions folder if it exists...
   #if [ -f "profile/extensions/\{437be45a-4114-11dd-b9ab-71d256d89593\}.xpi" ]
   #then
@@ -119,7 +119,7 @@ prepareProfile() {
   #fi
   # Cruft from the old JonDoFox-Profile...
   rm -f profile/prefs_portable*
-  rm -f profile/bookmarks* 
+  rm -f profile/bookmarks*
 }
 
 prepareMacProfiles() {
@@ -162,7 +162,7 @@ while [ $? -eq 0 ];
 do
   case ${CMD_OPT} in
     c) cleanup;;
-    h) echo '' 
+    h) echo ''
        echo 'JonDoBrowser Build Script 1.0 (2012 Copyright (c) JonDos GmbH)'
        echo "usage: $0 [options]"
        echo ''
@@ -195,7 +195,7 @@ gpgVerification() {
   else
     echo "Wrong signature, aborting..."
     exit 1
-  fi 
+  fi
 }
 
 if [ ! -d "tmp" ]; then
@@ -294,18 +294,17 @@ for macPlatform in $macPlatforms; do
     else
       echo "CC=/usr/local/clang/bin/clang" >> .mozconfig
       echo "CXX=/usr/local/clang/bin/clang++" >> .mozconfig
-       
     fi
     if [ "$lang" == "en-US" ]; then
       make -f client.mk build
-    else   
+    else
       # Now, we do all the stuff needed for localized builds
       cd ../../tmp
       # Checking out the locale repo if it is not existing already
       if [ ! -d $lang ]; then
         # TODO: Can we make it even more sure that no one tampered with the
         # repo(s)? It seems as tags are not signed yet...
-        hg clone -r FIREFOX_${ffVersion//./_}_RELEASE https://hg.mozilla.org/releases/l10n/mozilla-release/$lang 
+        hg clone -r FIREFOX_${ffVersion//./_}_RELEASE https://hg.mozilla.org/releases/l10n/mozilla-release/$lang
         cd $lang
         echo "Verifying the source repo..."
         hg verify
@@ -327,7 +326,7 @@ for macPlatform in $macPlatforms; do
       # Reconfiguring the build to be aware of the locale other than en-US
       make -f client.mk configure
       # Now we go and repack the binary
-      cd mac_build_${macPlatform}/browser/locales   
+      cd mac_build_${macPlatform}/browser/locales
       # We are supposed to need the compare-locales tool for the merge-$lang
       # target. BUT it seems we can omit that which results in an error (127)
       # but adds the german language strings, though. Going this route for now
