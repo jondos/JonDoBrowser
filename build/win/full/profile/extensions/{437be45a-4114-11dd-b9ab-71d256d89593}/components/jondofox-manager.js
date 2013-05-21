@@ -521,7 +521,7 @@ JDFManager.prototype = {
       // Iterate
       for (extension in this.extensions) {
         log('Checking for ' + extension);
-	// We have to do this, otherwise we would always get the feedback 
+	// We have to do this, otherwise we would always get the feedback
 	// related to the latest checked extension. See:
 	// https://developer.mozilla.org/en/New_in_JavaScript_1.7 the section
 	// concerning the let statement.
@@ -1168,6 +1168,8 @@ JDFManager.prototype = {
             'extensions.jondofox.profile_version') !== "2.6.12" &&
           this.prefsHandler.getStringPref(
             'extensions.jondofox.profile_version') !== "2.6.13" &&
+          this.prefsHandler.getStringPref(
+            'extensions.jondofox.profile_version') !== "2.6.14" &&
           this.prefsHandler.getBoolPref('extensions.jondofox.update_warning')) {
           this.jdfUtils.showAlertCheck(this.jdfUtils.
             getString('jondofox.dialog.attention'), this.jdfUtils.
