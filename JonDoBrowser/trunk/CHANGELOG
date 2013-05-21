@@ -1,6 +1,17 @@
-Version 0.7 XXXX-XX-XX
+Version 0.7 2013-05-21
+  * updated browser to Firefox 17.0.6 ESR
   * changed compression algorithm for Linux binaries (bzip2 -> xz) in build
     scripts
+  * removed empty UnPlug directory which caused UnPlug failure on first start
+    on some Linux systems
+  * updated NoScript
+  * updated Adblock Plus
+  * updated Adblock blocklist
+  * updated preferences ("extensions.adblockplus.currentVersion",
+    "noscript.version" and "extensions.jondofox.browser_version" to the
+    latest version and "browser.startup.homepage_override.mstone" +
+    "extensions.lastAppVersion" to "17.0.6")
+  * removed awxcnx.de bookmark
 
 Version 0.6 2013-04-08
   * updated browser to Firefox 17.0.5 ESR

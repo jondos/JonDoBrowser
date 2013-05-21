@@ -61,3 +61,5 @@ Testoutput:
 ===========
 
 LinkURI is: file:///home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/netwerk/test/unit/test_link.desktop and channelURI is: file:///home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/netwerk/test/unit/test_link.desktop
+
+See: https://bugzilla.mozilla.org/show_bug.cgi?id=833723

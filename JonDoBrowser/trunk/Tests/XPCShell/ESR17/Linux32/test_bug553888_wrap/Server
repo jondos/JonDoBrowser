@@ -28,7 +28,7 @@ parent: TEST-INFO | (xpcshell/head.js) | test 2 finished
 
 parent: TEST-INFO | (xpcshell/head.js) | running event loop
 
-(<unknown>:18691): Gtk-WARNING **: cannot open display: 
+(<unknown>:18691): Gtk-WARNING **: cannot open display:
 <<<<<<<
 
 -------------------------------------------------------------------------------

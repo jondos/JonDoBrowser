@@ -92,7 +92,7 @@ https://mxr.mozilla.org/mozilla-central/source/uriloader/exthandler/nsExternalHe
 * registering the http protocol in gconf does not help either:
   gconftool-2 -s /desktop/gnome/url-handlers/http/command '/path/to/app %s' \
   --type String
-  gconftool-2 -s /desktop/gnome/url-handlers/http/enabled --type Boolean true 
+  gconftool-2 -s /desktop/gnome/url-handlers/http/enabled --type Boolean true
 * using dbus-launch and exporting DBUS_SESSION_BUS_ADDRESS and
   DBUS_SESSION_BUS_PID solves this failure
 
