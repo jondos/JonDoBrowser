@@ -17,14 +17,14 @@
 #    specific prior written permission.
 
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-# ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
-# WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
+# ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+# WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
 # DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
-# ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES 
-# (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
-# LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON 
-# ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT 
-# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
+# ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+# (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+# LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+# ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 # This script fetches the latest sources of a Firefox release and verifies them.
@@ -58,7 +58,7 @@ gpgVerification() {
   else
     echo "Wrong signature, aborting..."
     exit 1
-  fi 
+  fi
 }
 
 OPTSTR="ch"
@@ -67,7 +67,7 @@ while [ $? -eq 0 ];
 do
   case ${CMD_OPT} in
     c) cleanup;;
-    h) echo '' 
+    h) echo ''
        echo 'JonDoBrowser Build Script 1.0 (2012 Copyright (c) JonDos GmbH)'
        echo "usage: $0 [options]"
        echo ''
@@ -164,7 +164,7 @@ for lang in $langs; do
       # Now, we do all the stuff needed for localized builds
       cd ../../tmp
       # Checking out the locale repo
-      hg clone -r FIREFOX_${ffVersion//./_}esr_RELEASE http://hg.mozilla.org/releases/l10n/mozilla-release/$lang 
+      hg clone -r FIREFOX_${ffVersion//./_}esr_RELEASE http://hg.mozilla.org/releases/l10n/mozilla-release/$lang
       # We need the branding files in the locale repo as well
       rsync ../build/mozilla-release/browser/branding/jondobrowser/locales/en-US/brand* $lang/browser/branding/jondobrowser
       # Updating the .mozconfig
