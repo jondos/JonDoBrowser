@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright (C) 2012 Jondos GmbH
+# Copyright (C) 2012-2013 Jondos GmbH
 
 # All rights reserved.
 
@@ -36,9 +36,11 @@ mozKey=247CA658AA95F6171EB0F13EA7D75CC7C52175E2
 releasePath=http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/latest-esr
 gpg="/c/Program Files/GNU/GnuPG/pub/gpg"
 # These are the languages we support with JonDoBrowser
-langs="en-US de"
+# TODO: We support 'de' as well but that is still handled by the NSIS script and
+# not by our build script as on the other platforms.
+langs="en-US"
 # These languages need a special treatment (i.e. a non-default localized build
-localeBuilds="de"
+localeBuilds=""
 # Files we need to move to the locale specific dierctories
 directories="dictionaries uninstall webapprt"
 files="dictionaries/* omni.ja uninstall updater.ini update-settings.ini webapprt"
