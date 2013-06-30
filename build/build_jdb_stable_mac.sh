@@ -27,13 +27,17 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+# This script is used to compile the JonDoBrowser on Mac OS X 10.8. If a working
+# version on Mac OS X 10.6 is needed, check out rev 4230 and adapt it to the
+# latest Firefox ESR changes (e.g. new patches that may be necessary).
+
 svnProfile=https://svn.jondos.de/svnpub/JonDoFox_Profile/trunk/full/profile
 svnBrowser=https://svn.jondos.de/svnpub/JonDoBrowser/trunk
 # The locales we support. en-US must be first as all the other localized builds
 # are actually only a repackaging of the en-US one.
 langs="en-US de"
 macPlatforms="mac-x86_64 mac-i386"
-jdbVersion="0.7"
+jdbVersion="0.8"
 title="JonDoBrowser"
 size="200000"
 mozKey=247CA658AA95F6171EB0F13EA7D75CC7C52175E2
@@ -260,6 +264,10 @@ if [ ! -d "patches" ]; then
   svn export $svnBrowser/build/patches 1>/dev/null
 fi
 
+cd patches
+svn export $svnBrowser/build/patches/os/Mac107ESR17.patch
+cd ..
+
 cp patches/*.patch mozilla-release/ && cd mozilla-release
 
 svn export $svnBrowser/build/branding/jondobrowser browser/branding/jondobrowser
@@ -275,28 +283,32 @@ for macPlatform in $macPlatforms; do
     echo "mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/mac_build_${macPlatform}" \
       >> .mozconfig
     echo >> .mozconfig
+    echo "ac_add_options --with-macos-sdk=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk" \
+      >> .mozconfig
+    echo "ac_add_options --enable-macos-target=10.6" >> .mozconfig
+    echo >> .mozconfig
+    echo "HOST_CC=clang" >> .mozconfig
+    echo "HOST_CXX=clang++" >> .mozconfig
+    echo "RANLIB=ranlib" >> .mozconfig
+    echo "AR=ar" >> .mozconfig
+    echo 'AS=$CC' >> .mozconfig
+    echo "LD=ld" >> .mozconfig
+    echo "STRIP=\"strip -x -S\"" >> .mozconfig
+    echo "CROSS_COMPILE=1" >> .mozconfig
+
     if [ "$macPlatform" == "mac-i386" ]; then
       # TODO: Not sure if we need everything here.
       # On 10.6.8 our building platform we only get clang 2.9 as newest clang
       # version if installed via MacPorts. But that is not recent enough to
       # build JonDoBrowser if it is based at least on FF 17. Thus, we need our
       # own compiler (3.1 is working atm)...
-      echo "CC=\"/usr/local/clang/bin/clang -arch i386\"" >> .mozconfig
-      echo "CXX=\"/usr/local/clang/bin/clang++ -arch i386\"" >> .mozconfig
-      echo "ac_add_options --target=i386-apple-darwin9.2.0" >> .mozconfig
-      echo "ac_add_options --enable-macos-target=10.5" >> .mozconfig
-      echo  >> .mozconfig
-      echo "HOST_CC=/usr/local/clang/bin/clang" >> .mozconfig
-      echo "HOST_CXX=/usr/local/clang/bin/clang++" >> .mozconfig
-      echo "RANLIB=ranlib" >> .mozconfig
-      echo "AR=ar" >> .mozconfig
-      echo 'AS=$CC' >> .mozconfig
-      echo "LD=ld" >> .mozconfig
-      echo "STRIP=\"strip -x -S\"" >> .mozconfig
-      echo "CROSS_COMPILE=1"
+      echo "CC=\"clang -arch i386\"" >> .mozconfig
+      echo "CXX=\"clang++ -arch i386\"" >> .mozconfig
+      echo "ac_add_options --target=i386-apple-darwin10.6.0" >> .mozconfig
     else
-      echo "CC=/usr/local/clang/bin/clang" >> .mozconfig
-      echo "CXX=/usr/local/clang/bin/clang++" >> .mozconfig
+      echo "CC=\"clang -arch x86_64\"" >> .mozconfig
+      echo "CXX=\"clang++ -arch x86_64\"" >> .mozconfig
+      echo "ac_add_options --target=x86_64-apple-darwin10.6.0" >> .mozconfig
     fi
     if [ "$lang" == "en-US" ]; then
       make -f client.mk build && make -C mac_build_$macPlatform package
