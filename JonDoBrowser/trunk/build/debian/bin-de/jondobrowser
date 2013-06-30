@@ -1,0 +1,146 @@
+#!/bin/bash 
+
+## Copyright (c) JonDos GmbH
+##
+## All rights reserved.
+## 
+## Redistribution and use in source and binary forms, with or without modification, 
+## are permitted provided that the following conditions are met:
+## 
+##     * Redistributions of source code must retain the above copyright notice, this list 
+##       of conditions and the following disclaimer.
+##     * Redistributions in binary form must reproduce the above copyright notice,
+##       this list of conditions and the following disclaimer in the documentation and/or
+##       other materials provided with the distribution.
+##     * Neither the name of the University of Technology Dresden, Germany, nor the name of
+##       the JonDos GmbH, nor the names of their contributors may be used to endorse or
+##       promote products derived from this software without specific prior written permission.
+## 
+## THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+## "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+## LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+## A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE REGENTS OR
+## CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+## EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+## PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+## PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+## LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+## NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+## SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+##    
+##   2013 by JonDos GmbH (info@jondos.de) 
+##
+
+copyJonDoFoxsettings()
+{
+  if [ -e "${HOME}/.mozilla/firefox/profile/places.sqlite"  ]; then
+     cp -f "${HOME}/.mozilla/firefox/profile/places.sqlite" "$HOME/.jondobrowser/profile/places.sqlite"
+  fi
+  if [ -e "${HOME}/.mozilla/firefox/profile/CertPatrol.sqlite"  ]; then
+     cp -f "${HOME}/.mozilla/firefox/profile/CertPatrol.sqlite" "$HOME/.jondobrowser/profile/CertPatrol.sqlite"
+  fi
+  if [ -e "${HOME}/.mozilla/firefox/profile/NoScriptSTS.db"  ]; then
+     cp -f "${HOME}/.mozilla/firefox/profile/NoScriptSTS.db" "$HOME/.jondobrowser/profile/NoScriptSTS.db"
+  fi
+  if [ -e "${HOME}/.mozilla/firefox/profile/permissions.sqlite"  ]; then
+     cp -f "${HOME}/.mozilla/firefox/profile/permissions.sqlite" "$HOME/.jondobrowser/profile/permissions.sqlite"
+  fi
+  if [ -e "${HOME}/.mozilla/firefox/profile/cert_override.txt"  ]; then
+     cp -f "${HOME}/.mozilla/firefox/profile/cert_override.txt" "$HOME/.jondobrowser/profile/cert_override.txt"
+  fi
+  if [ -d "${HOME}/.mozilla/firefox/profile/HTTPSEverywhereUserRules" ]; then
+     cp -r "${HOME}/.mozilla/firefox/profile/HTTPSEverywhereUserRules" "$HOME/.jondobrowser/profile"
+  fi
+}
+
+updateJonDoBrowserProfile()
+{
+  # Backup old data
+  install -d "$HOME/.jondobrowser/ttmmpp" 
+  if [ -e "$HOME/.jondobrowser/profile/places.sqlite"  ]; then
+      cp "$HOME/.jondobrowser/profile/places.sqlite" "$HOME/.jondobrowser/ttmmpp/" 
+  fi
+  if [ -e "$HOME/.jondobrowser/profile/CertPatrol.sqlite"  ]; then
+      cp "$HOME/.jondobrowser/profile/CertPatrol.sqlite" "$HOME/.jondobrowser/ttmmpp/" 
+  fi
+  if [ -e "$HOME/.jondobrowser/profile/NoScriptSTS.db"  ]; then
+      cp "$HOME/.jondobrowser/profile/NoScriptSTS.db" "$HOME/.jondobrowser/ttmmpp/" 
+  fi
+  if [ -e "$HOME/.jondobrowser/profile/permissions.sqlite"  ]; then
+      cp "$HOME/.jondobrowser/profile/permissions.sqlite" "$HOME/.jondobrowser/ttmmpp/" 
+  fi
+  if [ -e "$HOME/.jondobrowser/profile/cert_override.txt"  ]; then
+      cp "$HOME/.jondobrowser/profile/cert_override.txt" "$HOME/.jondobrowser/ttmmpp/" 
+  fi
+  if [ -d "$HOME/.jondobrowser/profile/HTTPSEverywhereUserRules" ]; then
+     cp -r "$HOME/.jondobrowser/profile/HTTPSEverywhereUserRules" "$HOME/.jondobrowser/ttmmpp"
+  fi
+  # Install new profile
+  rm -r $HOME/.jondobrowser/profile
+  cp -r /opt/JonDoBrowser/Data/profile $HOME/.jondobrowser/
+  # Restore backup data
+  cp -rf "$HOME"/.jondobrowser/ttmmpp/*  "$HOME/.jondobrowser/profile/" 
+  # Cleanup
+  rm -r "$HOME/.jondobrowser/ttmmpp"
+}
+
+ZENITY=`which zenity`
+
+
+if [ ! -d "$HOME/.jondobrowser/profile" ] 
+   then
+   install -d $HOME/.jondobrowser
+   cp -r /opt/JonDoBrowser/Data/profile $HOME/.jondobrowser/
+
+   # check for old JonDoFox
+   if [ -d "${HOME}/.mozilla/firefox/profile" ]
+      then
+          if test "X$KDE_FULL_SESSION" = "Xtrue" ; then
+               kdialog --title "JonDoFox Profil gefunden" --yesno "Wollen Sie die Lesezeichen und weitere Einstellungen vom JonDoFox Profil importieren?"
+
+               dialog_return=$?        
+               if [ $dialog_return -eq 0 ]; then
+                   copyJonDoFoxsettings
+               fi
+          else 
+
+             if [ $ZENITY ]; then
+                $ZENITY --question --title "JonDoFox Profil gefunden" --text "Wollen Sie die Lesezeichen und weitere\nEinstellungen vom JonDoFox Profil importieren?" --no-wrap
+
+                dialog_return=$?        
+                if [ $dialog_return -eq 0 ]; then
+                    copyJonDoFoxsettings
+                fi
+           
+             fi
+          fi 
+   fi
+else
+   VERSIONOLD=$(fgrep jondofox.browser_version "$HOME/.jondobrowser/profile/prefs.js" | xargs -I % expr % : ".*, \([0-9].*[0-9]\).*")
+   VERSIONNEW=$(fgrep jondofox.browser_version "/opt/JonDoBrowser/Data/profile/prefs.js" | xargs -I % expr % : ".*, \([0-9].*[0-9]\).*")
+   if [ "$VERSIONOLD" != "$VERSIONNEW" ]; then
+       if test "X$KDE_FULL_SESSION" = "Xtrue" ; then
+           kdialog --title "JonDoBrowser" --yesno "Eine neue Version des JonDoBrowser wurde installiert.\nSoll Ihr Profil aktualisiert werden?\n\n(Ihre Lesezeichen, Zertifikats-Datenbank und\nHTTPSEverywhereUserRules bleiben erhalten.)"
+
+           dialog_return=$?        
+           if [ $dialog_return -eq 0 ]; then
+               updateJonDoBrowserProfile
+           fi
+       else
+           if [ $ZENITY ]; then
+                $ZENITY --question --title "JonDoBrowser" --text "Eine neue Version des JonDoBrowser wurde installiert.\nSoll Ihr Profil aktualisiert werden?\n\n(Ihre Lesezeichen, Zertifikats-Datenbank und\nHTTPSEverywhereUserRules bleiben erhalten.)" --no-wrap
+
+                dialog_return=$?        
+                if [ $dialog_return -eq 0 ]; then
+                    updateJonDoBrowserProfile
+                fi
+           else
+                updateJonDoBrowserProfile
+           fi       
+       fi 
+   fi
+
+fi
+
+/opt/JonDoBrowser/App/Firefox/firefox -profile $HOME/.jondobrowser/profile -no-remote
+

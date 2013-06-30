@@ -1,0 +1,58 @@
+#!/usr/bin/make -f
+
+build: build-stamp
+build-stamp:
+	dh_testdir
+
+clean:
+	dh_testdir
+	dh_testroot
+	rm -f build-stamp
+	dh_clean -A
+
+install: build
+	dh_testdir
+	dh_testroot
+	dh_prep
+	dh_installdirs
+
+	install -m755 debian/bin-en/jondobrowser debian/jondobrowser-en/usr/bin/
+	install -m755 debian/bin-de/jondobrowser debian/jondobrowser-de/usr/bin/
+
+	install -m644 debian/jondobrowser.png debian/jondobrowser-en/usr/share/pixmaps/
+	install -m644 debian/jondobrowser.png debian/jondobrowser-de/usr/share/pixmaps/
+
+	install -m644 debian/jondobrowser.desktop debian/jondobrowser-en/usr/share/applications/jondobrowser.desktop
+	install -m644 debian/jondobrowser.desktop debian/jondobrowser-de/usr/share/applications/jondobrowser.desktop
+
+        
+	tar -xaf JonDoBrowser-*-linux-*-en-US.tar.xz
+	mv JonDoBrowser debian/jondobrowser-en/opt/
+	rm debian/jondobrowser-en/opt/JonDoBrowser/*.sh
+	rm debian/jondobrowser-en/opt/JonDoBrowser/CHANGELOG
+	
+
+	tar -xaf JonDoBrowser-*-linux-*-de.tar.xz
+	mv JonDoBrowser debian/jondobrowser-de/opt/
+	rm debian/jondobrowser-de/opt/JonDoBrowser/*.sh
+	rm debian/jondobrowser-de/opt/JonDoBrowser/CHANGELOG
+
+
+binary-arch: build install
+
+binary-indep: build install
+	dh_testdir
+	dh_testroot
+	dh_installdocs -A debian/copyright
+	dh_installchangelogs
+	dh_installmenu
+	dh_icons
+	dh_compress
+	dh_fixperms
+	dh_installdeb
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb --destdir=.
+
+binary: binary-indep binary-arch
+.PHONY: build clean binary-indep binary-arch binary install

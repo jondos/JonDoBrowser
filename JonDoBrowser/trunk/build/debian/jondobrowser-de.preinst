@@ -1,0 +1,23 @@
+#!/bin/bash 
+
+set -e
+
+if [ -e /usr/local/bin/jondobrowser ]; then
+  update-alternatives --remove x-www-browser /usr/local/bin/jondobrowser
+  update-alternatives --remove gnome-www-browser /usr/local/bin/jondobrowser
+  rm /usr/local/bin/jondobrowser
+fi
+
+if [ -e /usr/local/share/pixmaps/jondobrowser.png ]; then
+  rm /usr/local/share/pixmaps/jondobrowser.png
+fi
+
+if [ -e /usr/local/share/applications/jondobrowser.desktop ]; then
+  rm /usr/local/share/applications/jondobrowser.desktop
+fi
+
+
+
+#DEBHELPER#
+
+exit 0
