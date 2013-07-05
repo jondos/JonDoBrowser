@@ -1,6 +1,7 @@
 Version 0.8 2013-06-27
   * updated browser to Firefox 17.0.7 ESR
   * updated jondofox.xpi
+  * build_jdb_mac.sh, adapted to osx 10.8
 
 Version 0.7 2013-05-21
   * updated browser to Firefox 17.0.6 ESR
