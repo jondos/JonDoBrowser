@@ -29,6 +29,7 @@ user_pref("browser.cache.disk.enable", false);
 user_pref("browser.cache.disk_cache_ssl", false);
 user_pref("browser.cache.memory.capacity", 65536);
 user_pref("browser.cache.offline.enable", false);
+user_pref("browser.cache.compression_level", 1);
 user_pref("browser.download.hide_plugins_without_extensions", false);
 user_pref("browser.download.manager.alertOnEXEOpen", true);
 user_pref("browser.download.manager.retention", 0);
