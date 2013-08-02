@@ -6,8 +6,10 @@ INFO=3;
 NOTE=4;
 WARN=5;
 
-https_everywhere = CC["@eff.org/https-everywhere;1"].getService(Components.interfaces.nsISupports).wrappedJSObject;
-o_httpsprefs = https_everywhere.get_prefs();
+https_everywhere = CC["@eff.org/https-everywhere;1"]
+  .getService(Components.interfaces.nsISupports)
+  .wrappedJSObject;
+
 rulesets = Array.slice(https_everywhere.https_rules.rulesets);
 
 const id_prefix = "he_enable";
@@ -40,7 +42,7 @@ function resetSelected() {
     sel.getRangeAt(t, start, end);
     for (var v = start.value; v <= end.value; v++){
       var rs = treeView.rules[v];
-      rs[rs.on_by_default ? "enable" : "disable"]();
+      rs.clear();
     }
   }
 }
@@ -117,7 +119,15 @@ function getValue(row, col) {
     case "note_col":
       return row.notes;
     case "enabled_col":
-      return o_httpsprefs.getBoolPref(row.name) ? "true" : "false";
+      return https_everywhere.https_rules.rulesetsByName[row.name].active;
+      /*var ruleActive = false;
+      try {
+        if(https_everywhere.rule_toggle_prefs.getBoolPref(row.name))
+          ruleActive = true;
+      } catch(e) {
+        ruleActive = https_everywhere.https_rules.rulesetsByName[row.name].active;
+      }
+      return ruleActive;*/
     default:
       return;
   }
@@ -174,10 +184,15 @@ function https_prefs_init(doc) {
     getRowProperties: function(row, props) {},
     getColumnProperties: function(colid, col, props) {},
     getCellProperties: function(row, col, props) {
-      var atomS = Components.classes["@mozilla.org/atom-service;1"];
-        atomS = atomS.getService(Components.interfaces.nsIAtomService);
-
       if ( (col.id == "enabled_col") && !(this.rules[row]) ) {
+        var atomS = CC["@mozilla.org/atom-service;1"];
+        atomS = atomS.getService(CI.nsIAtomService);
+        // Starting with 22.0a1 there is no |props| available anymore. See:
+        // https://bugzilla.mozilla.org/show_bug.cgi?id=407956. Looking at the
+        // patch the following seems to work, though.
+        if (!props) {
+          return "undefined";
+        }
         props.AppendElement( atomS.getAtom("undefined") );
       }
     },
