@@ -62,13 +62,13 @@ Var update
 Var httpsForcedDomains
 Var httpsForcedDomainsExceptions
 
-!define JDB_VERSION "0.8"
+!define JDB_VERSION "0.9"
 !define NAME "JonDoBrowser"
-!define VERSION "0.8.0.1"
+!define VERSION "0.9.0.0"
 !define INSTALLERCOMMENTS "For additional details, visit anonymous-proxy-servers.net"
 !define INSTALLERADDITIONALTRADEMARKS "PortableApps.com is a Trademark of Rare Ideas, LLC. JonDoBrowser is a trademark of JonDos GmbH. Firefox is a Trademark of the Mozilla Foundation. " ;end this entry with a period and a space if used
 !define INSTALLERLEGALCOPYRIGHT "JonDos GmbH"
-!define INSTALLERVERSION "0.8"
+!define INSTALLERVERSION "0.9"
 
 # Runtime Switches
 SetCompress Auto
@@ -270,10 +270,16 @@ Section JFPortable
   SetOutPath "$profileExtensionPath\$extensionGUID"
   File /r /x .svn "..\..\..\full\profile\extensions\https-everywhere@eff.org\*.*"
 
-  # JonDoFox
+  # JonDoFox, old, leaves the XPI file there
+  # StrCpy $extensionGUID "{437be45a-4114-11dd-b9ab-71d256d89593}"
+  # SetOutPath "$profileExtensionPath\$extensionGUID"
+  # File /r /x .svn "..\..\..\full\profile\extensions\{437be45a-4114-11dd-b9ab-71d256d89593}\*.*"
+
+  # JonDoFox, new - delete XPI explicitpy
   StrCpy $extensionGUID "{437be45a-4114-11dd-b9ab-71d256d89593}"
   SetOutPath "$profileExtensionPath\$extensionGUID"
-  File /r /x .svn "..\..\..\full\profile\extensions\{437be45a-4114-11dd-b9ab-71d256d89593}\*.*"
+  File /r /x .svn /x {437be45a-4114-11dd-b9ab-71d256d89593}.xpi "..\..\..\full\profile\extensions\{437be45a-4114-11dd-b9ab-71d256d89593}\*.*"
+  Delete "$profileExtensionPath\{437be45a-4114-11dd-b9ab-71d256d89593}.xpi"
 
   # NoScript
   SetOutPath "$profileExtensionPath"
