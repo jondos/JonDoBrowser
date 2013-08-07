@@ -54,8 +54,8 @@ SHA1-Digest: +3mGorLsRBpsSPB+u6nq3QwZmwY=
 
 Name: modules/ssl-observatory-white.jsm
 Digest-Algorithms: MD5 SHA1
-MD5-Digest: 4NNa8UIGUqxhYN5wcjqKCw==
-SHA1-Digest: wxXupCcOIW6hx7DwpMjibaIRpQI=
+MD5-Digest: bdPvjt6040LijmrU+lfrCA==
+SHA1-Digest: hB9cFuIDMt/UfAEzTMJOuZIWzF4=
 
 Name: modules/bloodyVikingsUtils.jsm
 Digest-Algorithms: MD5 SHA1
@@ -69,13 +69,13 @@ SHA1-Digest: 7rlh+h1N+mDDHkU1IXdxr9DLRFQ=
 
 Name: chrome/jondofox.jar
 Digest-Algorithms: MD5 SHA1
-MD5-Digest: fpwWKJXoA5MliNtBNPms8A==
-SHA1-Digest: aV8hOqMhb/66dBkHIFii3LVSFNQ=
+MD5-Digest: aMV5IfBwphM+gUMetP8n0g==
+SHA1-Digest: brNstfni0q1IfifFM4gwMQglymg=
 
 Name: install.rdf
 Digest-Algorithms: MD5 SHA1
-MD5-Digest: ghEMPVcL+25pa0KM2sLQdQ==
-SHA1-Digest: P1XuCdne+lq4oHJdDNCTBdwB48Q=
+MD5-Digest: MXum6/G6+xtg6Wl4Xoh4Vg==
+SHA1-Digest: SbGVsqxoh5l+VoA8WSC7pznj5RQ=
 
 Name: GPL-TEXT
 Digest-Algorithms: MD5 SHA1
@@ -109,8 +109,8 @@ SHA1-Digest: 7Ir2vOp8LbN1r9dhqBFjeGPf2mY=
 
 Name: components/jondofox-manager.js
 Digest-Algorithms: MD5 SHA1
-MD5-Digest: 3YI6FCt4147SUFX01Jd2+g==
-SHA1-Digest: iwKeBbedoRoNuKG9Lo3Ti2TPwS4=
+MD5-Digest: g4gYrKQzcKr9R94AhB/dcQ==
+SHA1-Digest: 9g7VSSWUb+ieX85Y+OQl2SwY9n8=
 
 Name: components/preferences-mapper.js
 Digest-Algorithms: MD5 SHA1
@@ -124,5 +124,5 @@ SHA1-Digest: 988Vuygu4RpaLaGwoCbAtZKDF1A=
 
 Name: defaults/preferences/preferences.js
 Digest-Algorithms: MD5 SHA1
-MD5-Digest: ZUv35F5fkxwLI44MJf7ZKw==
-SHA1-Digest: Vt6l9vvHoDiqQlfiXV8Vy0RsxIE=
+MD5-Digest: lhTSAOPp0CRCqlJq06WUKQ==
+SHA1-Digest: szh/eNZh7K0KUcNzlhU5CqO96j4=
