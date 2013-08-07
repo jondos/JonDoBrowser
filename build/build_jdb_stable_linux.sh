@@ -39,11 +39,11 @@ langs="en-US de"
 # Allowing 32bit and 64bit JonDoBrowser builds
 platform="linux-$(uname -m)"
 jdbDir="JonDoBrowser"
-jdbVersion="0.8"
+jdbVersion="0.9"
 # TODO: Shouldn't we check whether this one is still used/valid before actually
 # building? Maybe that's something which is related to the more generic routine
 # for the case the key was not imported yet which is mentioned below.
-mozKey="247CA658AA95F6171EB0F13EA7D75CC7C52175E2"
+mozKey="2B90598A745E992F315E22C58AB132963A06537A"
 releasePath="http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/latest-esr"
 
 prepareProfile() {
