@@ -1,3 +1,24 @@
+jondobrowser (0.9-beta) unstable; urgency=low
+
+  * update to Firefox 17.0.8esr
+  * update add-ons
+  * disable OCSP
+  * added new blocklists to AdBlock
+  * disable allowed advertising in AdBlock
+  * set cache compression level to 1
+
+ -- JonDos GmbH <info@jondos.de>  Thu, 08 Aug 2013 08:17:23 +0200
+
+
+jondobrowser (0.8-beta) unstable; urgency=low
+
+  * update to latest Firefox 17esr
+  * update add-ons
+  * update bookmarks
+
+ -- JonDos GmbH <info@jondos.de>  Fri, 28 Jun 2013 08:17:23 +0200
+
+
 jondobrowser (0.7-beta) unstable; urgency=low
 
   * first debian release based on JonDoBrowser 0.7
