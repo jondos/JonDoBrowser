@@ -32,7 +32,7 @@
 # built.
 
 svnBrowser=https://svn.jondos.de/svnpub/JonDoBrowser/trunk
-mozKey=2B90598A745E992F315E22C58AB132963A06537A
+mozKey=5445390EF5D0C2ECFB8A6201057CC3EB15A0A4BC
 releasePath=http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/latest-esr
 gpg="/c/Program Files/GNU/GnuPG/pub/gpg"
 # These are the languages we support with JonDoBrowser
