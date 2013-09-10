@@ -41,7 +41,7 @@ localeBuilds=""
 platform="linux-$(uname -m)"
 jdbDir="JonDoBrowser"
 jdbVersion="0.2.2"
-mozKey=247CA658AA95F6171EB0F13EA7D75CC7C52175E2
+mozKey="5445390EF5D0C2ECFB8A6201057CC3EB15A0A4BC"
 releasePath=http://releases.mozilla.org/pub/mozilla.org/firefox/releases/latest
 
 prepareProfile() {

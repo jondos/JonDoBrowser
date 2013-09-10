@@ -43,7 +43,7 @@ jdbVersion="0.9"
 # TODO: Shouldn't we check whether this one is still used/valid before actually
 # building? Maybe that's something which is related to the more generic routine
 # for the case the key was not imported yet which is mentioned below.
-mozKey="2B90598A745E992F315E22C58AB132963A06537A"
+mozKey="5445390EF5D0C2ECFB8A6201057CC3EB15A0A4BC"
 releasePath="http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/latest-esr"
 
 prepareProfile() {
