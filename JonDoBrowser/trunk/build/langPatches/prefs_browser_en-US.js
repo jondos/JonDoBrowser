@@ -79,7 +79,6 @@ user_pref("copyplaintext.formatting.extra.newline", true);
 user_pref("copyplaintext.formatting.extra.space", true);
 user_pref("copyplaintext.formatting.trim", true);
 user_pref("dom.max_chrome_script_run_time", 60);
-user_pref("dom.storage.enabled", false);
 user_pref("extensions.autoDisableScopes", 14);
 user_pref("extensions.adblockplus.checkedadblockinstalled", true);
 user_pref("extensions.adblockplus.checkedtoolbar", true);
