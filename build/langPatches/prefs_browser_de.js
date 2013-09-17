@@ -113,6 +113,7 @@ user_pref("general.useragent.override", "Mozilla/5.0 (Windows NT 6.1; rv:10.0) G
 user_pref("general.useragent.vendor", "");
 user_pref("general.useragent.vendorSub", "");
 user_pref("general.useragent.locale", "de");
+user_pref("dom.storage.enabled", false);
 user_pref("geo.enabled", false);
 user_pref("intl.accept_charsets", "*");
 user_pref("intl.accept_languages", "en-us");
