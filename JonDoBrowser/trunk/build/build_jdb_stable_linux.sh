@@ -50,7 +50,6 @@ mozKey="5445390EF5D0C2ECFB8A6201057CC3EB15A0A4BC"
 # Only for JoNDoBrowser 0.10
 releasePath="https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/17.0.9esr"
 
-
 prepareProfile() {
   echo "Fetching sources..."
   svn export $svnProfile

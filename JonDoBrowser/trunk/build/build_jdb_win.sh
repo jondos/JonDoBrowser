@@ -33,7 +33,8 @@
 
 svnBrowser=https://svn.jondos.de/svnpub/JonDoBrowser/trunk
 mozKey=5445390EF5D0C2ECFB8A6201057CC3EB15A0A4BC
-releasePath=http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/latest-esr
+#releasePath=http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/latest-esr
+releasePath=http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/17.0.9esr
 gpg="/c/Program Files/GNU/GnuPG/pub/gpg"
 # These are the languages we support with JonDoBrowser
 # TODO: We support 'de' as well but that is still handled by the NSIS script and
