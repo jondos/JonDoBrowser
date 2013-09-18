@@ -1,3 +1,14 @@
+jondobrowser (0.10-beta) unstable; urgency=low
+
+  * update to Firefox 17.0.9esr
+  * update add-ons
+  * secured proxy switch
+  * removed disposable email provider Mailinator.com from XPI
+  * added dispostable.com and trash-mail.com to XPI
+
+ -- JonDos GmbH <info@jondos.de>  Wed, 18 Sep 2013 18:17:23 +0200
+
+
 jondobrowser (0.9-beta) unstable; urgency=low
 
   * update to Firefox 17.0.8esr
