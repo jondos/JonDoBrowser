@@ -62,13 +62,13 @@ Var update
 Var httpsForcedDomains
 Var httpsForcedDomainsExceptions
 
-!define JDB_VERSION "0.9"
+!define JDB_VERSION "0.10"
 !define NAME "JonDoBrowser"
-!define VERSION "0.9.0.0"
+!define VERSION "0.10.0.0"
 !define INSTALLERCOMMENTS "For additional details, visit anonymous-proxy-servers.net"
 !define INSTALLERADDITIONALTRADEMARKS "PortableApps.com is a Trademark of Rare Ideas, LLC. JonDoBrowser is a trademark of JonDos GmbH. Firefox is a Trademark of the Mozilla Foundation. " ;end this entry with a period and a space if used
 !define INSTALLERLEGALCOPYRIGHT "JonDos GmbH"
-!define INSTALLERVERSION "0.9"
+!define INSTALLERVERSION "0.10"
 
 # Runtime Switches
 SetCompress Auto

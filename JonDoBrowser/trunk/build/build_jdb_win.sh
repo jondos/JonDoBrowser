@@ -70,7 +70,7 @@ do
   case ${CMD_OPT} in
     c) cleanup;;
     h) echo ''
-       echo 'JonDoBrowser Build Script 1.0 (2012 Copyright (c) JonDos GmbH)'
+       echo 'JonDoBrowser Build Script 1.0 (2013 Copyright (c) JonDos GmbH)'
        echo "usage: $0 [options]"
        echo ''
        echo 'Possible options are:'
