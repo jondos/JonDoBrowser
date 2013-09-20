@@ -1,0 +1,5 @@
+?package(jondobrowser-de): needs="X11" \
+                    section="Apps/Net" \
+                    title="JonDoBrowser" \
+                    command="jondobrowser" \
+                    icon="jondobrowser.png"

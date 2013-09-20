@@ -1,0 +1,48 @@
+diff make_full_update.sh make_full_JDB_update.sh
+9a10
+> # Slightly adapted to JonDoBrowser needs by JonDos GmbH 2013.
+11c12
+< . $(dirname "$0")/common.sh
+---
+> . $(dirname "$0")/commonJDB.sh
+
+diff make_incremental_update.sh make_incremental_JDB_update.sh
+9a10
+> # Slightly adapted to JonDoBrowser needs by JonDos GmbH 2013.
+11c12
+< . $(dirname "$0")/common.sh
+---
+> . $(dirname "$0")/commonJDB.sh
+
+diff common.sh commonJDB.sh
+9a10
+> # Slightly adapted to JonDoBrowser needs by JonDos GmbH 2013.
+141a143,146
+> #
+> # We exclude the Data directory as this is userspace. In the future we might
+> # want to deploy a more fine-grained approach, e.g. delivering the extensions
+> # via our own server...
+145c150
+<   find . -type f \
+---
+>   find . -type d -name Data -prune -o -type f \
+150a156
+>       -print \
+
+diff createprecomplete.py createJDBPrecomplete.py
+8a9,11
+> # This file is a slightly adapted version of Mozilla's createprecomplete.py.
+> # Done by JonDos GmbH 2013.
+>
+25a29
+>                     rel_path_file.startswith("Data/") or
+33a38
+>                     rel_path_dir.startswith("Data/") or
+46c51
+<         application update instructions. The current working directory is used
+---
+>         application update instructions. The JonDoBrowser directory is used
+49c54
+<     root_path = os.getcwd()
+---
+>     root_path = os.path.join(os.getcwd(), 'JonDoBrowser')

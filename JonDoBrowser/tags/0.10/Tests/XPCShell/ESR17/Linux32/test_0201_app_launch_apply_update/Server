@@ -1,0 +1,96 @@
+TEST-INFO | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/test_0201_app_launch_apply_update.js | running test ...
+TEST-UNEXPECTED-FAIL | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/test_0201_app_launch_apply_update.js | test failed (with xpcshell return code: 0), see following log:
+>>>>>>>
+
+TEST-INFO | (xpcshell/head.js) | test 1 pending
+
+TEST-INFO | (xpcshell/head.js) | test 2 pending
+
+TEST-PASS | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/test_0201_app_launch_apply_update.js | [run_test : 159] true == true
+
+TEST-INFO | (xpcshell/head.js) | test 2 finished
+
+TEST-INFO | (xpcshell/head.js) | running event loop
+TEST-INFO | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/test_0201_app_launch_apply_update.js | [checkUpdateApplied : 365] testing /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/dist/bin/updated should exist
+
+TEST-PASS | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/test_0201_app_launch_apply_update.js | [checkUpdateApplied : 366] true == true
+
+TEST-PASS | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/test_0201_app_launch_apply_update.js | [checkUpdateApplied : 387] applied == applied
+TEST-INFO | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/test_0201_app_launch_apply_update.js | [checkUpdateApplied : 401] contents of /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/dist/bin/updated/updates/last-update.log:
+Performing a background update
+SOURCE DIRECTORY /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/dist/bin/updates/0
+DESTINATION DIRECTORY /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/dist/bin/updated
+PREPARE ADD update_test/UpdateTestAddFile
+PREPARE ADD update_test/removed-files
+EXECUTE ADD update_test/UpdateTestAddFile
+EXECUTE ADD update_test/removed-files
+FINISH ADD update_test/UpdateTestAddFile
+FINISH ADD update_test/removed-files
+succeeded
+calling QuitProgressUI
+
+TEST-INFO | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/test_0201_app_launch_apply_update.js | [checkUpdateApplied : 404] testing /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/dist/bin/update_test shouldn't exist
+
+TEST-PASS | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/test_0201_app_launch_apply_update.js | [checkUpdateApplied : 405] false == false
+TEST-INFO | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/test_0201_app_launch_apply_update.js | [checkUpdateApplied : 411] testing /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/dist/bin/updated/update_test/UpdateTestRemoveFile shouldn't exist
+
+TEST-PASS | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/test_0201_app_launch_apply_update.js | [checkUpdateApplied : 412] false == false
+TEST-INFO | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/test_0201_app_launch_apply_update.js | [checkUpdateApplied : 416] testing /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/dist/bin/updated/update_test/UpdateTestAddFile should exist
+
+TEST-PASS | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/test_0201_app_launch_apply_update.js | [checkUpdateApplied : 417] true == true
+
+TEST-PASS | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/test_0201_app_launch_apply_update.js | [checkUpdateApplied : 418] UpdateTestAddFile
+ == UpdateTestAddFile
+
+TEST-INFO | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/test_0201_app_launch_apply_update.js | [checkUpdateApplied : 422] testing /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/dist/bin/updated/update_test/removed-files should exist
+
+TEST-PASS | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/test_0201_app_launch_apply_update.js | [checkUpdateApplied : 423] true == true
+
+TEST-PASS | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/test_0201_app_launch_apply_update.js | [checkUpdateApplied : 424] update_test/UpdateTestRemoveFile
+ == update_test/UpdateTestRemoveFile
+
+TEST-INFO | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/test_0201_app_launch_apply_update.js | [checkUpdateApplied : 430] testing /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/dist/bin/updates/0/update.log shouldn't exist
+
+TEST-PASS | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/test_0201_app_launch_apply_update.js | [checkUpdateApplied : 431] false == false
+TEST-INFO | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/test_0201_app_launch_apply_update.js | [checkUpdateApplied : 440] testing /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/dist/bin/updates/last-update.log shouldn't exist
+
+TEST-PASS | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/test_0201_app_launch_apply_update.js | [checkUpdateApplied : 441] false == false
+TEST-INFO | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/test_0201_app_launch_apply_update.js | [checkUpdateApplied : 446] testing /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/dist/bin/updates/backup-update.log shouldn't exist
+
+TEST-PASS | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/test_0201_app_launch_apply_update.js | [checkUpdateApplied : 447] false == false
+TEST-INFO | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/test_0201_app_launch_apply_update.js | [checkUpdateApplied : 458] testing /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/dist/bin/updated/updates/0/update.log shouldn't exist
+
+TEST-PASS | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/test_0201_app_launch_apply_update.js | [checkUpdateApplied : 459] false == false
+TEST-INFO | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/test_0201_app_launch_apply_update.js | [checkUpdateApplied : 464] testing /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/dist/bin/updated/updates/last-update.log should exist
+
+TEST-PASS | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/test_0201_app_launch_apply_update.js | [checkUpdateApplied : 465] true == true
+TEST-INFO | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/test_0201_app_launch_apply_update.js | [checkUpdateApplied : 470] testing /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/dist/bin/updated/updates/backup-update.log shouldn't exist
+
+TEST-PASS | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/test_0201_app_launch_apply_update.js | [checkUpdateApplied : 471] false == false
+TEST-INFO | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/test_0201_app_launch_apply_update.js | [checkUpdateApplied : 474] testing /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/dist/bin/updated/updates/0 shouldn't exist
+
+TEST-PASS | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/test_0201_app_launch_apply_update.js | [checkUpdateApplied : 475] false == false
+TEST-INFO | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/head_update.js | [getProcessArgs : 2619] created /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/launch.sh containing:
+#! /bin/sh
+/home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/dist/bin/firefox-bin -no-remote -process-updates  1> /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/0201_app_console_log 2>&1
+TEST-INFO | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/test_0201_app_launch_apply_update.js | [switchApp : 184] launching /bin/sh /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/launch.sh
+TEST-INFO | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/head_update.js | [setEnvironment : 2878] removing the XPCOM_MEM_LEAK_LOG environment variable... previous value /tmp/tmpRxaDhY/runxpcshelltests_leaks.log
+TEST-INFO | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/head_update.js | [setEnvironment : 2885] setting the XPCOM_DEBUG_BREAK environment variable to warn... previous value stack-and-abort
+TEST-INFO | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/head_update.js | [setEnvironment : 2911] setting MOZ_NO_SERVICE_FALLBACK environment variable to 1
+TEST-INFO | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/head_update.js | [resetEnvironment : 2931] setting the XPCOM_MEM_LEAK_LOG environment variable back to /tmp/tmpRxaDhY/runxpcshelltests_leaks.log
+TEST-INFO | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/head_update.js | [resetEnvironment : 2937] setting the XPCOM_DEBUG_BREAK environment variable back to stack-and-abort
+TEST-INFO | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/head_update.js | [resetEnvironment : 2964] removing LD_LIBRARY_PATH environment variable
+TEST-INFO | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/head_update.js | [resetEnvironment : 2993] removing MOZ_NO_SERVICE_FALLBACK environment variable
+TEST-INFO | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/test_0201_app_launch_apply_update.js | [PO_observe : 251] topic process-finished, process exitValue 1
+
+TEST-UNEXPECTED-FAIL | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/test_0201_app_launch_apply_update.js | Failed to launch application - See following stack:
+JS frame :: /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/testing/xpcshell/head.js :: do_throw :: line 451
+JS frame :: /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/test_0201_app_launch_apply_update.js :: PO_observe :: line 257
+
+TEST-INFO | (xpcshell/head.js) | exiting test
+TEST-INFO | /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/_tests/xpcshell/toolkit/mozapps/update/test/unit/test_0201_app_launch_apply_update.js | [end_test : 226] removing update test directory /home/groeg/JonDoBrowser/stable/testing/mozilla-esr17/obj-i686-pc-linux-gnu/dist/bin/update_test
+<<<<<<<
+
+-------------------------------------------------------------------------------
+
+X11Forwarding was missing

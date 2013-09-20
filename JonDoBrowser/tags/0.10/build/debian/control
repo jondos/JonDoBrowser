@@ -1,0 +1,61 @@
+Source: jondobrowser
+Section: net
+Priority: optional
+Maintainer: JonDos GmbH <info@jondos.de>
+Build-Depends: debhelper (>= 5)
+Homepage: https://anonymous-proxy-servers.net
+Standards-Version: 3.7.2
+
+
+Package: jondobrowser-de
+Architecture: any
+Depends: zenity, ttf-liberation
+Conflicts: jondobrowser-en
+Description: JonDoBrowser ist optimiert für anonymes Surfen im Web.
+ This package contains an secure browser for anonymous web surfing.
+ It is optimized for the anonymisation service JonDonym.
+ JonDonym (the name is derived from John Doe and Anonymous) protects your 
+ privacy on the internet and makes truely anonymous websurfing possible. 
+ It consists of the following components:
+    * Mixes Anonymizing intermediaries (proxies) which multiply encrypt, 
+      mix and forward data streams of several users.
+    * Mix Cascades Chains of Mixes run by various independent operators. 
+    * InfoService A separate service which provides information about the 
+      available mixes and mix cascades, thenumber of users currently using 
+      the mix cascades, and their current workload.
+    * JonDo Client program installed on the user's computer. Its primary 
+      use is to establish encrypted connections to anonymising Mix Cascades.
+ In this form, the system protects from observation by
+    * the visited web server,
+    * your internet access provider (internet cafe, WLAN, AOL, T-Online, ...),
+    * other eavesdroppers on the connections (ECHELON,...),
+    * any data retention (by international distribution) and
+    * the JonDonym service itself.
+Homepage: https://www.anonym-surfen.de
+
+
+Package: jondobrowser-en
+Architecture: any
+Depends: zenity, ttf-liberation
+Conflicts: jondobrowser-de
+Description: JonDoBrowser is optimized for anonymous web surfing.
+ This package contains an secure browser for anonymous web surfing.
+ It is optimized for the anonymisation service JonDonym.
+ JonDonym (the name is derived from John Doe and Anonymous) protects your 
+ privacy on the internet and makes truely anonymous websurfing possible. 
+ It consists of the following components:
+    * Mixes Anonymizing intermediaries (proxies) which multiply encrypt, 
+      mix and forward data streams of several users.
+    * Mix Cascades Chains of Mixes run by various independent operators.
+    * InfoService A separate service which provides information about
+      the available mixes and mix cascades, thenumber of users currently 
+      using the mix cascades, and their current workload.
+    * JonDo Client program installed on the user's computer. Its primary 
+      use is to establish encrypted connections to anonymising Mix Cascades. 
+ In this form, the system protects from observation by
+    * the visited web server,
+    * your internet access provider (internet cafe, WLAN, AOL, T-Online, ...),
+    * other eavesdroppers on the connections (ECHELON,...),
+    * any data retention (by international distribution) and
+    * the JonDonym service itself.
+Homepage: https://anonymous-proxy-servers.net

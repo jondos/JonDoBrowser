@@ -1,0 +1,147 @@
+-siehe aboutDialog.xul und aboutDialog.js als Start ("Klasse" appUpdater())
+-app.update.auto regelt, ob button im deck aktiv ist oder automatisch nach
+Updates gesucht wird.
+-einige Eigenschaften der Update-Zerts sind hart-kodiert (Common Name, Issuer
+  name
+
+Funktionsweise:
+===============
+
+-Anzeige, dass Updates gesucht werden + isChecking = true
+-this.checker.checkForUpdates(this.updateCheckListener, true);
+        |                                   |
+      @mozilla.org/updates/update-checker;1 + nsIUpdateChecker <- in
+        | nsUpdateService deklariert        |
+        |                                   |
+        |      nsIUpdateCheckListener wird in aboutDialog.js implementiert
+        |
+      toolkit/mozapps/update/nsUpdateService.js
+          |
+        this.getUpdateURL(force) ["force" ist zweiter Parameter von oben]
+            |
+          default-URL kann mit app.update.url.override überschrieben werden
+            |
+          URL-Anpassung (z.B. PRODUCT-Auflösung, gewünschten Channel anhängen
+            und force)
+          |
+        XHR-Konstruktion mit Error-, Load-, und Progresshandler
+
+        Progress:
+        ---------
+          this._callback.onProgress(event.target, event.position,
+            event.totalSize); => updateCheckListener in aboutDialog.js
+
+        Error:
+        ------
+          this._callback.onError(request, update); => updateCheckListener in
+            aboutDialog.js [update ist new Update(null) + statusText]
+
+        Load:
+        -----
+          Einlesen von certs* prefs, wenn keine app.update.url.override
+           |
+          in get _updates() parsen der XML-Antwort und Rückgabe eines Arrays
+            mit Update-Objekten (Update() in nsUpdateService.js)
+           |   
+          gCertUtils.checkCert(this.request.channel, allowNonBuiltIn, certs);
+            [siehe /toolkit/mozapps/shared/CertUtils.jsm]
+          this._callback.onCheckComplete(event.target, updates,
+             updates.length); => updateCheckListener in aboutDialog.js
+                 |
+          gAppUpdater.update = gAppupdater.aus.selectUpdate(aUpdates,
+            aUpdates.length) ["aus" = UpdateService() definiert in
+            nsUpdateService.js]
+                 |     |
+                 |   Check, ob Channel-Wechsel; wenn, dann automatisch erstes
+                 |    Update zurückgeben
+                 | 
+          gAppUpdate.checkAddonCompatibility()
+                        |
+                      Check, ob kompatibel mit appVersion/platformVersion; wnn
+                      nicht, dann self.checkAddonsForUpdates()-Pfad; sonst
+                      self.startDownload()-Pfad
+                              |
+                            let state = this.aus.downloadUpdate(this.update,
+                                false);
+                                    |
+                                  this._downloader =
+                                    new Downloader(background);
+                                  return this._downloader.
+                                    downloadUpdate(update);
+                                        |
+                                      onStartRequest(request, context);
+                                      onProgress(request, context, progress,
+                                                 maxProgress);
+                                      onStopRequest(request, context, status);
+                                            |
+                                          Components.isSuccessCode(status))
+                                            |    |
+                                            |  this._verifyDownload()
+                                          [...]  
+                                            |
+                                          applyUpdateInBackground(this.
+                                              _update);
+                                                |
+                                              processUpdate(update) (in
+                                                  nsIUpdateProcessor, in
+                                                  nsUpdateDriver.cpp)
+                                                |
+                                              nsUpdateProcessor::
+                                                StartbackgroundUpdate()
+                                                |
+                                              ProcessUpdates()
+                                               /          \
+                                              /            \
+                                    ----------             |
+                                    |                      |
+                                  pending                applied
+                                  -------                -------
+                                 /                         |
+                              ApplyUpdate                SwitchToUpdatedApp
+                                 |
+                              update path mod
+                                 |
+                              NS_main (updater.cpp)
+                                 |
+                              applying
+                                 |
+                        background update > update.log
+                                 |
+                ensure_remove_recursive(gDestinationPath)
+                                 |
+                            UpdateThreadFunc
+                                 |
+                          CopyInstallDirToDestDir()
+                                 |
+                              DoUpdate
+
+                             refreshUpdateStatus 
+                                |
+                       applied > cleanUpUpdatesDir
+                                      |
+                         update.log > last-update.log
+
+-------------------------------------------------------------------------------
+-------------
+|precomplete|
+-------------
+
+The precomplete file contains the files and directories that are shipped with
+the application/update and that get removed with the next update [Why is it
+necessary at all as the update seems to work fine without it being available!?
+-> see comment in updater.cpp: "Applications aren't required to have a
+precomplete manifest yet"]
+If at all it is only considered if there is a complete update (see: DoUpdate())
+Hmmm... updater.cpp has the following hint: "The type [in updatev2.manifest] is
+used to support downgrades by causing the actions defined in precomplete to be
+performed"
+
+Sachen, die geändert werden müssen
+==================================
+-app.update.certs.1* muss an unser/Torproject-Zertifikat angepasst werden
+-app.update.auto? (vielleicht extra im JDF/Torbutton-Menü noch einmal!?)
+-Einlesen der hard-kodierten Zerts auch wenn app.update.url.override (oder eben
+  auf *.override verzichten und reguläre URL überschreiben; eher Letzteres,
+  da Code daraufhin optimiert ist)
+-Testen, ob builtInCheck auch klappt, wenn unsere/Torprojeckt-Zertifikate
+  benutzt werden (siehe "3." Teil in checkCert()); evtl. Codeanpassung
