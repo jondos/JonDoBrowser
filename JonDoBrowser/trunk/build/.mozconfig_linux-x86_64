@@ -1,8 +1,10 @@
 mk_add_options MOZ_MAKE_FLAGS="-j4"
 mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/linux_build
 
-CFLAGS="-O1 -Wformat -Wformat-security -D_FORTIFY_SOURCE=1 -fstack-protector-all --param ssp-buffer-size=1"
+
+CFLAGS="-Wformat -Wformat-security -D_FORTIFY_SOURCE=2 -fstack-protector-all --param ssp-buffer-size=1"
 CXXFLAGS="${CFLAGS}"
+CPPFLAGS="${CFLAGS}"
 LDFLAGS="-z relro -z now"
 
 # We don't need tests in a release build
