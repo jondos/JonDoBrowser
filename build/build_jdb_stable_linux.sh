@@ -264,6 +264,9 @@ for lang in $langs; do
   cp dist/firefox-$ffVersion.$lang.$platform.tar.bz2 ../../../tmp
   cd ../../../tmp && tar -xjvf firefox-$ffVersion.$lang.$platform.tar.bz2
 
+  # remove default search engines
+  rm firefox/browser/searchplugins/*.xml
+
   jdbFinal=JonDoBrowser-$jdbVersion-$platform-$lang
   cp -rf firefox/* $jdbDir-$lang/App/Firefox
   mv $jdbDir-$lang $jdbDir
