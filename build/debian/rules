@@ -29,12 +29,14 @@ install: build
 	tar -xaf JonDoBrowser-*-linux-*-en-US.tar.xz
 	mv JonDoBrowser debian/jondobrowser-en/opt/
 	rm debian/jondobrowser-en/opt/JonDoBrowser/*.sh
+        rm debian/jondobrowser-en/opt/JonDoBrowser/App/Firefox/searchplugins/*.xml
 	rm debian/jondobrowser-en/opt/JonDoBrowser/CHANGELOG
 	
 
 	tar -xaf JonDoBrowser-*-linux-*-de.tar.xz
 	mv JonDoBrowser debian/jondobrowser-de/opt/
 	rm debian/jondobrowser-de/opt/JonDoBrowser/*.sh
+        rm debian/jondobrowser-de/opt/JonDoBrowser/App/Firefox/searchplugins/*.xml
 	rm debian/jondobrowser-de/opt/JonDoBrowser/CHANGELOG
 
 

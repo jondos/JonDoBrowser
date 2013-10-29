@@ -9,7 +9,7 @@ Standards-Version: 3.7.2
 
 Package: jondobrowser-de
 Architecture: any
-Depends: zenity, ttf-liberation
+Depends: zenity, fonts-liberation
 Conflicts: jondobrowser-en
 Description: JonDoBrowser ist optimiert für anonymes Surfen im Web.
  This package contains an secure browser for anonymous web surfing.
@@ -36,7 +36,7 @@ Homepage: https://www.anonym-surfen.de
 
 Package: jondobrowser-en
 Architecture: any
-Depends: zenity, ttf-liberation
+Depends: zenity, fonts-liberation
 Conflicts: jondobrowser-de
 Description: JonDoBrowser is optimized for anonymous web surfing.
  This package contains an secure browser for anonymous web surfing.
