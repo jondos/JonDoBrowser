@@ -1,3 +1,11 @@
+jondobrowser (0.10.1-beta) unstable; urgency=low
+ 
+  * changed depency from ttf-liberation to fonts-liberation
+  * removed default search engines
+
+ -- JonDos GmbH <info@jondos.de>  Tue, 29 Oct 2013 8:17:23 +0100
+
+
 jondobrowser (0.10-beta) unstable; urgency=low
 
   * update to Firefox 17.0.9esr
