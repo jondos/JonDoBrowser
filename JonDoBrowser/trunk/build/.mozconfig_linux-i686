@@ -18,3 +18,5 @@ ac_add_options --with-branding=browser/branding/jondobrowser
 
 # We don't want to include WebRTC as it can open UDP sockets
 ac_add_options --disable-webrtc
+ac_add_options --disable-system-extension-dirs
+
