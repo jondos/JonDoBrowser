@@ -39,16 +39,16 @@ langs="en-US de"
 # Allowing 32bit and 64bit JonDoBrowser builds
 platform="linux-$(uname -m)"
 jdbDir="JonDoBrowser"
-jdbVersion="0.10"
+jdbVersion="0.11"
 # TODO: Shouldn't we check whether this one is still used/valid before actually
 # building? Maybe that's something which is related to the more generic routine
 # for the case the key was not imported yet which is mentioned below.
 mozKey="5445390EF5D0C2ECFB8A6201057CC3EB15A0A4BC"
 
-# releasePath="http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/latest-esr"
+releasePath="http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/latest-esr"
 
 # Only for JoNDoBrowser 0.10
-releasePath="https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/17.0.9esr"
+# releasePath="https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/17.0.9esr"
 
 prepareProfile() {
   echo "Fetching sources..."
@@ -212,7 +212,7 @@ if [ "$platform" == "linux-x86_64" ]; then
   svn export $svnBrowser/build/patches/os/PIE-64bit-Linux.patch
 fi
 
-svn export $svnBrowser/build/branding/jondobrowser browser/branding/jondobrowser
+svn export $svnBrowser/build/branding/jondobrowser24 browser/branding/jondobrowser
 
 # Essentially the patch-any-src.sh from the Tor Project
 for i in *patch; do patch -tp1 <$i || exit 1; done
