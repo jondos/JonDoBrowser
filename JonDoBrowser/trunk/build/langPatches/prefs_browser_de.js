@@ -97,7 +97,7 @@ user_pref("extensions.jondofox.last_version", "");
 user_pref("extensions.jondofox.new_profile", false);
 user_pref("extensions.jondofox.browser_version", "0.11");
 user_pref("extensions.jondofox.set_referrer", true);
-user_pref("extensions.lastAppVersion", "24.1");
+user_pref("extensions.lastAppVersion", "24.1.0");
 user_pref("extensions.secureLogin@blueimp.net.javascriptProtection", true);
 user_pref("extensions.shownSelectionUI", true);
 user_pref("extensions.ui.lastCategory", "addons://list/extension");
