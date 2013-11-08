@@ -47,8 +47,6 @@ mozKey="5445390EF5D0C2ECFB8A6201057CC3EB15A0A4BC"
 
 releasePath="http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/latest-esr"
 
-# Only for JoNDoBrowser 0.10
-# releasePath="https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/17.0.9esr"
 
 prepareProfile() {
   echo "Fetching sources..."
@@ -64,16 +62,12 @@ prepareProfile() {
   echo "Preparing the profile..."
   # We do not need ProfileSwitcher in our JonDoBrowser, thus removing it.
   rm -rf profile/extensions/\{fa8476cf-a98c-4e08-99b4-65a69cb4b7d4\}.xpi
-  # Patching the profile xpi to be optimized for JDB, sigh...
+  # Remove the JonDoFox-XPI for JonDoFox and replace it with JDB-XPI
+  rm profile/extensions/\{437be45a-4114-11dd-b9ab-71d256d89593\}.xpi
   unzip -d profile/extensions/\{437be45a-4114-11dd-b9ab-71d256d89593\} -o jondofox.xpi
-  # TODO: Why does -f or -s not work? And removing the .xpi in the extensions folder if it exists...
-  #if [ -f "profile/extensions/\{437be45a-4114-11dd-b9ab-71d256d89593\}.xpi" ]
-  #then
-    rm profile/extensions/\{437be45a-4114-11dd-b9ab-71d256d89593\}.xpi
-  #fi
+
   # Cruft from the old JonDoFox-Profile...
   rm -f profile/prefs_portable*
-  rm -f profile/bookmarks*
 }
 
 prepareLinuxProfiles() {
@@ -86,10 +80,13 @@ prepareLinuxProfiles() {
     mkdir -p $jdbDir-$lang/Data/plugins
     cp -rf profile $jdbDir-$lang/Data
     cp -f prefs_browser_$lang.js $profileDir/prefs.js
+    # replace "Arial" by "Liberation Sans"
+    sed -i "s/Arial/Liberation Sans/" $profileDir/prefs.js
     cp start-jondobrowser.sh $jdbDir-$lang
     cp CHANGELOG $jdbDir-$lang
     mv -f $profileDir/places.sqlite_$lang $profileDir/places.sqlite
     rm -f $profileDir/places.sqlite_*
+
   done
 }
 
@@ -192,7 +189,8 @@ if [ ! -d "build" ]; then
 fi
 
 cd build && cp ../tmp/firefox-${ffVersion}esr.source.tar.bz2 .
-tar -xjvf firefox-${ffVersion}esr.source.tar.bz2
+echo "Unpack Firefox source..."
+tar -xjf firefox-${ffVersion}esr.source.tar.bz2
 # We do not want to care about specific ESR versions, thus we rename the dir
 # to "mozilla-release".
 mv mozilla-esr* mozilla-release
@@ -230,7 +228,7 @@ for lang in $langs; do
     # Checking out the locale repo
     # TODO: Can we make it even more sure that no one tampered with the repo(s)?
     # It seems as tags are not signed yet...
-    hg clone -r FIREFOX_${ffVersion//./_}esr_RELEASE https://hg.mozilla.org/releases/l10n/mozilla-release/$lang
+    hg clone -r FIREFOX_24_1_0esr_RELEASE https://hg.mozilla.org/releases/l10n/mozilla-release/$lang
     cd $lang
     echo "Verifying the source repo..."
     hg verify
@@ -262,7 +260,7 @@ for lang in $langs; do
 
   echo "Creating the JonDoBrowser with $lang support..."
   cp dist/firefox-$ffVersion.$lang.$platform.tar.bz2 ../../../tmp
-  cd ../../../tmp && tar -xjvf firefox-$ffVersion.$lang.$platform.tar.bz2
+  cd ../../../tmp && tar -xjf firefox-$ffVersion.$lang.$platform.tar.bz2
 
   # remove default search engines
   rm firefox/browser/searchplugins/*.xml

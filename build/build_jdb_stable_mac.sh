@@ -41,8 +41,8 @@ jdbVersion="0.10"
 title="JonDoBrowser"
 size="200000"
 mozKey=5445390EF5D0C2ECFB8A6201057CC3EB15A0A4BC
-# releasePath=http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/latest-esr
-releasePath="https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/17.0.9esr"
+releasePath=http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/latest-esr
+# releasePath="https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/17.0.9esr"
 source="JDB"
 backgroundPictureName="background.png"
 
@@ -271,7 +271,7 @@ cd ..
 
 cp patches/*.patch mozilla-release/ && cd mozilla-release
 
-svn export $svnBrowser/build/branding/jondobrowser browser/branding/jondobrowser
+svn export $svnBrowser/build/branding/jondobrowser24 browser/branding/jondobrowser
 
 # Essentially the patch-any-src.sh from the Tor Project
 for i in *patch; do patch -tp1 <$i || exit 1; done
