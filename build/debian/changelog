@@ -1,3 +1,16 @@
+jondobrowser (0.11-beta) unstable; urgency=low
+ 
+  * update browser to Firefox 24.1.0 ESR
+  * updated jondofox.xpi to 0.40
+  * change JonDo user agent fake to Firefox 24.0 (Linux, i686)
+  * set SOCKS5 proxy for JonDo too
+  * disable update of AdBlock filter lists to get unique filtersets 
+  * update add-ons and AdBlock blocklists
+  * use language XPI for German localisation
+
+ -- JonDos GmbH <info@jondos.de>  Mon, 11 Nov 2013 7:17:23 +0100
+
+
 jondobrowser (0.10.1-beta) unstable; urgency=low
  
   * changed depency from ttf-liberation to fonts-liberation
