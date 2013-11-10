@@ -1,9 +1,18 @@
+Version 0.11 2013-11-11
+  * update browser to Firefox 24.1.0 ESR
+  * updated jondofox.xpi to 0.40
+  * change JonDo user agent fake to Firefox 24.0 (Linux, i686)
+  * set SOCKS5 proxy for JonDo too
+  * disable update of AdBlock filter lists to get unique filtersets 
+  * update add-ons and AdBlock blocklists
+  * use language XPI for German localisation
+
 Version 0.10 2013-09-18
-  * updated Browser to Firefox 17.0.9 ESR
+  * updated browser to Firefox 17.0.9 ESR
   * updated jondofox.xpi to 0.30
 
 Version 0.9 2013-08-07
-  * updated Browser to Firefox 17.0.8 ESR
+  * updated browser to Firefox 17.0.8 ESR
   * updated jondofox.xpi to 0.2.31
 
 Version 0.8 2013-06-27
