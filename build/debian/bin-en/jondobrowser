@@ -39,6 +39,12 @@ copyJonDoFoxsettings()
   if [ -e "${HOME}/.mozilla/firefox/profile/CertPatrol.sqlite"  ]; then
      cp -f "${HOME}/.mozilla/firefox/profile/CertPatrol.sqlite" "$HOME/.jondobrowser/profile/CertPatrol.sqlite"
   fi
+  if [ -e "${HOME}/.mozilla/firefox/profile/key3.db"  ]; then
+     cp -f "${HOME}/.mozilla/firefox/profile/key3.db" "$HOME/.jondobrowser/profile/key3.db"
+  fi
+  if [ -e "${HOME}/.mozilla/firefox/profile/signons.sqlite"  ]; then
+     cp -f "${HOME}/.mozilla/firefox/profile/signons.sqlite" "$HOME/.jondobrowser/profile/signons.sqlite"
+  fi
   if [ -e "${HOME}/.mozilla/firefox/profile/NoScriptSTS.db"  ]; then
      cp -f "${HOME}/.mozilla/firefox/profile/NoScriptSTS.db" "$HOME/.jondobrowser/profile/NoScriptSTS.db"
   fi
@@ -62,6 +68,12 @@ updateJonDoBrowserProfile()
   fi
   if [ -e "$HOME/.jondobrowser/profile/CertPatrol.sqlite"  ]; then
       cp "$HOME/.jondobrowser/profile/CertPatrol.sqlite" "$HOME/.jondobrowser/ttmmpp/" 
+  fi
+  if [ -e "$HOME/.jondobrowser/profile/key3.db"  ]; then
+      cp "$HOME/.jondobrowser/profile/key3.db" "$HOME/.jondobrowser/ttmmpp/" 
+  fi
+  if [ -e "$HOME/.jondobrowser/profile/signons.sqlite"  ]; then
+      cp "$HOME/.jondobrowser/profile/signons.sqlite" "$HOME/.jondobrowser/ttmmpp/" 
   fi
   if [ -e "$HOME/.jondobrowser/profile/NoScriptSTS.db"  ]; then
       cp "$HOME/.jondobrowser/profile/NoScriptSTS.db" "$HOME/.jondobrowser/ttmmpp/" 
