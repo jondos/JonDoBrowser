@@ -34,12 +34,12 @@
 svnBrowser=https://svn.jondos.de/svnpub/JonDoBrowser/trunk
 mozKey=5445390EF5D0C2ECFB8A6201057CC3EB15A0A4BC
 releasePath=http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/latest-esr
-#releasePath=http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/17.0.9esr
+
 gpg="/c/Program Files/GNU/GnuPG/pub/gpg"
 # These are the languages we support with JonDoBrowser
 # TODO: We support 'de' as well but that is still handled by the NSIS script and
 # not by our build script as on the other platforms.
-langs="en-US"
+langs="en-US de"
 # These languages need a special treatment (i.e. a non-default localized build
 localeBuilds=""
 # Files we need to move to the locale specific dierctories
@@ -202,8 +202,8 @@ cd profile/Firefox/App/firefox
 svn export $svnBrowser/build/msvcp100.dll
 svn export $svnBrowser/build/msvcr100.dll
 
-# Removing unneccessary files...
-rm -rf searchplugins
+# Removing default search plugins (check it!)
+rm searchplugins/*.xml
 
 #TODO: Moving the en-US locale specific files and adding all the other too.
 
