@@ -42,7 +42,6 @@ title="JonDoBrowser"
 size="200000"
 mozKey=5445390EF5D0C2ECFB8A6201057CC3EB15A0A4BC
 releasePath=http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/latest-esr
-# releasePath="https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/17.0.9esr"
 source="JDB"
 backgroundPictureName="background.png"
 
@@ -104,10 +103,11 @@ prepareProfile() {
   svn export $svnProfile
   for lang in $langs; do
     svn export $svnBrowser/build/langPatches/prefs_browser_$lang.js
+    svn export $svnBrowser/build/mac/JonDoBrowser_$lang
+    chmod +x JonDoBrowser_$lang
   done
   svn export $svnBrowser/CHANGELOG
-  svn export $svnBrowser/build/mac/JonDoBrowser
-  chmod +x JonDoBrowser
+ 
   svn export $svnBrowser/build/patches/xpi/jondofox.xpi
   svn export $svnBrowser/build/mac/Info.plist
   svn export $svnBrowser/build/mac/jondobrowser.icns
@@ -115,16 +115,13 @@ prepareProfile() {
   echo "Preparing the profile..."
   # We do not need ProfileSwitcher in our JonDoBrowser, thus removing it.
   rm -rf profile/extensions/\{fa8476cf-a98c-4e08-99b4-65a69cb4b7d4\}.xpi
+  # remove jondofox-xpi for JonDoFox
+  rm profile/extensions/\{437be45a-4114-11dd-b9ab-71d256d89593\}.xpi
   # Patching the profile xpi to be optimized for JDB, sigh...
   unzip -d profile/extensions/\{437be45a-4114-11dd-b9ab-71d256d89593\} -o jondofox.xpi
-  # TODO: Why does -f or -s not work? And removing the .xpi in the extensions folder if it exists...
-  #if [ -f "profile/extensions/\{437be45a-4114-11dd-b9ab-71d256d89593\}.xpi" ]
-  #then
-    rm profile/extensions/\{437be45a-4114-11dd-b9ab-71d256d89593\}.xpi
-  #fi
+ 
   # Cruft from the old JonDoFox-Profile...
   rm -f profile/prefs_portable*
-  rm -f profile/bookmarks*
 }
 
 prepareMacProfiles() {
@@ -147,10 +144,15 @@ prepareMacProfiles() {
     cp -f prefs_browser_$lang.js "$profileDir"/prefs.js
     mv -f "$profileDir"/places.sqlite_$lang "$profileDir"/places.sqlite
     rm -f "$profileDir"/places.sqlite_*
-    cp JonDoBrowser $appDir
+    cp JonDoBrowser_$lang "$appDir"/JonDoBrowser
     cp CHANGELOG $appDir
     cp Info.plist $jdbDir/Contents
     cp jondobrowser.icns $jdbDir/Contents/Resources
+
+    if [ "$lang" == "de" ]; then
+       curl --retry 3 -O  $releasePath/linux-i686/xpi/de.xpi
+       mv -f de.xpi "$profileDir"/extensions/langpack-de@firefox.mozilla.org.xpi
+    fi
   done
 }
 
@@ -265,9 +267,9 @@ if [ ! -d "patches" ]; then
   svn export $svnBrowser/build/patches 1>/dev/null
 fi
 
-cd patches
-svn export $svnBrowser/build/patches/os/Mac107ESR17.patch
-cd ..
+# cd patches
+# svn export $svnBrowser/build/patches/os/Mac107ESR17.patch
+# cd ..
 
 cp patches/*.patch mozilla-release/ && cd mozilla-release
 
@@ -278,7 +280,7 @@ for i in *patch; do patch -tp1 <$i || exit 1; done
 
 echo "Building JonDoBrowser..."
 for macPlatform in $macPlatforms; do
-  for lang in $langs; do
+  
     cp -f ../.mozconfig .
     echo >> .mozconfig
     echo "mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/mac_build_${macPlatform}" \
@@ -311,47 +313,10 @@ for macPlatform in $macPlatforms; do
       echo "CXX=\"clang++ -arch x86_64\"" >> .mozconfig
       echo "ac_add_options --target=x86_64-apple-darwin10.6.0" >> .mozconfig
     fi
-    if [ "$lang" == "en-US" ]; then
-      make -f client.mk build && make -C mac_build_$macPlatform package
-    else
-      # Now, we do all the stuff needed for localized builds
-      cd ../../tmp
-      # Checking out the locale repo if it is not existing already
-      if [ ! -d $lang ]; then
-        # TODO: Can we make it even more sure that no one tampered with the
-        # repo(s)? It seems not as tags are not signed yet...
-        hg clone -r FIREFOX_${ffVersion//./_}esr_RELEASE https://hg.mozilla.org/releases/l10n/mozilla-release/$lang
-        cd $lang
-        echo "Verifying the source repo..."
-        hg verify
-        retVal=$?
-        if [ $retVal -eq 1 ]; then
-          echo "Something went wrong with verifying the source repo! Exiting..."
-          exit 1
-        fi
-        echo "Done."
-        cd ..
-        # We need the branding files in the locale repo as well
-        rsync ../build/mozilla-release/browser/branding/jondobrowser/locales/en-US/brand* $lang/browser/branding/jondobrowser
-      fi
-      # Updating the .mozconfig
-      cd ../build/mozilla-release
-      echo >> .mozconfig
-      echo "ac_add_options --with-l10n-base=$(cd ../../tmp && pwd)" >> .mozconfig
-      echo "ac_add_options --disable-compile-environment" >> .mozconfig
-      # Reconfiguring the build to be aware of the locale other than en-US
-      make -f client.mk configure
-      # Now we go and repack the binary
-      cd mac_build_${macPlatform}/browser/locales
-      # We are supposed to need the compare-locales tool for the merge-$lang
-      # target. BUT it seems we can omit that which results in an error (127)
-      # but adds the german language strings, though. Going this route for now
-      # as this means less build dependencies...
-      make merge-$lang LOCALE_MERGEDIR=mergedir
-      make installers-$lang LOCALE_MERGEDIR=mergedir
-      cd ../../../
-    fi
+    make -f client.mk build && make -C mac_build_$macPlatform package
+ 
 
+  for lang in $langs; do
     echo "Creating the final packages..."
     cd ../..
     jdbDir=JonDoBrowser-$lang

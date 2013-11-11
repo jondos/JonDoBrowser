@@ -53,10 +53,9 @@ prepareProfile() {
   svn export $svnProfile
   for lang in $langs; do
     svn export $svnBrowser/build/langPatches/prefs_browser_$lang.js
+    svn export $svnBrowser/start-jondobrowser_$lang.sh
   done
   svn export $svnBrowser/CHANGELOG
-  svn export $svnBrowser/start-jondobrowser.sh
-  chmod +x start-jondobrowser.sh
   svn export $svnBrowser/build/patches/xpi/jondofox.xpi
 
   echo "Preparing the profile..."
@@ -82,11 +81,15 @@ prepareLinuxProfiles() {
     cp -f prefs_browser_$lang.js $profileDir/prefs.js
     # replace "Arial" by "Liberation Sans"
     sed -i "s/Arial/Liberation Sans/" $profileDir/prefs.js
-    cp start-jondobrowser.sh $jdbDir-$lang
+    cp start-jondobrowser_$lang.sh $jdbDir-$lang/start-jondobrowser.sh
+    chmod +x $jdbDir-$lang/start-jondobrowser.sh
     cp CHANGELOG $jdbDir-$lang
     mv -f $profileDir/places.sqlite_$lang $profileDir/places.sqlite
     rm -f $profileDir/places.sqlite_*
-
+    
+    if [ "$lang" == "de" ]; then
+        wget -t 3 -O $profileDir/extensions/langpack-de@firefox.mozilla.org.xpi  $releasePath/linux-i686/xpi/de.xpi
+    fi
   done
 }
 
@@ -206,9 +209,9 @@ fi
 
 cp patches/*.patch mozilla-release/ && cd mozilla-release
 
-if [ "$platform" == "linux-x86_64" ]; then
-  svn export $svnBrowser/build/patches/os/PIE-64bit-Linux.patch
-fi
+# if [ "$platform" == "linux-x86_64" ]; then
+#  svn export $svnBrowser/build/patches/os/PIE-64bit-Linux.patch
+# fi
 
 svn export $svnBrowser/build/branding/jondobrowser24 browser/branding/jondobrowser
 
@@ -216,51 +219,15 @@ svn export $svnBrowser/build/branding/jondobrowser24 browser/branding/jondobrows
 for i in *patch; do patch -tp1 <$i || exit 1; done
 
 echo "Building JonDoBrowser..."
-for lang in $langs; do
-  cp -f ../.mozconfig .
-  if [ "$lang" == "en-US" ]; then
-    make -f client.mk build
-    echo "Creating the final packages..."
-    cd linux_build && make package
-  else
-    # Now we do all the stuff needed for the non en-US localized builds
-    cd ../../tmp
-    # Checking out the locale repo
-    # TODO: Can we make it even more sure that no one tampered with the repo(s)?
-    # It seems as tags are not signed yet...
-    hg clone -r FIREFOX_24_1_0esr_RELEASE https://hg.mozilla.org/releases/l10n/mozilla-release/$lang
-    cd $lang
-    echo "Verifying the source repo..."
-    hg verify
-    retVal=$?
-    if [ $retVal -eq 1 ]; then
-      echo "Something went wrong with verifying the source repo! Exiting..."
-      exit 1
-    fi
-    echo "Done."
-    cd ..
-    # We need the branding files in the locale repo as well
-    rsync ../build/mozilla-release/browser/branding/jondobrowser/locales/en-US/brand* $lang/browser/branding/jondobrowser
-    # Updating the .mozconfig
-    cd ../build/mozilla-release
-    echo "ac_add_options --with-l10n-base=$(cd ../../tmp && pwd)" >> .mozconfig
-    echo "ac_add_options --disable-compile-environment" >> .mozconfig
-    # Reconfiguring the build to be aware of the locale other than en-US
-    make -f client.mk configure
-    # Now we go and repack the binary
-    cd linux_build/browser/locales
-    # We are supposed to need the compare-locales tool for the merge-$lang
-    # target. BUT it seems we can omit that which results in an error (127) but
-    # adds the german language strings, though. Going this route for now as this
-    # means less build dependencies...
-    make merge-$lang LOCALE_MERGEDIR=mergedir
-    make installers-$lang LOCALE_MERGEDIR=mergedir
-    cd ../../
-  fi
+cp -f ../.mozconfig .
+make -f client.mk build
+echo "Creating the final packages..."
+cd linux_build && make package
 
+for lang in $langs; do
   echo "Creating the JonDoBrowser with $lang support..."
-  cp dist/firefox-$ffVersion.$lang.$platform.tar.bz2 ../../../tmp
-  cd ../../../tmp && tar -xjf firefox-$ffVersion.$lang.$platform.tar.bz2
+  cp dist/firefox-$ffVersion.en-US.$platform.tar.bz2 ../../../tmp
+  cd ../../../tmp && tar -xjf firefox-$ffVersion.en-US.$platform.tar.bz2
 
   # remove default search engines
   rm firefox/browser/searchplugins/*.xml
@@ -273,7 +240,7 @@ for lang in $langs; do
   mv $jdbFinal.tar.xz ../
   rm -rf $jdbDir
   # TODO: Only needed if we need to build another localized build...
-  cd ../build/mozilla-release
+  cd ../build/mozilla-release/linux_build
 done
 
 cd ../../../
