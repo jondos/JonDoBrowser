@@ -326,6 +326,10 @@ for macPlatform in $macPlatforms; do
     # ship our own dmg files + having no langpack extension
     build/mozilla-release/build/package/mac_osx/unpack-diskimage build/mozilla-release/mac_build_$macPlatform/dist/firefox-${ffVersion}.$lang.*.dmg testing tmp
     cp -rf tmp/JonDoBrowser.app/* $jdbDir/Contents/MacOS/Firefox.app
+
+    # please CHECK the directory
+    rm $jdbDir/Contents/MacOS/Firefox.app/searchplugins/*.xml
+
     mv $jdbDir JonDoBrowser.app
     # Preparing everything for generating the dmg image...
     if [ ! -d $source ]; then
