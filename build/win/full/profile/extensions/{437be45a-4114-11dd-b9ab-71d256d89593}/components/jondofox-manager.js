@@ -233,7 +233,7 @@ JDFManager.prototype = {
     'browser.zoom.siteSpecific':'extensions.jondofox.browser.zoom.siteSpecific',
     'plugin.expose_full_path':'extensions.jondofox.plugin.expose_full_path',
     'browser.send_pings':'extensions.jondofox.browser_send_pings',
-	'dom.storage.enabled':'extensions.jondofox.dom_storage_enabled',
+    'dom.storage.enabled':'extensions.jondofox.dom_storage_enabled',
     'geo.enabled':'extensions.jondofox.geo_enabled',
     'network.prefetch-next':'extensions.jondofox.network_prefetch-next',
     'network.proxy.socks_remote_dns':'extensions.jondofox.socks_remote_dns',
@@ -1140,41 +1140,9 @@ JDFManager.prototype = {
     log("Checking whether we have to update the profile ..");
     try {
       if (this.prefsHandler.getStringPref(
-            'extensions.jondofox.profile_version') !== "2.6.0" &&
-          this.prefsHandler.getStringPref(
-            'extensions.jondofox.profile_version') !== "2.6.1" &&
-          this.prefsHandler.getStringPref(
-            'extensions.jondofox.profile_version') !== "2.6.2" &&
-          this.prefsHandler.getStringPref(
-            'extensions.jondofox.profile_version') !== "2.6.3" &&
-          this.prefsHandler.getStringPref(
-            'extensions.jondofox.profile_version') !== "2.6.4" &&
-          this.prefsHandler.getStringPref(
-            'extensions.jondofox.profile_version') !== "2.6.5" &&
-          this.prefsHandler.getStringPref(
-            'extensions.jondofox.profile_version') !== "2.6.6" &&
-          this.prefsHandler.getStringPref(
-            'extensions.jondofox.profile_version') !== "2.6.7" &&
-          this.prefsHandler.getStringPref(
-            'extensions.jondofox.profile_version') !== "2.6.8" &&
-          this.prefsHandler.getStringPref(
-            'extensions.jondofox.profile_version') !== "2.6.9" &&
-          this.prefsHandler.getStringPref(
-            'extensions.jondofox.profile_version') !== "2.6.10" &&
-          this.prefsHandler.getStringPref(
-            'extensions.jondofox.profile_version') !== "2.6.11" &&
-          this.prefsHandler.getStringPref(
-            'extensions.jondofox.profile_version') !== "2.6.12" &&
-          this.prefsHandler.getStringPref(
-            'extensions.jondofox.profile_version') !== "2.6.13" &&
-          this.prefsHandler.getStringPref(
-            'extensions.jondofox.profile_version') !== "2.6.14" &&
-          this.prefsHandler.getStringPref(
-            'extensions.jondofox.profile_version') !== "2.6.15" &&
-	  this.prefsHandler.getStringPref(
-            'extensions.jondofox.profile_version') !== "2.6.16" &&
-	  this.prefsHandler.getStringPref(
             'extensions.jondofox.profile_version') !== "2.7.0" &&
+	  this.prefsHandler.getStringPref(
+            'extensions.jondofox.profile_version') !== "2.8.0" &&
           this.prefsHandler.getBoolPref('extensions.jondofox.update_warning')) {
           this.jdfUtils.showAlertCheck(this.jdfUtils.
             getString('jondofox.dialog.attention'), this.jdfUtils.
@@ -1862,8 +1830,10 @@ JDFManager.prototype = {
             // Ensure that share_proxy_settings is unset
             this.prefsHandler.setBoolPref("network.proxy.share_proxy_settings", false);
             // Set proxies for all protocols but SOCKS
-            this.proxyManager.setProxyAll('127.0.0.1', 4001);
-            this.proxyManager.setProxySOCKS('', 0, 5);
+            this.proxyManager.setProxyAll(this.prefsHandler.getStringPref("extensions.jondofox.jondo.host"), 
+                      this.prefsHandler.getIntPref("extensions.jondofox.jondo.port"));
+            this.proxyManager.setProxySOCKS(this.prefsHandler.getStringPref("extensions.jondofox.jondo.host"), 
+                      this.prefsHandler.getIntPref("extensions.jondofox.jondo.port"), 5);
             // Set default exceptions
             this.proxyManager.setExceptions(this.prefsHandler.
                                  getStringPref(this.NO_PROXIES));
@@ -1877,10 +1847,10 @@ JDFManager.prototype = {
             // Set SOCKS or if the user wishes a HTTP/S-proxy additionally
             this.proxyManager.setProxyHTTP(this.prefsHandler.getStringPref(prefix + "http_host"),
                       this.prefsHandler.getIntPref(prefix + "http_port"));
-            this.proxyManager.setProxySSL(
-            this.prefsHandler.getStringPref(prefix + "ssl_host"),
-            this.prefsHandler.getIntPref(prefix + "ssl_port"));
-            this.proxyManager.setProxySOCKS("127.0.0.1", 9050, 5);
+            this.proxyManager.setProxySSL(this.prefsHandler.getStringPref(prefix + "ssl_host"),
+                      this.prefsHandler.getIntPref(prefix + "ssl_port"));
+            this.proxyManager.setProxySOCKS(this.prefsHandler.getStringPref(prefix + "socks_host"), 
+                      this.prefsHandler.getIntPref(prefix + "socks_port"), 5);
             this.proxyManager.setSocksRemoteDNS(true);
             // Set default exceptions
             this.proxyManager.setExceptions(this.prefsHandler.

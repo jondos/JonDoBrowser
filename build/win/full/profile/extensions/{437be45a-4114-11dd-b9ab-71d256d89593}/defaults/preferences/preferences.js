@@ -55,21 +55,27 @@ pref("extensions.jondofox.custom.backup.socks_host", "");
 pref("extensions.jondofox.custom.backup.socks_port", 0);
 pref("extensions.jondofox.custom.backup.socks_version", 5);
 
+// JonDo proxy settings
+pref("extensions.jondofox.jondo.host", "127.0.0.1");
+pref("extensions.jondofox.jondo.port", 4001);
+
 // Tor proxy settings
 pref("extensions.jondofox.tor.http_host", "");
 pref("extensions.jondofox.tor.http_port", 0);
 pref("extensions.jondofox.tor.ssl_host", "");
 pref("extensions.jondofox.tor.ssl_port", 0);
+pref("extensions.jondofox.tor.socks_host", "127.0.0.1");
+pref("extensions.jondofox.tor.socks_port", 9050);
 
 // Useragent
 // JonDo settings
 pref("extensions.jondofox.jondo.appname_override", "Netscape");
-pref("extensions.jondofox.jondo.appversion_override", "5.0 (Windows)");
+pref("extensions.jondofox.jondo.appversion_override", "5.0 (X11)");
 pref("extensions.jondofox.jondo.buildID_override", "0");
-pref("extensions.jondofox.jondo.oscpu_override", "Windows NT 6.1");
-pref("extensions.jondofox.jondo.platform_override", "Win32");
+pref("extensions.jondofox.jondo.oscpu_override", "Linux i686");
+pref("extensions.jondofox.jondo.platform_override", "Linux i686");
 pref("extensions.jondofox.jondo.productsub_override", "20100101");
-pref("extensions.jondofox.jondo.useragent_override", "Mozilla/5.0 (Windows NT 6.1; rv:17.0) Gecko/20100101 Firefox/17.0");
+pref("extensions.jondofox.jondo.useragent_override", "Mozilla/5.0 (X11; Linux i686; rv:24.0) Gecko/20100101 Firefox/24.0");
 pref("extensions.jondofox.jondo.useragent_vendor", "");
 pref("extensions.jondofox.jondo.useragent_vendorSub", "");
 
@@ -111,10 +117,10 @@ pref("extensions.jondofox.safebrowsing.warning.infoURL", "http://www.mozilla.com
 pref("extensions.jondofox.safebrowsing.malware.reportURL", "http://safebrowsing.clients.google.com/safebrowsing/diagnostic?client=%NAME%&hl=en-US&site=");
 
 // Location neutrality
-pref("extensions.jondofox.accept_languages", "en-us");
-pref("extensions.jondofox.accept_charsets", "*");
+pref("extensions.jondofox.accept_languages", "en-US,en");
+pref("extensions.jondofox.accept_charsets", "iso-8859-1,*,utf-8");
 pref("extensions.jondofox.default_charset", "");
-pref("extensions.jondofox.accept_default", "text/html,application/xml,*/*");
+pref("extensions.jondofox.accept_default", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
 
 // If the user sets a Torbutton UA then use the following values as well
 pref("extensions.jondofox.tor.accept_languages", "en-us, en");
@@ -232,4 +238,4 @@ pref("extensions.jondofox.peerconnection.enabled", false);
 //JonDoBrowser
 pref("extensions.jondofox.advanced_menu", false);
 pref("extensions.jondofox.update_jondonym", false);
-pref("extensions.jondofox.jdb.version", "0.10");
+pref("extensions.jondofox.jdb.version", "0.11");
