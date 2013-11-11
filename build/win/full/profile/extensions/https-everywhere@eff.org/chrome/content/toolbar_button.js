@@ -158,6 +158,7 @@ httpsEverywhere.toolbarButton = {
   } 
 };
 
+
 function https_everywhere_load() {
   window.removeEventListener('load', https_everywhere_load, true);
   // on first run, put the context menu in the addons bar
@@ -250,8 +251,11 @@ function reload_window() {
 }
 
 function toggleEnabledState(){
-	HTTPSEverywhere.toggleEnabledState();
-	reload_window();	
+  HTTPSEverywhere.toggleEnabledState();
+  reload_window();	
+
+  // Change icon depending on enabled state
+  httpsEverywhere.toolbarButton.changeIcon();
 }
 
 function open_in_tab(url) {

@@ -56,13 +56,11 @@ const INCLUDE = function(name) {
     for (var j = 0, len = arguments.length; j < len; j++)
       INCLUDE(arguments[j]);
   else if (!_INCLUDED[name]) {
-    try {
-      LOADER.loadSubScript("chrome://https-everywhere/content/code/"
-              + name + ".js");
-      _INCLUDED[name] = true;
-    } catch(e) {
-      dump("INCLUDE " + name + ": " + e + "\n");
-    }
+    // we used to try/catch here, but that was less useful because it didn't
+    // produce line numbers for syntax errors
+    LOADER.loadSubScript("chrome://https-everywhere/content/code/"
+            + name + ".js");
+    _INCLUDED[name] = true;
   }
 }
 
@@ -382,11 +380,11 @@ HTTPSEverywhere.prototype = {
     try {
       var domWin = nc.getInterface(CI.nsIDOMWindow);
     } catch(e) {
-      this.log(INFO, "exploded getting DOMWin for " + channel.URI.spec);
+      this.log(INFO, "No window associated with request: " + channel.URI.spec);
       return null;
     }
     if (!domWin) {
-      this.log(WARN, "failed to get DOMWin for " + channel.URI.spec);
+      this.log(NOTE, "failed to get DOMWin for " + channel.URI.spec);
       return null;
     }
     domWin = domWin.top;
@@ -438,7 +436,7 @@ HTTPSEverywhere.prototype = {
       if (!(channel instanceof CI.nsIHttpChannel)) return;
       
       this.log(DBUG,"Got http-on-modify-request: "+channel.URI.spec);
-      var lst = this.getApplicableListForChannel(channel);
+      var lst = this.getApplicableListForChannel(channel); // null if no window is associated (ex: xhr)
       if (channel.URI.spec in https_everywhere_blacklist) {
         this.log(DBUG, "Avoiding blacklisted " + channel.URI.spec);
         if (lst) lst.breaking_rule(https_everywhere_blacklist[channel.URI.spec])
@@ -454,7 +452,6 @@ HTTPSEverywhere.prototype = {
          HTTPS.handleSecureCookies(channel);
     } else if (topic == "cookie-changed") {
       // Javascript can add cookies via document.cookie that are insecure.
-      // It might also be able to 
       if (data == "added" || data == "changed") {
         // subject can also be an nsIArray! bleh.
         try {
@@ -520,7 +517,6 @@ HTTPSEverywhere.prototype = {
     var shown = ssl_observatory.myGetBoolPref("popup_shown");
     var enabled = ssl_observatory.myGetBoolPref("enabled");
     var that = this;
-    var cohort = this.getExperimentalFeatureCohort();
     var obs_popup_callback = function(result) {
       if (result) that.log(INFO, "Got positive proxy test.");
       else        that.log(INFO, "Got negative proxy text.");
@@ -548,7 +544,7 @@ HTTPSEverywhere.prototype = {
   // nsIChannelEventSink implementation
   onChannelRedirect: function(oldChannel, newChannel, flags) {  
     const uri = newChannel.URI;
-    this.log(DBUG,"Got onChannelRedirect.");
+    this.log(DBUG,"Got onChannelRedirect to "+uri.spec);
     if (!(newChannel instanceof CI.nsIHttpChannel)) {
       this.log(DBUG, newChannel + " is not an instance of nsIHttpChannel");
       return;
@@ -603,10 +599,12 @@ HTTPSEverywhere.prototype = {
     return this.shouldLoad(aContentType, aContentLocation, aRequestOrigin, aContext, aMimeType, CP_SHOULDPROCESS);
   },
 
-  get_prefs: function(prefBranch = PREFBRANCH_ROOT) {
+  get_prefs: function(prefBranch) {
+    if(!prefBranch) prefBranch = PREFBRANCH_ROOT;
+
     // get our preferences branch object
     // FIXME: Ugly hack stolen from https
-    var branch_namel
+    var branch_name;
     if(prefBranch == PREFBRANCH_RULE_TOGGLE)
       branch_name = "extensions.https_everywhere.rule_toggle.";
     else
