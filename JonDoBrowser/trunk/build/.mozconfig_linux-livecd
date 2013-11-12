@@ -24,7 +24,6 @@ ac_add_options --disable-system-extension-dirs
 
 # we use Debian system libs
 ac_add_options --with-system-libevent
-ac_add_options --with-system-jpeg
 ac_add_options --with-system-zlib
 ac_add_options --with-system-bz
 ac_add_options --with-system-png
