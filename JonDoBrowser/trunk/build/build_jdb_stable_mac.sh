@@ -37,7 +37,7 @@ svnBrowser=https://svn.jondos.de/svnpub/JonDoBrowser/trunk
 # are actually only a repackaging of the en-US one.
 langs="en-US de"
 macPlatforms="mac-x86_64 mac-i386"
-jdbVersion="0.10"
+jdbVersion="0.11"
 title="JonDoBrowser"
 size="200000"
 mozKey=5445390EF5D0C2ECFB8A6201057CC3EB15A0A4BC
