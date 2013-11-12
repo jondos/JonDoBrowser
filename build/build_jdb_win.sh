@@ -203,7 +203,7 @@ svn export $svnBrowser/build/msvcp100.dll
 svn export $svnBrowser/build/msvcr100.dll
 
 # Removing default search plugins (check it!)
-rm searchplugins/*.xml
+rm browser/searchplugins/*.xml
 
 #TODO: Moving the en-US locale specific files and adding all the other too.
 
