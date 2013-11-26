@@ -39,7 +39,7 @@ langs="en-US de"
 # Allowing 32bit and 64bit JonDoBrowser builds
 platform="linux-$(uname -m)"
 jdbDir="JonDoBrowser"
-jdbVersion="0.11"
+jdbVersion="0.11.1"
 # TODO: Shouldn't we check whether this one is still used/valid before actually
 # building? Maybe that's something which is related to the more generic routine
 # for the case the key was not imported yet which is mentioned below.
@@ -175,7 +175,7 @@ echo "Checking the signature of the sources..."
 # TODO: Implement a more generic routine here assuming the user has not yet
 # imported the Firefox key
 # gpg prints the verification success message to stderr
-gpgVerification firefox-${ffVersion}esr.source.tar.bz2.asc
+# gpgVerification firefox-${ffVersion}esr.source.tar.bz2.asc
 
 echo "Retrieving commonly used resources preparing the profiles..."
 prepareProfile
