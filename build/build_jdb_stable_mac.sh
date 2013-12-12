@@ -31,13 +31,14 @@
 # version on Mac OS X 10.6 is needed, check out rev 4230 and adapt it to the
 # latest Firefox ESR changes (e.g. new patches that may be necessary).
 
+svnXPI=https://svn.jondos.de/svnpub/JonDoFox_Extension/trunk/xpi/jondobrowser.xpi
 svnProfile=https://svn.jondos.de/svnpub/JonDoFox_Profile/trunk/full/profile
 svnBrowser=https://svn.jondos.de/svnpub/JonDoBrowser/trunk
 # The locales we support. en-US must be first as all the other localized builds
 # are actually only a repackaging of the en-US one.
 langs="en-US de"
 macPlatforms="mac-x86_64 mac-i386"
-jdbVersion="0.11.1"
+jdbVersion="0.12"
 title="JonDoBrowser"
 size="200000"
 mozKey=5445390EF5D0C2ECFB8A6201057CC3EB15A0A4BC
@@ -108,17 +109,15 @@ prepareProfile() {
   done
   svn export $svnBrowser/CHANGELOG
  
-  svn export $svnBrowser/build/patches/xpi/jondofox.xpi
+  svn export $svnXPI
   svn export $svnBrowser/build/mac/Info.plist
   svn export $svnBrowser/build/mac/jondobrowser.icns
 
   echo "Preparing the profile..."
   # We do not need ProfileSwitcher in our JonDoBrowser, thus removing it.
   rm -rf profile/extensions/\{fa8476cf-a98c-4e08-99b4-65a69cb4b7d4\}.xpi
-  # remove jondofox-xpi for JonDoFox
-  rm profile/extensions/\{437be45a-4114-11dd-b9ab-71d256d89593\}.xpi
-  # Patching the profile xpi to be optimized for JDB, sigh...
-  unzip -d profile/extensions/\{437be45a-4114-11dd-b9ab-71d256d89593\} -o jondofox.xpi
+  # replace jondofox.xpi with jondobrowser.xpi
+  cp -f jondobrowser.xpi profile/extensions/\{437be45a-4114-11dd-b9ab-71d256d89593\}.xpi
  
   # Cruft from the old JonDoFox-Profile...
   rm -f profile/prefs_portable*
@@ -141,7 +140,10 @@ prepareMacProfiles() {
     mkdir $dataDir/plugins
     mkdir -p "$profileDir"
     cp -rf profile/* "$profileDir"
-    cp -f prefs_browser_$lang.js "$profileDir"/prefs.js
+
+    echo "user_pref(\"extensions.jondofox.browser_version\", \"${jdbVersion}\");" >> "$profileDir"/prefs.js
+    echo "user_pref(\"app.update.enabled\", false);" >> "$profileDir"/prefs.js
+    
     mv -f "$profileDir"/places.sqlite_$lang "$profileDir"/places.sqlite
     rm -f "$profileDir"/places.sqlite_*
     cp JonDoBrowser_$lang "$appDir"/JonDoBrowser
@@ -266,10 +268,6 @@ echo "Patching JonDoBrowser..."
 if [ ! -d "patches" ]; then
   svn export $svnBrowser/build/patches 1>/dev/null
 fi
-
-# cd patches
-# svn export $svnBrowser/build/patches/os/Mac107ESR17.patch
-# cd ..
 
 cp patches/*.patch mozilla-release/ && cd mozilla-release
 
