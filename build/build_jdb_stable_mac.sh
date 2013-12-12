@@ -103,7 +103,6 @@ prepareProfile() {
   echo "Fetching sources..."
   svn export $svnProfile
   for lang in $langs; do
-    svn export $svnBrowser/build/langPatches/prefs_browser_$lang.js
     svn export $svnBrowser/build/mac/JonDoBrowser_$lang
     chmod +x JonDoBrowser_$lang
   done
