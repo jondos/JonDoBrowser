@@ -31,6 +31,7 @@
 # Afterwards the browser profiles are prepared and JonDoBrowser for Linux is
 # built.
 
+svnXPI="https://svn.jondos.de/svnpub/JonDoFox_Extension/trunk/xpi/jondobrowser.xpi"
 svnProfile="https://svn.jondos.de/svnpub/JonDoFox_Profile/trunk/full/profile"
 svnBrowser="https://svn.jondos.de/svnpub/JonDoBrowser/trunk"
 # The locales we support. en-US must be first as all the other localized builds
@@ -39,7 +40,7 @@ langs="en-US de"
 # Allowing 32bit and 64bit JonDoBrowser builds
 platform="linux-$(uname -m)"
 jdbDir="JonDoBrowser"
-jdbVersion="0.11.1"
+jdbVersion="0.12"
 # TODO: Shouldn't we check whether this one is still used/valid before actually
 # building? Maybe that's something which is related to the more generic routine
 # for the case the key was not imported yet which is mentioned below.
@@ -52,18 +53,19 @@ prepareProfile() {
   echo "Fetching sources..."
   svn export $svnProfile
   for lang in $langs; do
-    svn export $svnBrowser/build/langPatches/prefs_browser_$lang.js
     svn export $svnBrowser/start-jondobrowser_$lang.sh
   done
   svn export $svnBrowser/CHANGELOG
-  svn export $svnBrowser/build/patches/xpi/jondofox.xpi
+  svn export $svnXPI
 
   echo "Preparing the profile..."
   # We do not need ProfileSwitcher in our JonDoBrowser, thus removing it.
   rm -rf profile/extensions/\{fa8476cf-a98c-4e08-99b4-65a69cb4b7d4\}.xpi
   # Remove the JonDoFox-XPI for JonDoFox and replace it with JDB-XPI
-  rm profile/extensions/\{437be45a-4114-11dd-b9ab-71d256d89593\}.xpi
-  unzip -d profile/extensions/\{437be45a-4114-11dd-b9ab-71d256d89593\} -o jondofox.xpi
+  cp -f jondobrowser.xpi profile/extensions/\{437be45a-4114-11dd-b9ab-71d256d89593\}.xpi
+
+  # rm profile/extensions/\{437be45a-4114-11dd-b9ab-71d256d89593\}.xpi
+  # unzip -d profile/extensions/\{437be45a-4114-11dd-b9ab-71d256d89593\} -o jondofox.xpi
 
   # Cruft from the old JonDoFox-Profile...
   rm -f profile/prefs_portable*
@@ -78,9 +80,12 @@ prepareLinuxProfiles() {
     mkdir -p $jdbDir-$lang/App/Firefox
     mkdir -p $jdbDir-$lang/Data/plugins
     cp -rf profile $jdbDir-$lang/Data
-    cp -f prefs_browser_$lang.js $profileDir/prefs.js
-    # replace "Arial" by "Liberation Sans"
+
+    # modify preferences for JDB
     sed -i "s/Arial/Liberation Sans/" $profileDir/prefs.js
+    echo "user_pref(\"extensions.jondofox.browser_version\", \"${jdbVersion}\");" >> $profileDir/prefs.js
+    echo "user_pref(\"app.update.enabled\", false);" >> $profileDir/prefs.js
+
     cp start-jondobrowser_$lang.sh $jdbDir-$lang/start-jondobrowser.sh
     chmod +x $jdbDir-$lang/start-jondobrowser.sh
     cp CHANGELOG $jdbDir-$lang
@@ -209,9 +214,6 @@ fi
 
 cp patches/*.patch mozilla-release/ && cd mozilla-release
 
-# if [ "$platform" == "linux-x86_64" ]; then
-#  svn export $svnBrowser/build/patches/os/PIE-64bit-Linux.patch
-# fi
 
 svn export $svnBrowser/build/branding/jondobrowser24 browser/branding/jondobrowser
 
