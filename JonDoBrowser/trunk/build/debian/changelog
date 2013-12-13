@@ -1,8 +1,19 @@
-jondobrowser (0.11.1-beta) unstable; urgency=low
+jondobrowser (0.12-beta) unstable; urgency=low
 
-  * Updates to Firefox 24.1.1
+  * Updates to Firefox 24.2.0
+  * replaced Unplug with VideoDownloadHelper
+  * placement of toolbar icons changed (CookieMonster, VideoDownloadHelper)
+  * SSL certificate of AnonBox was verified and is accepted by default
+  * TLS 1.2 enabled
+  * disable Firefox Health Report by default
+  * using return value of SSL observatory to generate a warning in case of issues
+  * change settings dialog for aditional checks of SSL certificates
+  * disable Certificate Patrol by default, only alternative for SSL observatory
+  * block HTTP-Auth tracking silent 
+  * update add-ons (NoScript, HTTPSEverywhere
+  * update AdBlock blocklist 
 
- -- JonDos GmbH <info@jondos.de>  Tue, 26 Nov 2013 10:00:00 +0100
+ -- JonDos GmbH <info@jondos.de>  Fri, 13 Dec 2013 15:00:00 +0100
 
 
 jondobrowser (0.11-beta) unstable; urgency=low
