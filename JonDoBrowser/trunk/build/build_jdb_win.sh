@@ -31,6 +31,10 @@
 # Afterwards the browser profiles are prepared and JonDoBrowser for Windows is
 # built.
 
+jdbVersion="0.12"
+
+svnXPI=https://svn.jondos.de/svnpub/JonDoFox_Extension/trunk/xpi/jondobrowser.xpi
+svnProfile=https://svn.jondos.de/svnpub/JonDoFox_Profile/trunk/full/profile
 svnBrowser=https://svn.jondos.de/svnpub/JonDoBrowser/trunk
 mozKey=5445390EF5D0C2ECFB8A6201057CC3EB15A0A4BC
 releasePath=http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/latest-esr
@@ -209,8 +213,14 @@ rm browser/searchplugins/*.xml
 
 # Getting the preference files...
 cd ../../../full/profile
-svn export $svnBrowser/build/langPatches/prefs_browser_de.js
-svn export $svnBrowser/build/langPatches/prefs_browser_en-US.js
+
+# add JonDoBrowser stuff to prefs.js
+# echo "user_pref(\"extensions.jondofox.browser_version\", \"${jdbVersion}\");" >> prefs.js
+# echo "user_pref(\"app.update.enabled\", false);" >> prefs.js
+
+# old stuff
+# svn export $svnBrowser/build/langPatches/prefs_browser_de.js
+# svn export $svnBrowser/build/langPatches/prefs_browser_en-US.js
 
 # Building the files...
 cd ../../Firefox/Other/Source

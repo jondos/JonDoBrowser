@@ -226,24 +226,26 @@ Section JFPortable
 
   # Copying the JonDoBrowser.ini in order to allow a desktop and
   # a portable Firefox running in parallel
-  File "JonDoBrowser.ini"
+  ${If} $LANGUAGE == "1031"
+    File "/oname=JonDoBrowser.ini" "JonDoBrowser_de.ini"
+  ${ElseIf} $LANGUAGE == "1033"
+    File "JonDoBrowser.ini"
+  ${EndIf}
 
   SetOutPath $INSTDIR\Data\profile
 
   ${If} $LANGUAGE == "1031"
-    File "/oname=prefs.js" "..\..\..\full\profile\prefs_browser_de.js"
     File "/oname=places.sqlite" "..\..\..\full\profile\places.sqlite_de"
   ${ElseIf} $LANGUAGE == "1033"
-    File "/oname=prefs.js" "..\..\..\full\profile\prefs_browser_en-US.js"
     File "/oname=places.sqlite" "..\..\..\full\profile\places.sqlite_en-US"
   ${EndIf}
 
+  File "..\..\..\full\profile\prefs.js"
   File "..\..\..\full\profile\localstore.rdf"
+  File "..\..\..\full\profile\cert_override.txt"
 
   # The search plugins...
-
   SetOutPath $INSTDIR\Data\profile\searchplugins
-
   File /x .svn "..\..\..\full\profile\searchplugins\*"
 
   # The AdBlock subscriptions...
@@ -276,18 +278,24 @@ Section JFPortable
   # File /r /x .svn "..\..\..\full\profile\extensions\{437be45a-4114-11dd-b9ab-71d256d89593}\*.*"
 
   # JonDoFox, new - delete XPI explicitpy
-  StrCpy $extensionGUID "{437be45a-4114-11dd-b9ab-71d256d89593}"
-  SetOutPath "$profileExtensionPath\$extensionGUID"
-  File /r /x .svn /x {437be45a-4114-11dd-b9ab-71d256d89593}.xpi "..\..\..\full\profile\extensions\{437be45a-4114-11dd-b9ab-71d256d89593}\*.*"
-  Delete "$profileExtensionPath\{437be45a-4114-11dd-b9ab-71d256d89593}.xpi"
+  # StrCpy $extensionGUID "{437be45a-4114-11dd-b9ab-71d256d89593}"
+  # SetOutPath "$profileExtensionPath\$extensionGUID"
+  # File /r /x .svn /x {437be45a-4114-11dd-b9ab-71d256d89593}.xpi "..\..\..\full\profile\extensions\{437be45a-4114-11dd-b9ab-71d256d89593}\*.*"
+  # Delete "$profileExtensionPath\{437be45a-4114-11dd-b9ab-71d256d89593}.xpi"
 
   # NoScript
   SetOutPath "$profileExtensionPath"
   File /r /x .svn "..\..\..\full\profile\extensions\{73a6fe31-595d-460b-a920-fcc0f8843232}.xpi"
 
-  # UnPlug
+  # JonDoFox-XPI very new
   SetOutPath "$profileExtensionPath"
-  File /r /x .svn "..\..\..\full\profile\extensions\unplug@compunach.xpi"
+  File /r /x .svn "..\..\..\full\profile\extensions\{437be45a-4114-11dd-b9ab-71d256d89593}.xpi"
+
+  # VideoDownloadHelper
+  StrCpy $extensionGUID "{b9db16a4-6edc-47ec-a1f4-b86292ed211d}"
+  SetOutPath "$profileExtensionPath\$extensionGUID"
+  File /r /x .svn "..\..\..\full\profile\extensions\{b9db16a4-6edc-47ec-a1f4-b86292ed211d}\*.*"
+ 
 
   ${If} $LANGUAGE == "1031"
     # German language strings
