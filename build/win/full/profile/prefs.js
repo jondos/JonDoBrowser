@@ -253,3 +253,6 @@ user_pref("toolkit.telemetry.prompted", 2);
 user_pref("toolkit.telemetry.rejected", true);
 user_pref("xpinstall.whitelist.add", "");
 user_pref("xpinstall.whitelist.add.103", "");
+user_pref("extensions.jondofox.browser_version", "0.12");
+user_pref("app.update.enabled", false);
+
