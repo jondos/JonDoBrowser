@@ -10,9 +10,9 @@
        its icon on it and it would be shown in this case. -->
   <RDF:Description RDF:about="chrome://browser/content/browser.xul#addon-bar"
                    collapsed="true" />
-  <!-- We need that to have the UnPlug icon in the toolbar. -->
+  <!-- We need that to modify the toolbar. -->
   <RDF:Description RDF:about="chrome://browser/content/browser.xul#nav-bar"
-                   currentset="unified-back-forward-button,jondofox-toolbar-button,noscript-tbb,urlbar-container,reload-button,stop-button,urlbar-search-splitter,search-container,window-controls,https-everywhere-button,cookiemonster-status,fullscreenflex,unplug2_toolbarbutton,bookmarks-menu-button-container"/>
+                   currentset="unified-back-forward-button,jondofox-toolbar-button,noscript-tbb,cookiemonster-status,urlbar-container,reload-button,stop-button,urlbar-search-splitter,search-container,downloads-button,dwhelper-toolbaritem,window-controls,https-everywhere-button,bookmarks-menu-button-container"/>
   <!-- We need that to tell Adblock Plus that its icon is already included into
        the browser window. Otherwise would AdBlock add it (again) which pops up
        the add-on bar.-->
