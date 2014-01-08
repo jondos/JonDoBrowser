@@ -36,7 +36,7 @@ svnProfile=https://svn.jondos.de/svnpub/JonDoFox_Profile/trunk/full/profile
 svnBrowser=https://svn.jondos.de/svnpub/JonDoBrowser/trunk
 # The locales we support. en-US must be first as all the other localized builds
 # are actually only a repackaging of the en-US one.
-langs="en-US de"
+langs="en-US" 
 macPlatforms="mac-x86_64 mac-i386"
 jdbVersion="0.12"
 title="JonDoBrowser"
@@ -283,7 +283,7 @@ for macPlatform in $macPlatforms; do
     echo "mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/mac_build_${macPlatform}" \
       >> .mozconfig
     echo >> .mozconfig
-    echo "ac_add_options --with-macos-sdk=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk" \
+    echo "ac_add_options --with-macos-sdk=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk" \
       >> .mozconfig
     echo "ac_add_options --enable-macos-target=10.6" >> .mozconfig
     echo >> .mozconfig
@@ -293,7 +293,7 @@ for macPlatform in $macPlatforms; do
     echo "AR=ar" >> .mozconfig
     echo 'AS=$CC' >> .mozconfig
     echo "LD=ld" >> .mozconfig
-    echo "STRIP=\"strip -x -S\"" >> .mozconfig
+    echo "STRIP=\"strip\"" >> .mozconfig
     echo "CROSS_COMPILE=1" >> .mozconfig
 
     if [ "$macPlatform" == "mac-i386" ]; then
@@ -310,23 +310,28 @@ for macPlatform in $macPlatforms; do
       echo "CXX=\"clang++ -arch x86_64\"" >> .mozconfig
       echo "ac_add_options --target=x86_64-apple-darwin10.6.0" >> .mozconfig
     fi
-    make -f client.mk build && make -C mac_build_$macPlatform package
+    make -f client.mk build && make -C mac_build_${macPlatform} package
  
 
   for lang in $langs; do
     echo "Creating the final packages..."
+    #echo "dbg_1: " `pwd`
     cd ../..
     jdbDir=JonDoBrowser-$lang
+    #echo "dbg_2: " $jdbDir
     cp -rf tmp/$jdbDir .
     # Now we unpack the .dmg file created during the packaging phase in order
     # to benfit from the packaging step (e.g. omni.ja) creation AND be able to
     # ship our own dmg files + having no langpack extension
+    # -- opens the build dmg (only en-us exists, though!) an unpacks it to /build/tmp
     build/mozilla-release/build/package/mac_osx/unpack-diskimage build/mozilla-release/mac_build_$macPlatform/dist/firefox-${ffVersion}.$lang.*.dmg testing tmp
     cp -rf tmp/JonDoBrowser.app/* $jdbDir/Contents/MacOS/Firefox.app
 
     # please CHECK the directory
-    rm $jdbDir/Contents/MacOS/Firefox.app/searchplugins/*.xml
+    # broken _ rm $jdbDir/Contents/MacOS/Firefox.app/searchplugins/*.xml
+    rm $jdbDir/Library/Application\ Support/Firefox/Profiles/profile/searchplugins/*.xml
 
+    # copies the content of jdbDir (all!) to the 'file' JonDoBrowser.app
     mv $jdbDir JonDoBrowser.app
     # Preparing everything for generating the dmg image...
     if [ ! -d $source ]; then
@@ -335,9 +340,10 @@ for macPlatform in $macPlatforms; do
       svn cat $svnBrowser/build/mac/background-$lang.png > $backgroundPictureName
       cd ../..
     fi
+
+    # -- now move the big fat JonDoBrowser.app to folder JDB (ie 'rename')
     mv JonDoBrowser.app $source/
     generateDmgImage $macPlatform $lang
-    rm -rf $source
     rm -rf tmp/JonDoBrowser.app
     # TODO: Only needed if we have to build another (localized) build...
     cd build/mozilla-release
