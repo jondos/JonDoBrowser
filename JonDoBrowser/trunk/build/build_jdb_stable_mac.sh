@@ -312,6 +312,7 @@ for macPlatform in $macPlatforms; do
     fi
     make -f client.mk build && make -C mac_build_${macPlatform} package
  
+# @cane - get the language (as on linux) simply with $LANG
 
   for lang in $langs; do
     echo "Creating the final packages..."
