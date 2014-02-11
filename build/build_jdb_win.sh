@@ -33,7 +33,7 @@
 
 jdbVersion="0.12"
 
-svnXPI=https://svn.jondos.de/svnpub/JonDoFox_Extension/trunk/xpi/jondobrowser.xpi
+svnXPI=https://svn.jondos.de/svnpub/JonDoFox_Extension/trunk/xpi/jondofoxBrowser.xpi
 svnProfile=https://svn.jondos.de/svnpub/JonDoFox_Profile/trunk/full/profile
 svnBrowser=https://svn.jondos.de/svnpub/JonDoBrowser/trunk
 mozKey=5445390EF5D0C2ECFB8A6201057CC3EB15A0A4BC
