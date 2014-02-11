@@ -5,6 +5,10 @@ CFLAGS="-Wformat -Wformat-security -D_FORTIFY_SOURCE=2 -fstack-protector-all --p
 CXXFLAGS="${CFLAGS}"
 LDFLAGS="-z relro -z now"
 
+MOZ_UNIFY_BDATE=1
+MOZ_BUILD_DATE="20140131092626"
+
+
 # We don't need tests in a release build
 ac_add_options --disable-tests
 
@@ -12,13 +16,17 @@ ac_add_options --disable-tests
 ac_add_options --disable-crashreporter
 # No updater yet. Thus, we don't need to build it.
 ac_add_options --disable-updater
-ac_add_options --enable-optimize
+ac_add_options --enable-optimize=-O2
 ac_add_options --disable-debug
 ac_add_options --with-branding=browser/branding/jondobrowser
 
-# We don't want to include WebRTC and WebGL
+# We don't want to include WebRTC and WebGL and gamepad API
 ac_add_options --disable-webrtc
 ac_add_options --disable-webgl
+ac_add_options --disable-gamepad
 # all extensions are part of the profil
 ac_add_options --disable-system-extension-dirs
+
+ac_add_options --disable-gconf
+
 
