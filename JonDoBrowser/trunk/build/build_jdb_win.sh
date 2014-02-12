@@ -31,10 +31,10 @@
 # Afterwards the browser profiles are prepared and JonDoBrowser for Windows is
 # built.
 
-jdbVersion="0.12"
+jdbVersion="0.13"
 
 svnXPI=https://svn.jondos.de/svnpub/JonDoFox_Extension/trunk/xpi/jondofoxBrowser.xpi
-svnProfile=https://svn.jondos.de/svnpub/JonDoFox_Profile/trunk/full/profile
+svnProfile=https://svn.jondos.de/svnpub/JonDoFox_Profile/trunk/full
 svnBrowser=https://svn.jondos.de/svnpub/JonDoBrowser/trunk
 mozKey=5445390EF5D0C2ECFB8A6201057CC3EB15A0A4BC
 releasePath=http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/latest-esr
@@ -195,6 +195,22 @@ cd ../../
 # Now preparing the installer
 echo "Now we gonna build the installer..."
 svn export $svnBrowser/build/win profile
+
+# replace the old JonDoFox full (@Kuno: please test)
+cd profile
+rm -r full
+svn export svnProfile
+# Remove Profilswitcher and replace JonDoFox-XPI by JonDoFoxBrowser.xpi
+rm full/profile/extensions/\{fa8476cf-a98c-4e08-99b4-65a69cb4b7d4\}.xpi
+rm full/profile/extensions/\{437be45a-4114-11dd-b9ab-71d256d89593\}.xpi
+svn export $svnXPI full/profile/extensions/\{437be45a-4114-11dd-b9ab-71d256d89593\}.xpi
+# add JonDoBrowser stuff to prefs.js
+echo "user_pref(\"extensions.jondofox.browser_version\", \"${jdbVersion}\");" >> full/profile/prefs.js
+echo "user_pref(\"app.update.enabled\", false);" >> full/profile/prefs.js
+# remove JonDoFox portable stuff
+rm -f full/profile/prefs_portable*
+cd ..
+
 # We start with the en-US version and separate the locale specific parts one
 # after the other...
 unzip -d profile/Firefox/App build/firefox-$ffVersion.en-US.win32.zip
@@ -213,10 +229,6 @@ rm browser/searchplugins/*.xml
 
 # Getting the preference files...
 cd ../../../full/profile
-
-# add JonDoBrowser stuff to prefs.js
-# echo "user_pref(\"extensions.jondofox.browser_version\", \"${jdbVersion}\");" >> prefs.js
-# echo "user_pref(\"app.update.enabled\", false);" >> prefs.js
 
 # old stuff
 # svn export $svnBrowser/build/langPatches/prefs_browser_de.js
