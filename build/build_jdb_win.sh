@@ -207,6 +207,9 @@ svn export $svnXPI full/profile/extensions/\{437be45a-4114-11dd-b9ab-71d256d8959
 # add JonDoBrowser stuff to prefs.js
 echo "user_pref(\"extensions.jondofox.browser_version\", \"${jdbVersion}\");" >> full/profile/prefs.js
 echo "user_pref(\"app.update.enabled\", false);" >> full/profile/prefs.js
+# get German language pack and disable update of xpi
+wget -t 3 -O full/profile/extensions/langpack-de@firefox.mozilla.org.xpi  $releasePath/win32/xpi/de.xpi
+echo "user_pref(\"extensions.langpack-de@firefox.mozilla.org.update.enabled\", false);" >> full/profile/prefs.js
 # remove JonDoFox portable stuff
 rm -f full/profile/prefs_portable*
 cd ..
