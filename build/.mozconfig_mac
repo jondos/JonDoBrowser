@@ -18,5 +18,6 @@ ac_add_options --with-branding=browser/branding/jondobrowser
 # We don't want to include WebRTC and WebGL
 ac_add_options --disable-webrtc
 ac_add_options --disable-webgl
+ac_add_options --disable-gamepad
 # all extensions are part of the profil
 ac_add_options --disable-system-extension-dirs

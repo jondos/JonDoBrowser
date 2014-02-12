@@ -91,6 +91,7 @@ prepareLinuxProfiles() {
     
     if [ "$lang" == "de" ]; then
         wget -t 3 -O $profileDir/extensions/langpack-de@firefox.mozilla.org.xpi  $releasePath/linux-i686/xpi/de.xpi
+        echo "user_pref(\"extensions.langpack-de@firefox.mozilla.org.update.enabled\", false);" >> $profileDir/prefs.js
     fi
   done
 }
