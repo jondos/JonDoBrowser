@@ -26,7 +26,4 @@ ac_add_options --disable-system-extension-dirs
 
 ac_add_options --disable-gconf
 
-MOZ_UNIFY_BDATE=1
-MOZ_BUILD_DATE="20140131092626"
-
 

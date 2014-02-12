@@ -31,14 +31,14 @@
 # version on Mac OS X 10.6 is needed, check out rev 4230 and adapt it to the
 # latest Firefox ESR changes (e.g. new patches that may be necessary).
 
-svnXPI=https://svn.jondos.de/svnpub/JonDoFox_Extension/trunk/xpi/jondobrowser.xpi
+svnXPI=https://svn.jondos.de/svnpub/JonDoFox_Extension/trunk/xpi/jondofoxBrowser.xpi
 svnProfile=https://svn.jondos.de/svnpub/JonDoFox_Profile/trunk/full/profile
 svnBrowser=https://svn.jondos.de/svnpub/JonDoBrowser/trunk
 # The locales we support. en-US must be first as all the other localized builds
 # are actually only a repackaging of the en-US one.
 langs="en-US" 
 macPlatforms="mac-x86_64 mac-i386"
-jdbVersion="0.12"
+jdbVersion="0.13"
 title="JonDoBrowser"
 size="200000"
 mozKey=5445390EF5D0C2ECFB8A6201057CC3EB15A0A4BC
@@ -116,7 +116,7 @@ prepareProfile() {
   # We do not need ProfileSwitcher in our JonDoBrowser, thus removing it.
   rm -rf profile/extensions/\{fa8476cf-a98c-4e08-99b4-65a69cb4b7d4\}.xpi
   # replace jondofox.xpi with jondobrowser.xpi
-  cp -f jondobrowser.xpi profile/extensions/\{437be45a-4114-11dd-b9ab-71d256d89593\}.xpi
+  cp -f jondofoxBrowser.xpi profile/extensions/\{437be45a-4114-11dd-b9ab-71d256d89593\}.xpi
  
   # Cruft from the old JonDoFox-Profile...
   rm -f profile/prefs_portable*
@@ -146,13 +146,14 @@ prepareMacProfiles() {
     mv -f "$profileDir"/places.sqlite_$lang "$profileDir"/places.sqlite
     rm -f "$profileDir"/places.sqlite_*
     cp JonDoBrowser_$lang "$appDir"/JonDoBrowser
-    cp CHANGELOG $appDir
-    cp Info.plist $jdbDir/Contents
-    cp jondobrowser.icns $jdbDir/Contents/Resources
+    cp CHANGELOG "$appDir"
+    cp Info.plist "$jdbDir"/Contents
+    cp jondobrowser.icns "$jdbDir"/Contents/Resources
 
     if [ "$lang" == "de" ]; then
-       curl --retry 3 -O  $releasePath/linux-i686/xpi/de.xpi
+       curl --retry 3 -O  $releasePath/mac/xpi/de.xpi
        mv -f de.xpi "$profileDir"/extensions/langpack-de@firefox.mozilla.org.xpi
+       echo "user_pref(\"extensions.langpack-de@firefox.mozilla.org.update.enabled\", false);" >> "$profileDir"/prefs.js
     fi
   done
 }
@@ -171,7 +172,7 @@ do
   case ${CMD_OPT} in
     c) cleanup;;
     h) echo ''
-       echo 'JonDoBrowser Build Script 1.0 (2012 Copyright (c) JonDos GmbH)'
+       echo 'JonDoBrowser Build Script 1.2 (2014 Copyright (c) JonDos GmbH)'
        echo "usage: $0 [options]"
        echo ''
        echo 'Possible options are:'
