@@ -130,7 +130,7 @@ echo "Checking the signature of the sources..."
 # TODO: Implement a more generic routine her assuming the user has not yet
 # imported the Firefox key
 # gpg prints the verification success message to stderr
-gpgVerification firefox-${ffVersion}esr.source.tar.bz2.asc
+#gpgVerification firefox-${ffVersion}esr.source.tar.bz2.asc
 
 cd ..
 
@@ -199,7 +199,7 @@ svn export $svnBrowser/build/win profile
 # replace the old JonDoFox full (@Kuno: please test)
 cd profile
 rm -r full
-svn export svnProfile
+svn export $svnProfile
 # Remove Profilswitcher and replace JonDoFox-XPI by JonDoFoxBrowser.xpi
 rm full/profile/extensions/\{fa8476cf-a98c-4e08-99b4-65a69cb4b7d4\}.xpi
 rm full/profile/extensions/\{437be45a-4114-11dd-b9ab-71d256d89593\}.xpi
@@ -231,6 +231,7 @@ rm browser/searchplugins/*.xml
 #TODO: Moving the en-US locale specific files and adding all the other too.
 
 # Getting the preference files...
+pwd
 cd ../../../full/profile
 
 # old stuff
@@ -243,6 +244,7 @@ cd ../../Firefox/Other/Source
 # echo "Building the JonDoBrowser launcher..."
 # makensisu-2.46.exe JonDoBrowserExe.nsi
 echo "Building the JonDoBrowser installer..."
+pwd
 makensisu-2.46.exe JonDoBrowser.nsi
 cd ../../../../
 mv profile/JonDoBrowser*.exe .
