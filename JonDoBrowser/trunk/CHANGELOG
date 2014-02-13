@@ -1,3 +1,25 @@
+Version 0.13 2014-02-13
+
+  * update browser to Firefox 24.3.0 
+  * update add-ons 
+  * removed gamepad-API 
+  * added Blekko to search engines
+
+Version 0.12 2013-12-13
+
+  * Updates to Firefox 24.2.0
+  * replaced Unplug with VideoDownloadHelper
+  * placement of toolbar icons changed (CookieMonster, VideoDownloadHelper)
+  * SSL certificate of AnonBox was verified and is accepted by default
+  * TLS 1.2 enabled
+  * disable Firefox Health Report by default
+  * using return value of SSL observatory to generate a warning in case of issues
+  * change settings dialog for aditional checks of SSL certificates
+  * disable Certificate Patrol by default, only alternative for SSL observatory
+  * block HTTP-Auth tracking silent 
+  * update add-ons (NoScript, HTTPSEverywhere
+  * update AdBlock blocklist 
+
 Version 0.11 2013-11-11
   * update browser to Firefox 24.1.0 ESR
   * updated jondofox.xpi to 0.40
