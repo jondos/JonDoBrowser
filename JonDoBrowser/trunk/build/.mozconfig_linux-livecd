@@ -16,11 +16,14 @@ ac_add_options --enable-optimize
 ac_add_options --disable-debug
 ac_add_options --with-branding=browser/branding/jondobrowser
 
-# We don't want to include WebRTC and WebGL
+# We don't want to include WebRTC and WebGL and gamepad API
 ac_add_options --disable-webrtc
 ac_add_options --disable-webgl
+ac_add_options --disable-gamepad
 # all extensions are part of the profil
 ac_add_options --disable-system-extension-dirs
+
+ac_add_options --disable-gconf
 
 # we use Debian system libs
 ac_add_options --enable-system-hunspell
