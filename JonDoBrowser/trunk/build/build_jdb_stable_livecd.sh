@@ -108,6 +108,13 @@ prepareLinuxProfiles() {
         echo "user_pref(\"browser.safebrowsing.enabled\", false);" >> $profileDir/prefs.js
         echo "user_pref(\"browser.safebrowsing.malware.enabled\", false);" >> $profileDir/prefs.js
 
+        echo "user_pref(\"extensions.{437be45a-4114-11dd-b9ab-71d256d89593}.update.enabled\", false);" >> $profileDir/prefs.js
+        echo "user_pref(\"extensions.{45d8ff86-d909-11db-9705-005056c00008}.update.enabled\", false);" >> $profileDir/prefs.js
+        echo "user_pref(\"extensions.{73a6fe31-595d-460b-a920-fcc0f8843232}.update.enabled\", false);" >> $profileDir/prefs.js
+        echo "user_pref(\"extensions.{b9db16a4-6edc-47ec-a1f4-b86292ed211d}.update.enabled\", false);" >> $profileDir/prefs.js
+        echo "user_pref(\"extensions.{d10d0bf8-f5b5-c8b4-a8b2-2b9879e08c5d}.update.enabled\", false);" >> $profileDir/prefs.js
+        echo "user_pref(\"extensions.https-everywhere@eff.org.update.enabled\", false);" >> $profileDir/prefs.js
+
         cp $profileDir/prefs.js $profileDir/prefs.js_jondo
         mv $profileDir/prefs.js $profileDir/prefs.js_ohne
   done
