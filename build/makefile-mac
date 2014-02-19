@@ -1,0 +1,44 @@
+
+
+
+fetch:  buildtmp/.step-fetch-done
+buildtmp/.step-fetch-done:
+	mkdir buildtmp
+	helpers/fetch-ff-source.sh
+	helpers/fetch-jdf-profil.sh
+	touch buildtmp/.step-fetch-done
+
+
+patch: buildtmp/.step-patch-done
+buildtmp/.step-patch-done: buildtmp/.step-fetch-done
+	helpers/patch-ff-source.sh
+	touch buildtmp/.step-patch-done
+
+
+compile: buildtmp/.step-compile-done
+buildtmp/.step-compile-done: buildtmp/.step-patch-done
+	echo "compile is not implemented"
+	touch buildtmp/.step-compile-done
+
+
+post-compile: buildtmp/.step-postcompile-done
+buildtmp/.step-postcompile-done: buildtmp/.step-compile-done
+	echo "post-compile is not implemented"
+	touch buildtmp/.step-postcompile-done
+
+
+package: buildtmp/.step-package-done
+buildtmp/.step-package-done: buildtmp/.step-postcompile-done
+	echo "package is not implemented"
+	touch buildtmp/.step-package-done
+
+
+mar: buildtmp/.step-mar-done
+buildtmp/.step-mar-done: buildtmp/.step-postcompile-done
+	echo "mar is not implemented"
+	touch buildtmp/.step-mar-done
+
+
+
+clean-all:
+	rm -r buildtmp
