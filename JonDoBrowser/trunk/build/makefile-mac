@@ -1,34 +1,45 @@
 
 
-
 fetch:  buildtmp/.step-fetch-done
 buildtmp/.step-fetch-done:
 	mkdir buildtmp
-	helpers/fetch-ff-source.sh
-	helpers/fetch-jdf-profil.sh
-	touch buildtmp/.step-fetch-done
+	helpers/fetch-ff-source.sh && helpers/fetch-de-xpi-mac.sh && touch buildtmp/.step-fetch-done
+
+
+unpack: buildtmp/.step-unpack-done
+buildtmp/.step-unpack-done: buildtmp/.step-fetch-done
+	tar -xj --directory buildtmp -f buildtmp/firefox-*esr.source.tar.bz2
+	mv buildtmp/mozilla-esr* buildtmp/mozilla-release
+	touch buildtmp/.step-unpack-done
 
 
 patch: buildtmp/.step-patch-done
-buildtmp/.step-patch-done: buildtmp/.step-fetch-done
-	helpers/patch-ff-source.sh
-	touch buildtmp/.step-patch-done
+buildtmp/.step-patch-done: buildtmp/.step-unpack-done
+	helpers/patch-ff-source.sh && touch buildtmp/.step-patch-done
 
 
-compile: buildtmp/.step-compile-done
-buildtmp/.step-compile-done: buildtmp/.step-patch-done
+compile: buildtmp/firefox.en-US.dmg
+buildtmp/firefox.en-US.dmg: buildtmp/.step-patch-done
 	echo "compile is not implemented"
-	touch buildtmp/.step-compile-done
+
+
+re-compile:
 
 
 post-compile: buildtmp/.step-postcompile-done
-buildtmp/.step-postcompile-done: buildtmp/.step-compile-done
+buildtmp/.step-postcompile-done: buildtmp/firefox.en-US.dmg
 	echo "post-compile is not implemented"
 	touch buildtmp/.step-postcompile-done
 
 
-package: buildtmp/.step-package-done
-buildtmp/.step-package-done: buildtmp/.step-postcompile-done
+package-de: buildtmp/.step-package-de-done
+buildtmp/.step-package-de-done: buildtmp/.step-postcompile-done
+	echo "package is not implemented"
+	touch buildtmp/.step-package-done
+
+
+package-en: buildtmp/.step-package-en-done
+buildtmp/.step-package-en-done: buildtmp/.step-postcompile-done
 	echo "package is not implemented"
 	touch buildtmp/.step-package-done
 
@@ -38,7 +49,12 @@ buildtmp/.step-mar-done: buildtmp/.step-postcompile-done
 	echo "mar is not implemented"
 	touch buildtmp/.step-mar-done
 
+mardiff:
+
+
+all: package-de package-en mar mardiff
 
 
 clean-all:
 	rm -r buildtmp
+
