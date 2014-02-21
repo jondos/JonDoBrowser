@@ -3,6 +3,9 @@
 mozKey=5445390EF5D0C2ECFB8A6201057CC3EB15A0A4BC
 releasePath=http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/latest-esr
 
+svnXPI=https://svn.jondos.de/svnpub/JonDoFox_Extension/trunk/xpi/jondofoxBrowser.xpi
+svnProfile=https://svn.jondos.de/svnpub/JonDoFox_Profile/trunk/full/profile
+
 gpgVerification() {
   sigKey=$(gpg --verify $1 2>&1 | tail -n1 | tr -d ' ' | \
            sed 's/.*[^A-F0-9]\([A-F0-9]\{40\}\)/\1/g')
