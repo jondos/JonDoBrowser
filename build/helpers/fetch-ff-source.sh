@@ -11,6 +11,7 @@ gpgVerification() {
     echo "Successful verification!"
   else
     echo "Wrong signature, aborting..."
+    rm firefox-${ffVersion}esr.source.tar.bz2
     exit 1
   fi
 }
@@ -42,19 +43,13 @@ if [ ! -e "firefox-${ffVersion}esr.source.tar.bz2.asc" ]; then
   fi
 fi
 
-if [ ! -e de.xpi ]; then
-  echo "Getting the German language XPI..."
-  curl --retry 3 -O  $releasePath/mac/xpi/de.xpi
-  if [ ! $? -eq 0 ]; then
-    echo "Error while retrieving the German language XPI, exiting..."
-    exit 1
-  fi
-fi
 
 gpgVerification firefox-${ffVersion}esr.source.tar.bz2.asc
 
-echo "Unpack Firefox source..."
-tar -xjf firefox-${ffVersion}esr.source.tar.bz2
-mv mozilla-esr* mozilla-release
+echo "Fetching JonDoFox profile..."
+svn export $svnProfile
+
+echo "Fetching JonDoBrowser XPI..."
+svn export $svnXPI
 
 cd ..
