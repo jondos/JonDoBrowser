@@ -154,5 +154,5 @@ else
 
 fi
 
-/opt/JonDoBrowser/App/Firefox/firefox -profile $HOME/.jondobrowser/profile -no-remote -UILocale de
+/opt/JonDoBrowser/App/firefox/firefox -profile $HOME/.jondobrowser/profile -no-remote -UILocale de
 
