@@ -1,0 +1,65 @@
+all: jdb-de jdb-en
+
+fetch:  buildtmp/.step-fetch-done
+buildtmp/.step-fetch-done:
+	mkdir buildtmp
+	helpers/fetch-ff-source.sh && helpers/fetch-de-xpi-linux.sh && touch buildtmp/.step-fetch-done
+
+
+unpack: buildtmp/.step-unpack-done
+buildtmp/.step-unpack-done: buildtmp/.step-fetch-done
+	tar -xj --directory buildtmp -f buildtmp/firefox-*esr.source.tar.bz2
+	mv buildtmp/mozilla-esr* buildtmp/mozilla-release
+	touch buildtmp/.step-unpack-done
+
+
+patch: buildtmp/.step-patch-done
+buildtmp/.step-patch-done: buildtmp/.step-unpack-done
+	helpers/patch-ff-source.sh && touch buildtmp/.step-patch-done
+
+
+compile: buildtmp/firefox.tar.bz2
+buildtmp/firefox.tar.bz2: buildtmp/.step-patch-done
+	cp -f .mozconfig_linux buildtmp/mozilla-release/.mozconfig
+	helpers/compile-linux.sh
+
+
+firefox-en: buildtmp/firefox_en-US.tar.bz2
+buildtmp/firefox_en-US.tar.bz2: buildtmp/firefox.tar.bz2
+	tar -xaf buildtmp/firefox.tar.bz2
+	rm firefox/browser/searchplugins/*.xml
+	cp searchplugins/common/*.xml firefox/browser/searchplugins/
+	tar -cjf buildtmp/firefox_en-US.tar.bz2 firefox
+	rm -r firefox
+
+
+firefox-de: buildtmp/firefox_de.tar.bz2
+buildtmp/firefox_de.tar.bz2: buildtmp/firefox.tar.bz2
+	tar -xaf buildtmp/firefox.tar.bz2
+	rm firefox/browser/searchplugins/*.xml
+	cp searchplugins/common/*.xml firefox/browser/searchplugins/
+	cp searchplugins/de/*.xml firefox/browser/searchplugins/
+	cp buildtmp/de.xpi firefox/browser/extensions/langpack-de@firefox.mozilla.org.xpi
+	tar -cjf buildtmp/firefox_de.tar.bz2 firefox
+	rm -r firefox
+
+
+jdb-en: buildtmp/.step-jdb-en-done
+buildtmp/.step-package-en-done: buildtmp/firefox_en-US.tar.bz2
+	echo "package is not implemented"
+	touch buildtmp/.step-package-en-done
+
+jdb-de: buildtmp/.step-jdb-de-done
+buildtmp/.step-package-de-done: buildtmp/firefox_de.tar.bz2
+	echo "package is not implemented"
+	touch buildtmp/.step-package-de-done
+
+
+mar: buildtmp/.step-mar-done
+buildtmp/.step-mar-done: buildtmp/.step-postcompile-done
+	echo "mar is not implemented"
+	touch buildtmp/.step-mar-done
+
+clean:
+	rm -rf buildtmp
+
