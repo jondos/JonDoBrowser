@@ -1,7 +1,7 @@
 #!/bin/sh
 
 cd buildtmp
-
+ 
 if [ ! -e de.xpi ]; then
   echo "Getting the German language XPI..."
   curl --retry 3 -O  $releasePath/mac/xpi/de.xpi

@@ -1,7 +1,7 @@
 #!/bin/sh
 
 platform="linux-$(uname -m)"
-
+ 
 cd buildtmp/mozilla-release
 make -f client.mk build
 

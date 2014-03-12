@@ -1,11 +1,15 @@
 
+# by default
+all: jdb-en
 
+# fetch the latest Firefox ESR and JonDoFox Profile and modify profile for JDB
 fetch:  buildtmp/.step-fetch-done
 buildtmp/.step-fetch-done:
 	mkdir buildtmp
 	helpers/fetch-ff-source.sh && helpers/fetch-de-xpi-mac.sh && touch buildtmp/.step-fetch-done
 
 
+# Unpack the firefox source to buildtmp/mozilla-release
 unpack: buildtmp/.step-unpack-done
 buildtmp/.step-unpack-done: buildtmp/.step-fetch-done
 	tar -xj --directory buildtmp -f buildtmp/firefox-*esr.source.tar.bz2
@@ -13,48 +17,34 @@ buildtmp/.step-unpack-done: buildtmp/.step-fetch-done
 	touch buildtmp/.step-unpack-done
 
 
+# apply JonDoBrowser patches
 patch: buildtmp/.step-patch-done
 buildtmp/.step-patch-done: buildtmp/.step-unpack-done
 	helpers/patch-ff-source.sh && touch buildtmp/.step-patch-done
 
 
-compile: buildtmp/firefox.en-US.dmg
+# Compile Firefox and create a TAR.BZ2 archive
+compile: buildtmp/firefox.dmg
 buildtmp/firefox.en-US.dmg: buildtmp/.step-patch-done
-	echo "compile is not implemented"
+	helpers/compile-mac.sh
 
 
-re-compile:
+# Build the JDB (en_US) with compiled Firefox
+jdb-en: buildtmp/.step-jdb-en-done
+buildtmp/.step-jdb-en-done: buildtmp/firefox.dmg
+	helpers/pack-jdb-mac-en.sh && touch buildtmp/.step-jdb-en-done
 
 
-post-compile: buildtmp/.step-postcompile-done
-buildtmp/.step-postcompile-done: buildtmp/firefox.en-US.dmg
-	echo "post-compile is not implemented"
-	touch buildtmp/.step-postcompile-done
 
-
-package-de: buildtmp/.step-package-de-done
-buildtmp/.step-package-de-done: buildtmp/.step-postcompile-done
-	echo "package is not implemented"
-	touch buildtmp/.step-package-done
-
-
-package-en: buildtmp/.step-package-en-done
-buildtmp/.step-package-en-done: buildtmp/.step-postcompile-done
-	echo "package is not implemented"
-	touch buildtmp/.step-package-done
-
-
-mar: buildtmp/.step-mar-done
-buildtmp/.step-mar-done: buildtmp/.step-postcompile-done
-	echo "mar is not implemented"
+mar-en: buildtmp/.step-mar-en-done
+buildtmp/.step-mar-en-done: buildtmp/.step-jdb-en-done
+	helpers/make-full-mar-mac.sh && touch buildtmp/.step-mar-done
 	touch buildtmp/.step-mar-done
 
 mardiff:
 
-
-all: package-de package-en mar mardiff
-
-
-clean-all:
+clean:
 	rm -r buildtmp
+	rm -r JDB
+
 

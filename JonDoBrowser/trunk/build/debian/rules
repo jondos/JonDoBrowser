@@ -66,20 +66,20 @@ install: build buildtmp/firefox_de.tar.bz2 buildtmp/firefox_en-US.tar.bz2
 	install -m644 debian/jondobrowser.desktop debian/jondobrowser-en/usr/share/applications/jondobrowser.desktop
 	install -m644 debian/jondobrowser.desktop debian/jondobrowser-de/usr/share/applications/jondobrowser.desktop
 
-        tar -xj --directory debian/jondobrowser-en/opt/JonDoBrowser/App -f buildtmp/firefox_en-US.tar.bz2
-        tar -xj --directory debian/jondobrowser-de/opt/JonDoBrowser/App -f buildtmp/firefox_en-US.tar.bz2
+	tar -xj --directory debian/jondobrowser-en/opt/JonDoBrowser/App -f buildtmp/firefox_en-US.tar.bz2
+	tar -xj --directory debian/jondobrowser-de/opt/JonDoBrowser/App -f buildtmp/firefox_en-US.tar.bz2
          
 
 	cp -r buildtmp/profile debian/jondobrowser-en/opt/JonDoBrowser/Data/
 	sed -i "s/Arial/Liberation Sans/" debian/jondobrowser-en/opt/JonDoBrowser/Data/profile/prefs.js
 	echo "user_pref(\"app.update.enabled\", false);" >> debian/jondobrowser-en/opt/JonDoBrowser/Data/profile/prefs.js
-        mv -f debian/jondobrowser-en/opt/JonDoBrowser/Data/profile/places.sqlite_en-US debian/jondobrowser-en/opt/JonDoBrowser/Data/profile/places.sqlite
+	mv -f debian/jondobrowser-en/opt/JonDoBrowser/Data/profile/places.sqlite_en-US debian/jondobrowser-en/opt/JonDoBrowser/Data/profile/places.sqlite
 	rm -f debian/jondobrowser-en/opt/JonDoBrowser/Data/profile/places.sqlite_de
 
 	cp -r buildtmp/profile debian/jondobrowser-de/opt/JonDoBrowser/Data/
 	sed -i "s/Arial/Liberation Sans/" debian/jondobrowser-de/opt/JonDoBrowser/Data/profile/prefs.js
 	echo "user_pref(\"app.update.enabled\", false);" >> debian/jondobrowser-en/opt/JonDoBrowser/Data/profile/prefs.js
-        mv -f debian/jondobrowser-de/opt/JonDoBrowser/Data/profile/places.sqlite_de debian/jondobrowser-de/opt/JonDoBrowser/Data/profile/places.sqlite
+	mv -f debian/jondobrowser-de/opt/JonDoBrowser/Data/profile/places.sqlite_de debian/jondobrowser-de/opt/JonDoBrowser/Data/profile/places.sqlite
 	rm -f debian/jondobrowser-de/opt/JonDoBrowser/Data/profile/places.sqlite_en-US
 
 
