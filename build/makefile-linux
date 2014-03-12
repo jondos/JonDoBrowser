@@ -1,11 +1,14 @@
+
 all: jdb-de jdb-en
 
+# fetch the latest Firefox ESR and JonDoFox Profile and modify profile for JDB
 fetch:  buildtmp/.step-fetch-done
 buildtmp/.step-fetch-done:
 	mkdir buildtmp
 	helpers/fetch-ff-source.sh && helpers/fetch-de-xpi-linux.sh && touch buildtmp/.step-fetch-done
 
 
+# Unpack the firefox source to buildtmp/mozilla-release
 unpack: buildtmp/.step-unpack-done
 buildtmp/.step-unpack-done: buildtmp/.step-fetch-done
 	tar -xj --directory buildtmp -f buildtmp/firefox-*esr.source.tar.bz2
@@ -13,17 +16,20 @@ buildtmp/.step-unpack-done: buildtmp/.step-fetch-done
 	touch buildtmp/.step-unpack-done
 
 
+# apply JonDoBrowser patches
 patch: buildtmp/.step-patch-done
 buildtmp/.step-patch-done: buildtmp/.step-unpack-done
 	helpers/patch-ff-source.sh && touch buildtmp/.step-patch-done
 
 
+# Compile Firefox and create a TAR.BZ2 archive
 compile: buildtmp/firefox.tar.bz2
 buildtmp/firefox.tar.bz2: buildtmp/.step-patch-done
 	cp -f .mozconfig_linux buildtmp/mozilla-release/.mozconfig
 	helpers/compile-linux.sh
 
 
+# Unpack the compiled Firefox and replace search engines, repack en-US Firefox
 firefox-en: buildtmp/firefox_en-US.tar.bz2
 buildtmp/firefox_en-US.tar.bz2: buildtmp/firefox.tar.bz2
 	tar -xaf buildtmp/firefox.tar.bz2
@@ -33,6 +39,7 @@ buildtmp/firefox_en-US.tar.bz2: buildtmp/firefox.tar.bz2
 	rm -r firefox
 
 
+# Unpack the compiles Firefox and apply all modifications for German version
 firefox-de: buildtmp/firefox_de.tar.bz2
 buildtmp/firefox_de.tar.bz2: buildtmp/firefox.tar.bz2
 	tar -xaf buildtmp/firefox.tar.bz2
@@ -44,17 +51,45 @@ buildtmp/firefox_de.tar.bz2: buildtmp/firefox.tar.bz2
 	rm -r firefox
 
 
-jdb-en: buildtmp/.step-jdb-en-done
-buildtmp/.step-package-en-done: buildtmp/firefox_en-US.tar.bz2
-	echo "package is not implemented"
-	touch buildtmp/.step-package-en-done
+# Pack JonDoBrowser en-US
+jdb-en: JonDoBrowser-en-US.tar.xz
+JonDoBrowser-en-US.tar.xz: buildtmp/firefox_en-US.tar.bz2
+	mdir JonDoBrowser
+	cp linux/start-jondobrowser_en-US.sh JonDoBrowser/start-jondobrowser.sh
+	chmod +x JonDoBrowser/start-jondobrowser.sh
+	mdir JonDoBrowser/App
+        tar -xj --directory JonDoBrowser/App -f buildtmp/firefox_en-US.tar.bz2
+	mdir JonDoBrowser/Data
+	cp -r buildtmp/profile JonDoBrowser/Data/
+	sed -i "s/Arial/Liberation Sans/" JonDoBrowser/Data/profile/prefs.js
+	echo "user_pref(\"app.update.enabled\", false);" >> JonDoBrowser/Data/profile/prefs.js
+	mv -f JonDoBrowser/Data/profile/places.sqlite_en-US JonDoBrowser/Data/profile/places.sqlite
+	rm -f JonDoBrowser/Data/profile/places.sqlite_de
+	tar -cf JonDoBrowser-en-US.tar JonDoBrowser
+	xz JonDoBrowser-en-US.tar
+	rm -r JonDoBrowser
 
+
+# Pack JonDoBrowser de
 jdb-de: buildtmp/.step-jdb-de-done
 buildtmp/.step-package-de-done: buildtmp/firefox_de.tar.bz2
-	echo "package is not implemented"
-	touch buildtmp/.step-package-de-done
+	mdir JonDoBrowser 
+	cp linux/start-jondobrowser_de.sh JonDoBrowser/start-jondobrowser.sh
+	chmod +x JonDoBrowser/start-jondobrowser.sh
+	mdir JonDoBrowser/App
+        tar -xj --directory JonDoBrowser/App -f buildtmp/firefox_de.tar.bz2
+	mdir JonDoBrowser/Data
+	cp -r buildtmp/profile JonDoBrowser/Data/
+	sed -i "s/Arial/Liberation Sans/" JonDoBrowser/Data/profile/prefs.js
+	echo "user_pref(\"app.update.enabled\", false);" >> JonDoBrowser/Data/profile/prefs.js
+	mv -f JonDoBrowser/Data/profile/places.sqlite_de JonDoBrowser/Data/profile/places.sqlite
+	rm -f JonDoBrowser/Data/profile/places.sqlite_en_US
+	tar -cf JonDoBrowser-en-US.tar JonDoBrowser
+	xz JonDoBrowser-en-US.tar
+	rm -r JonDoBrowser
 
 
+# Build the full mar file
 mar: buildtmp/.step-mar-done
 buildtmp/.step-mar-done: buildtmp/.step-postcompile-done
 	echo "mar is not implemented"
