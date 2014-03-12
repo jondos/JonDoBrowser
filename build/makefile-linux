@@ -54,12 +54,12 @@ buildtmp/firefox_de.tar.bz2: buildtmp/firefox.tar.bz2
 # Pack JonDoBrowser en-US
 jdb-en: JonDoBrowser-en-US.tar.xz
 JonDoBrowser-en-US.tar.xz: buildtmp/firefox_en-US.tar.bz2
-	mdir JonDoBrowser
+	mkdir JonDoBrowser
 	cp linux/start-jondobrowser_en-US.sh JonDoBrowser/start-jondobrowser.sh
 	chmod +x JonDoBrowser/start-jondobrowser.sh
-	mdir JonDoBrowser/App
-        tar -xj --directory JonDoBrowser/App -f buildtmp/firefox_en-US.tar.bz2
-	mdir JonDoBrowser/Data
+	mkdir JonDoBrowser/App
+	tar -xj --directory JonDoBrowser/App -f buildtmp/firefox_en-US.tar.bz2
+	mkdir JonDoBrowser/Data
 	cp -r buildtmp/profile JonDoBrowser/Data/
 	sed -i "s/Arial/Liberation Sans/" JonDoBrowser/Data/profile/prefs.js
 	echo "user_pref(\"app.update.enabled\", false);" >> JonDoBrowser/Data/profile/prefs.js
@@ -73,11 +73,11 @@ JonDoBrowser-en-US.tar.xz: buildtmp/firefox_en-US.tar.bz2
 # Pack JonDoBrowser de
 jdb-de: buildtmp/.step-jdb-de-done
 buildtmp/.step-package-de-done: buildtmp/firefox_de.tar.bz2
-	mdir JonDoBrowser 
+	mkdir JonDoBrowser 
 	cp linux/start-jondobrowser_de.sh JonDoBrowser/start-jondobrowser.sh
 	chmod +x JonDoBrowser/start-jondobrowser.sh
-	mdir JonDoBrowser/App
-        tar -xj --directory JonDoBrowser/App -f buildtmp/firefox_de.tar.bz2
+	mkdir JonDoBrowser/App
+	tar -xj --directory JonDoBrowser/App -f buildtmp/firefox_de.tar.bz2
 	mdir JonDoBrowser/Data
 	cp -r buildtmp/profile JonDoBrowser/Data/
 	sed -i "s/Arial/Liberation Sans/" JonDoBrowser/Data/profile/prefs.js
