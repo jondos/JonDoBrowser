@@ -4,6 +4,7 @@ all: jdb-de jdb-en
 # fetch the latest Firefox ESR and JonDoFox Profile and modify profile for JDB
 fetch:  buildtmp/.step-fetch-done
 buildtmp/.step-fetch-done:
+	chmod +x helpers/*.sh
 	mkdir buildtmp
 	helpers/fetch-ff-source.sh && helpers/fetch-de-xpi-linux.sh && touch buildtmp/.step-fetch-done
 
@@ -62,7 +63,6 @@ JonDoBrowser-en-US.tar.xz: buildtmp/firefox_en-US.tar.bz2
 	mkdir JonDoBrowser/Data
 	cp -r buildtmp/profile JonDoBrowser/Data/
 	sed -i "s/Arial/Liberation Sans/" JonDoBrowser/Data/profile/prefs.js
-	echo "user_pref(\"app.update.enabled\", false);" >> JonDoBrowser/Data/profile/prefs.js
 	mv -f JonDoBrowser/Data/profile/places.sqlite_en-US JonDoBrowser/Data/profile/places.sqlite
 	rm -f JonDoBrowser/Data/profile/places.sqlite_de
 	tar -cf JonDoBrowser-en-US.tar JonDoBrowser
@@ -71,8 +71,8 @@ JonDoBrowser-en-US.tar.xz: buildtmp/firefox_en-US.tar.bz2
 
 
 # Pack JonDoBrowser de
-jdb-de: buildtmp/.step-jdb-de-done
-buildtmp/.step-package-de-done: buildtmp/firefox_de.tar.bz2
+jdb-de: JonDoBrowser-de.tar.xz
+JonDoBrowser-de.tar.xz: buildtmp/firefox_de.tar.bz2
 	mkdir JonDoBrowser 
 	cp linux/start-jondobrowser_de.sh JonDoBrowser/start-jondobrowser.sh
 	chmod +x JonDoBrowser/start-jondobrowser.sh
@@ -81,11 +81,11 @@ buildtmp/.step-package-de-done: buildtmp/firefox_de.tar.bz2
 	mdir JonDoBrowser/Data
 	cp -r buildtmp/profile JonDoBrowser/Data/
 	sed -i "s/Arial/Liberation Sans/" JonDoBrowser/Data/profile/prefs.js
-	echo "user_pref(\"app.update.enabled\", false);" >> JonDoBrowser/Data/profile/prefs.js
+	echo "user_pref(\"extensions.langpack-de@firefox.mozilla.org.update.enabled\", false);" >> JonDoBrowser/Data/profile/prefs.js
 	mv -f JonDoBrowser/Data/profile/places.sqlite_de JonDoBrowser/Data/profile/places.sqlite
 	rm -f JonDoBrowser/Data/profile/places.sqlite_en_US
-	tar -cf JonDoBrowser-en-US.tar JonDoBrowser
-	xz JonDoBrowser-en-US.tar
+	tar -cf JonDoBrowser-de.tar JonDoBrowser
+	xz JonDoBrowser-de.tar
 	rm -r JonDoBrowser
 
 

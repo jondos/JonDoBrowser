@@ -132,7 +132,7 @@ else
    VERSIONNEW=$(fgrep jondofox.browser_version "/opt/JonDoBrowser/Data/profile/prefs.js" | xargs -I % expr % : ".*, \([0-9].*[0-9]\).*")
    if [ "$VERSIONOLD" != "$VERSIONNEW" ]; then
        if test "X$KDE_FULL_SESSION" = "Xtrue" ; then
-           kdialog --title "JonDoBrowser" --yesno "Eine neue Version des JonDoBrowser wurde installiert.\nSoll Ihr Profil aktualisiert werden?\n\n(Ihre Lesezeichen, Zertifikats-Datenbank und\nHTTPSEverywhereUserRules bleiben erhalten.)"
+           kdialog --title "JonDoBrowser" --yesno "Eine neue Version des JonDoBrowser wurde installiert.\nSoll Ihr Profil aktualisiert werden?\n\nIhre Lesezeichen, Zertifikats-Datenbank und\nHTTPSEverywhereUserRules bleiben erhalten."
 
            dialog_return=$?        
            if [ $dialog_return -eq 0 ]; then
@@ -140,7 +140,7 @@ else
            fi
        else
            if [ $ZENITY ]; then
-                $ZENITY --question --title "JonDoBrowser" --text "Eine neue Version des JonDoBrowser wurde installiert.\nSoll Ihr Profil aktualisiert werden?\n\n(Ihre Lesezeichen, Zertifikats-Datenbank und\nHTTPSEverywhereUserRules bleiben erhalten.)" --no-wrap
+                $ZENITY --question --title "JonDoBrowser" --text "Eine neue Version des JonDoBrowser wurde installiert.\nSoll Ihr Profil aktualisiert werden?\n\nIhre Lesezeichen, Zertifikats-Datenbank und\nHTTPSEverywhereUserRules bleiben erhalten." --no-wrap
 
                 dialog_return=$?        
                 if [ $dialog_return -eq 0 ]; then

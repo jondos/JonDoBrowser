@@ -5,6 +5,7 @@ all: jdb-en
 # fetch the latest Firefox ESR and JonDoFox Profile and modify profile for JDB
 fetch:  buildtmp/.step-fetch-done
 buildtmp/.step-fetch-done:
+	chmod +x helpers/*.sh
 	mkdir buildtmp
 	helpers/fetch-ff-source.sh && helpers/fetch-de-xpi-mac.sh && touch buildtmp/.step-fetch-done
 

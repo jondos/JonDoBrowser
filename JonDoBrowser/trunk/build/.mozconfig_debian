@@ -23,10 +23,8 @@ ac_add_options --disable-gamepad
 # all extensions are part of the profil
 ac_add_options --disable-system-extension-dirs
 
-ac_add_options --disable-gconf
+ac_add_options --enable-default-toolkit=cairo-gtk3
 
 # we use Debian system libs
 ac_add_options --enable-system-hunspell
-ac_add_options --with-system-zlib
-ac_add_options --with-system-bz2
 

@@ -1,2 +1,2 @@
 #!/bin/sh
-./App/Firefox/firefox -profile ./Data/profile -no-remote -UILocale de
+./App/firefox/firefox -profile ./Data/profile -no-remote -UILocale de

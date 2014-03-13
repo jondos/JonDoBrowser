@@ -11,12 +11,13 @@ clean:
 	dh_clean -A
 	rm -r  buildtmp/mozilla-release
 	rm buildtmp/firefox.tar.bz2
-	rm buildtmp/firefox_en-US.tar.bz2
-	rm buildtmp/firefox_de.tar.bz2
+	rm buildtmp/firefox_en-US.tar
+	rm buildtmp/firefox_de.tar
 	rm buildtmp/.step-unpack-done
 	rm buildtmp/.step-unpack-done
 
 buildtmp/.step-fetch-done:
+	chmod +x /helpers/*.sh
 	mkdir buildtmp
 	helpers/fetch-ff-source.sh && helpers/fetch-de-xpi-linux.sh && touch buildtmp/.step-fetch-done
 
@@ -32,26 +33,26 @@ buildtmp/firefox.tar.bz2: buildtmp/.step-patch-done
 	cp -f .mozconfig_debian buildtmp/mozilla-release/.mozconfig
 	helpers/compile-linux.sh
 
-buildtmp/firefox_en-US.tar.bz2: buildtmp/firefox.tar.bz2
-	tar -xaf buildtmp/firefox.tar.bz2
+buildtmp/firefox_en-US.tar: buildtmp/firefox.tar.bz2
+	tar -xaf buildtmp/firefox.tar
 	rm firefox/browser/searchplugins/*.xml
 	cp searchplugins/common/*.xml firefox/browser/searchplugins/
 	rm -r firefox/dictionaries
-	tar -cjf buildtmp/firefox_en-US.tar.bz2 firefox
+	tar -cf buildtmp/firefox_en-US.tar firefox
 	rm -r firefox
 
-buildtmp/firefox_de.tar.bz2: buildtmp/firefox.tar.bz2
-	tar -xaf buildtmp/firefox.tar.bz2
+buildtmp/firefox_de.tar: buildtmp/firefox.tar.bz2
+	tar -xaf buildtmp/firefox.tar
 	rm firefox/browser/searchplugins/*.xml
 	cp searchplugins/common/*.xml firefox/browser/searchplugins/
 	cp searchplugins/de/*.xml firefox/browser/searchplugins/
 	cp buildtmp/de.xpi firefox/browser/extensions/langpack-de@firefox.mozilla.org.xpi
 	rm -r firefox/dictionaries
-	tar -cjf buildtmp/firefox_de.tar.bz2 firefox
+	tar -cf buildtmp/firefox_de.tar firefox
 	rm -r firefox
 
 
-install: build buildtmp/firefox_de.tar.bz2 buildtmp/firefox_en-US.tar.bz2
+install: build buildtmp/firefox_de.tar buildtmp/firefox_en-US.tar
 	dh_testdir
 	dh_testroot
 	dh_prep
@@ -66,8 +67,8 @@ install: build buildtmp/firefox_de.tar.bz2 buildtmp/firefox_en-US.tar.bz2
 	install -m644 debian/jondobrowser.desktop debian/jondobrowser-en/usr/share/applications/jondobrowser.desktop
 	install -m644 debian/jondobrowser.desktop debian/jondobrowser-de/usr/share/applications/jondobrowser.desktop
 
-	tar -xj --directory debian/jondobrowser-en/opt/JonDoBrowser/App -f buildtmp/firefox_en-US.tar.bz2
-	tar -xj --directory debian/jondobrowser-de/opt/JonDoBrowser/App -f buildtmp/firefox_en-US.tar.bz2
+	tar -x --directory debian/jondobrowser-en/opt/JonDoBrowser/App -f buildtmp/firefox_en-US.tar
+	tar -x --directory debian/jondobrowser-de/opt/JonDoBrowser/App -f buildtmp/firefox_de.tar
          
 
 	cp -r buildtmp/profile debian/jondobrowser-en/opt/JonDoBrowser/Data/
@@ -78,7 +79,7 @@ install: build buildtmp/firefox_de.tar.bz2 buildtmp/firefox_en-US.tar.bz2
 
 	cp -r buildtmp/profile debian/jondobrowser-de/opt/JonDoBrowser/Data/
 	sed -i "s/Arial/Liberation Sans/" debian/jondobrowser-de/opt/JonDoBrowser/Data/profile/prefs.js
-	echo "user_pref(\"app.update.enabled\", false);" >> debian/jondobrowser-en/opt/JonDoBrowser/Data/profile/prefs.js
+	echo "user_pref(\"extensions.langpack-de@firefox.mozilla.org.update.enabled\", false);" >> debian/jondobrowser-de/opt/JonDoBrowser/Data/profile/prefs.js
 	mv -f debian/jondobrowser-de/opt/JonDoBrowser/Data/profile/places.sqlite_de debian/jondobrowser-de/opt/JonDoBrowser/Data/profile/places.sqlite
 	rm -f debian/jondobrowser-de/opt/JonDoBrowser/Data/profile/places.sqlite_en-US
 
