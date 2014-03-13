@@ -1,6 +1,6 @@
 #!/bin/sh
 
-jdbVersion="0.13"
+jdbVersion="0.14"
 
 mozKey=5445390EF5D0C2ECFB8A6201057CC3EB15A0A4BC
 releasePath=http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/latest-esr
@@ -55,21 +55,18 @@ svn export $svnXPI
 
 echo "Fetching JonDoFox profile..."
 svn export $svnProfile
-rm -f profile/prefs_portable*
-# search plugins are part of Firefox now
-rm -r profile/searchplugins
+rm -f ./profile/prefs_portable*
+# search plugins are part of JonDoBrowser
+rm -r ./profile/searchplugins
 # We do not need ProfileSwitcher in our JonDoBrowser, thus removing it.
-rm -rf profile/extensions/\{fa8476cf-a98c-4e08-99b4-65a69cb4b7d4\}.xpi
+rm -rf ./profile/extensions/\{fa8476cf-a98c-4e08-99b4-65a69cb4b7d4\}.xpi
 
 # Remove the JonDoFox-XPI for JonDoFox and replace it with JDB-XPI
-cp -f jondofoxBrowser.xpi profile/extensions/\{437be45a-4114-11dd-b9ab-71d256d89593\}.xpi
+rm ./profile/extensions/\{437be45a-4114-11dd-b9ab-71d256d89593\}.xpi
+cp ./jondofoxBrowser.xpi ./profile/extensions/\{437be45a-4114-11dd-b9ab-71d256d89593\}.xpi
 
 echo "user_pref(\"extensions.jondofox.browser_version\", \"${jdbVersion}\");" >> profile/prefs.js
 chmod -R ugo-x,u+rwX,go+rX,go-w profile
- 
-
-
-
-
 
 cd ..
+

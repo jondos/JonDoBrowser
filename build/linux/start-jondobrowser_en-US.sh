@@ -1,2 +1,2 @@
 #!/bin/sh
-./App/Firefox/firefox -profile ./Data/profile -no-remote
+./App/firefox/firefox -profile ./Data/profile -no-remote
