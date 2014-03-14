@@ -17,7 +17,7 @@ clean:
 	rm buildtmp/.step-unpack-done
 
 buildtmp/.step-fetch-done:
-	chmod +x /helpers/*.sh
+	chmod +x helpers/*.sh
 	mkdir buildtmp
 	helpers/fetch-ff-source.sh && helpers/fetch-de-xpi-linux.sh && touch buildtmp/.step-fetch-done
 
@@ -34,7 +34,7 @@ buildtmp/firefox.tar.bz2: buildtmp/.step-patch-done
 	helpers/compile-linux.sh
 
 buildtmp/firefox_en-US.tar: buildtmp/firefox.tar.bz2
-	tar -xaf buildtmp/firefox.tar
+	tar -xaf buildtmp/firefox.tar.bz2
 	rm firefox/browser/searchplugins/*.xml
 	cp searchplugins/common/*.xml firefox/browser/searchplugins/
 	rm -r firefox/dictionaries
@@ -42,7 +42,7 @@ buildtmp/firefox_en-US.tar: buildtmp/firefox.tar.bz2
 	rm -r firefox
 
 buildtmp/firefox_de.tar: buildtmp/firefox.tar.bz2
-	tar -xaf buildtmp/firefox.tar
+	tar -xaf buildtmp/firefox.tar.bz2
 	rm firefox/browser/searchplugins/*.xml
 	cp searchplugins/common/*.xml firefox/browser/searchplugins/
 	cp searchplugins/de/*.xml firefox/browser/searchplugins/
