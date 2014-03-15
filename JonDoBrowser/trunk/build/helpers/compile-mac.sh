@@ -3,12 +3,17 @@ arch=$(uname -a)
 [[ $arch == *x86_64* ]] && echo "Mac is x86_64, selecting mozconfig_mac_x86_64." && arch=$(echo "x86_64")
 [[ $arch == *i386* ]] && echo "Mac is i386, selecting mozconfig_mac_i386." && arch=$(echo "i386")
 
-echo "Preparing .mozconfig for JonDoBrowser..."
-machPlatforms="mac-x86_64"; # was: "mac-x86_64 mac-i386"
+pwd
+echo "Preparing .mozconfig for JonDoBrowser ..."
+macPlatforms="mac-x86_64"; # was: "mac-x86_64 mac-i386"
+
+#read -p "Preparing mozconfig ... proceed with [Enter]"
 
 for macPlatform in $macPlatforms; do
   
-    cp -f ../.mozconfig .
+    read -p "cp -f .mozconfig_mac ./buildtmp/.mozconfig ... [Enter]"
+    #cd buildtmp
+    cp -f .mozconfig_mac ./buildtmp/.mozconfig
     echo >> .mozconfig
     echo "mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/mac_build_${macPlatform}" \
       >> .mozconfig
@@ -42,20 +47,24 @@ for macPlatform in $macPlatforms; do
     fi
     #make -f client.mk build && make -C mac_build_${macPlatform} package
 
+	cp -f .mozconfig ./buildtmp/mozilla-release/.mozconfig
+	cd ./buildtmp/mozilla-release/
+	read -p "Building Firefofx ... proceed with [Enter]"
+
+	# Building FF
+	#was: make -f client.mk build && make -C mac_build_$arch package
+	make -f client.mk build && make -C mac_build_$macPlatform package
+	# Preparing .dmg for the next Step
+	#was: firefox=$(ls ./mac_build_$arch/dist/ | grep \.dmg$)
+	# kgr: alternative: see: echo $MACHTYPE
+	#firefox=($ls ./obj-$arch-apple-darwin13.1.0/dist/ | grep \.dmg$)
+	firefox=$(ls ./mac_build_$macPlatform/dist/ | grep \.dmg)
+	cd .. && cd ..
+	cp ./buildtmp/mozilla-release/mac_build_$macPlatform/dist/$firefox ./buildtmp/firefox.dmg
+
 done
 
-cp .mozconfig
 
-# Building FF
-cp -f .mozconfig_mac_$arch ./buildtmp/mozilla-release/.mozconfig
-cd ./buildtmp/mozilla-release/
-#was: make -f client.mk build && make -C mac_build_$arch package
-make -f client.mk build && make -C obj-$arch-apple-darwin13.1.0 package
-# Preparing .dmg for the next Step
-#was: firefox=$(ls ./mac_build_$arch/dist/ | grep \.dmg$)
-# kgr: alternative: see: echo $MACHTYPE
-#firefox=($ls ./obj-$arch-apple-darwin13.1.0/dist/ | grep \.dmg$)
-firefox=$(ls ./obj-$MACHTYPE.1.0/dist/ | grep \.dmg)
-cd .. && cd ..
-cp ./buildtmp/mozilla-release/obj-$arch-apple-darwin13.1.0/dist/$firefox ./buildtmp/firefox.dmg
+
+
 

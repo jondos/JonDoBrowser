@@ -7,4 +7,4 @@ cd buildtmp/mozilla-release
 # Essentially the patch-any-src.sh from the Tor Project
 for i in *patch; do patch -tp1 <$i || exit 1; done
 
-cd ../..
+cd ..
