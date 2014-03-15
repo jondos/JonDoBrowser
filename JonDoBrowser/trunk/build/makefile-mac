@@ -25,8 +25,7 @@ buildtmp/.step-patch-done: buildtmp/.step-unpack-done
 
 
 # Compile Firefox and create a TAR.BZ2 archive
-compile: buildtmp/firefox.dmg
-buildtmp/firefox.en-US.dmg: buildtmp/.step-patch-done
+compile: buildtmp/.step-patch-done
 	helpers/compile-mac.sh
 
 
@@ -45,7 +44,7 @@ buildtmp/.step-mar-en-done: buildtmp/.step-jdb-en-done
 mardiff:
 
 clean:
-	rm -r buildtmp
-	rm -r JDB
+	rm -fr buildtmp
+	rm -fr JDB
 
 
