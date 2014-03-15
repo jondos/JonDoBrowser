@@ -1,25 +1,27 @@
-#!/bin/sh
+#!/bin/bash
+
+
+#
+# --- initializei / export  basic vars ---
+#
 
 jdbVersion="0.14"
 
 mozKey=5445390EF5D0C2ECFB8A6201057CC3EB15A0A4BC
-releasePath=http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/latest-esr
+export releasePath=http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/latest-esr
+# bash does set & export vars, no need for: export $releasePath
 
 svnXPI=https://svn.jondos.de/svnpub/JonDoFox_Extension/trunk/xpi/jondofoxBrowser.xpi
 svnProfile=https://svn.jondos.de/svnpub/JonDoFox_Profile/trunk/full/profile
 
-gpgVerification() {
-  sigKey=$(gpg --verify $1 2>&1 | tail -n1 | tr -d ' ' | \
-           sed 's/.*[^A-F0-9]\([A-F0-9]\{40\}\)/\1/g')
+# set $arch if noone else has set it yet
+if [ -n "$arch" ]; then export arch=x85_64; fi;
 
-  if [ "$sigKey" = "$mozKey" ]; then
-    echo "Successful verification!"
-  else
-    echo "Wrong signature, aborting..."
-    rm firefox-${ffVersion}esr.source.tar.bz2
-    exit 1
-  fi
-}
+ 
+
+#
+# --- get the FF sources & determine version & get signatures ---
+#
 
 cd buildtmp
 
@@ -48,7 +50,34 @@ if [ ! -e "firefox-${ffVersion}esr.source.tar.bz2.asc" ]; then
   fi
 fi
 
+
+
+# 
+# --- verify ff-sources ---
+#
+
+# define function
+gpgVerification() {
+  sigKey=$(gpg --verify $1 2>&1 | tail -n1 | tr -d ' ' | \
+           sed 's/.*[^A-F0-9]\([A-F0-9]\{40\}\)/\1/g')
+
+  if [ "$sigKey" = "$mozKey" ]; then
+    echo "Successful verification!"
+  else
+    echo "Wrong signature, aborting..."
+    rm firefox-${ffVersion}esr.source.tar.bz2
+    exit 1
+  fi
+}
+
+# now call it
 gpgVerification firefox-${ffVersion}esr.source.tar.bz2.asc
+
+
+
+#
+# -- fetch jdb xpi ---
+# 
 
 echo "Fetching JonDoBrowser XPI..."
 svn export $svnXPI
