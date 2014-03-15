@@ -47,4 +47,7 @@ clean:
 	rm -fr buildtmp
 	rm -fr JDB
 
-
+clean-compile:
+	rm -r buildtmp/mozilla-release/
+	rm -r buildtmp/.step-patch-done 
+	rm -r buildtmp/.step-unpack-done 
