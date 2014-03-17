@@ -94,6 +94,7 @@ updateJonDoBrowserProfile()
   cp -rf "$HOME"/.jondobrowser/ttmmpp/*  "$HOME/.jondobrowser/profile/" 
   # Cleanup
   rm -r "$HOME/.jondobrowser/ttmmpp"
+  chmod -R ugo-x,u+rwX,go-rw "$HOME/.jondobrowser/"
 }
 
 
@@ -125,6 +126,7 @@ if [ ! -d "$HOME/.jondobrowser/profile" ]
            fi
        fi 
    fi
+   chmod -R ugo-x,u+rwX,go-rw "$HOME/.jondobrowser/"
 else
    VERSIONOLD=$(fgrep jondofox.browser_version "$HOME/.jondobrowser/profile/prefs.js" | xargs -I % expr % : ".*, \([0-9].*[0-9]\).*")
    VERSIONNEW=$(fgrep jondofox.browser_version "/opt/JonDoBrowser/Data/profile/prefs.js" | xargs -I % expr % : ".*, \([0-9].*[0-9]\).*")

@@ -34,19 +34,22 @@ buildtmp/firefox.tar.bz2: buildtmp/.step-patch-done
 	helpers/compile-linux.sh
 
 buildtmp/firefox_en-US.tar: buildtmp/firefox.tar.bz2
-	tar -xaf buildtmp/firefox.tar.bz2
+	tar -xjf buildtmp/firefox.tar.bz2
 	rm firefox/browser/searchplugins/*.xml
 	cp searchplugins/common/*.xml firefox/browser/searchplugins/
+	chmod -x firefox/browser/searchplugins/*.xml
 	rm -r firefox/dictionaries
 	tar -cf buildtmp/firefox_en-US.tar firefox
 	rm -r firefox
 
 buildtmp/firefox_de.tar: buildtmp/firefox.tar.bz2
-	tar -xaf buildtmp/firefox.tar.bz2
+	tar -xjf buildtmp/firefox.tar.bz2
 	rm firefox/browser/searchplugins/*.xml
 	cp searchplugins/common/*.xml firefox/browser/searchplugins/
 	cp searchplugins/de/*.xml firefox/browser/searchplugins/
+	chmod -x firefox/browser/searchplugins/*.xml
 	cp buildtmp/de.xpi firefox/browser/extensions/langpack-de@firefox.mozilla.org.xpi
+	chmod -x firefox/browser/extensions/langpack-de@firefox.mozilla.org.xpi
 	rm -r firefox/dictionaries
 	tar -cf buildtmp/firefox_de.tar firefox
 	rm -r firefox
@@ -74,12 +77,14 @@ install: build buildtmp/firefox_de.tar buildtmp/firefox_en-US.tar
 	cp -r buildtmp/profile debian/jondobrowser-en/opt/JonDoBrowser/Data/
 	sed -i "s/Arial/Liberation Sans/" debian/jondobrowser-en/opt/JonDoBrowser/Data/profile/prefs.js
 	echo "user_pref(\"app.update.enabled\", false);" >> debian/jondobrowser-en/opt/JonDoBrowser/Data/profile/prefs.js
+	echo "user_pref(\"spellchecker.dictionary\", \"en-US\");" >> debian/jondobrowser-en/opt/JonDoBrowser/Data/profile/prefs.js
 	mv -f debian/jondobrowser-en/opt/JonDoBrowser/Data/profile/places.sqlite_en-US debian/jondobrowser-en/opt/JonDoBrowser/Data/profile/places.sqlite
 	rm -f debian/jondobrowser-en/opt/JonDoBrowser/Data/profile/places.sqlite_de
 
 	cp -r buildtmp/profile debian/jondobrowser-de/opt/JonDoBrowser/Data/
 	sed -i "s/Arial/Liberation Sans/" debian/jondobrowser-de/opt/JonDoBrowser/Data/profile/prefs.js
 	echo "user_pref(\"extensions.langpack-de@firefox.mozilla.org.update.enabled\", false);" >> debian/jondobrowser-de/opt/JonDoBrowser/Data/profile/prefs.js
+	echo "user_pref(\"spellchecker.dictionary\", \"de-DE\");" >> debian/jondobrowser-de/opt/JonDoBrowser/Data/profile/prefs.js
 	mv -f debian/jondobrowser-de/opt/JonDoBrowser/Data/profile/places.sqlite_de debian/jondobrowser-de/opt/JonDoBrowser/Data/profile/places.sqlite
 	rm -f debian/jondobrowser-de/opt/JonDoBrowser/Data/profile/places.sqlite_en-US
 
