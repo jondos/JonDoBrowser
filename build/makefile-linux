@@ -36,6 +36,7 @@ buildtmp/firefox_en-US.tar.bz2: buildtmp/firefox.tar.bz2
 	tar -xaf buildtmp/firefox.tar.bz2
 	rm firefox/browser/searchplugins/*.xml
 	cp searchplugins/common/*.xml firefox/browser/searchplugins/
+	chmod -x firefox/browser/searchplugins/*.xml
 	tar -cjf buildtmp/firefox_en-US.tar.bz2 firefox
 	rm -r firefox
 
@@ -47,7 +48,9 @@ buildtmp/firefox_de.tar.bz2: buildtmp/firefox.tar.bz2
 	rm firefox/browser/searchplugins/*.xml
 	cp searchplugins/common/*.xml firefox/browser/searchplugins/
 	cp searchplugins/de/*.xml firefox/browser/searchplugins/
+	chmod -x firefox/browser/searchplugins/*.xml
 	cp buildtmp/de.xpi firefox/browser/extensions/langpack-de@firefox.mozilla.org.xpi
+	chmod -x firefox/browser/extensions/langpack-de@firefox.mozilla.org.xpi
 	tar -cjf buildtmp/firefox_de.tar.bz2 firefox
 	rm -r firefox
 
