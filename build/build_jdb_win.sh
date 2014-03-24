@@ -31,7 +31,7 @@
 # Afterwards the browser profiles are prepared and JonDoBrowser for Windows is
 # built.
 
-jdbVersion="0.13"
+jdbVersion="0.14"
 
 svnXPI=https://svn.jondos.de/svnpub/JonDoFox_Extension/trunk/xpi/jondofoxBrowser.xpi
 svnProfile=https://svn.jondos.de/svnpub/JonDoFox_Profile/trunk/full
@@ -130,7 +130,7 @@ echo "Checking the signature of the sources..."
 # TODO: Implement a more generic routine her assuming the user has not yet
 # imported the Firefox key
 # gpg prints the verification success message to stderr
-#gpgVerification firefox-${ffVersion}esr.source.tar.bz2.asc
+gpgVerification firefox-${ffVersion}esr.source.tar.bz2.asc
 
 cd ..
 
