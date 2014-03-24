@@ -2,7 +2,7 @@
 
 
 #
-# --- initializei / export  basic vars ---
+# --- initialize / export  basic vars ---
 #
 
 jdbVersion="0.14"

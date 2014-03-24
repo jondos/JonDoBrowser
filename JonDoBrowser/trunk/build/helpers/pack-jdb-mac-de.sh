@@ -13,7 +13,7 @@ generateDmgImage() {
   applicationName="JonDoBrowser.app"
 
   # insert "$arch" !!!
-  finalDMGName="JonDoBrowser_en-US.dmg"
+  finalDMGName="JonDoBrowser_de.dmg"
 
   # TODO GeKo: Why does the backslash as a line delimiter not work but result in an error?
   # UDBZ?
@@ -21,7 +21,7 @@ generateDmgImage() {
 
   # TODO Geko: Why does the backslash as a line delimiter not work but result in an error?
   device=$(hdiutil attach -readwrite -noverify -noautoopen "JDB.temp.dmg" | egrep '^/dev/' | sed 1q)
-  # read -p "Press [Enter] key to go on inner chmodding..."
+  
   chmod -Rf go-w /Volumes/"JonDoBrowser"
   chmod 777 /Volumes/JonDoBrowser/JonDoBrowser.app/Contents/MacOS/JonDoBrowser
 
@@ -48,7 +48,7 @@ generateDmgImage() {
        end tell
      end tell
   ' | osascript
-  # read -p "Press [Enter] key to go on inner 2nd chmodding..."
+
   chmod -Rf go-w /Volumes/"JonDoBrowser"
   sync
   sync
@@ -60,46 +60,58 @@ generateDmgImage() {
 # Unpacking the .dmg
 ./buildtmp/mozilla-release/build/package/mac_osx/unpack-diskimage ./buildtmp/firefox.dmg testing buildtmp
 
-mkdir ./JonDoBrowser-en-US
-mkdir ./JonDoBrowser-en-US/Contents
-mkdir ./JonDoBrowser-en-US/Contents/MacOS
-mkdir ./JonDoBrowser-en-US/Library
-mkdir ./JonDoBrowser-en-US/Library/Application\ Support
-mkdir ./JonDoBrowser-en-US/Library/Application\ Support/Firefox
-mkdir ./JonDoBrowser-en-US/Library/Application\ Support/Firefox/profiles
-mkdir ./JonDoBrowser-en-US/Contents/Resources
+mkdir ./JonDoBrowser-de
+mkdir ./JonDoBrowser-de/Contents
+mkdir ./JonDoBrowser-de/Contents/MacOS
+mkdir ./JonDoBrowser-de/Library
+mkdir ./JonDoBrowser-de/Library/Application\ Support
+mkdir ./JonDoBrowser-de/Library/Application\ Support/Firefox
+mkdir ./JonDoBrowser-de/Library/Application\ Support/Firefox/profiles
+mkdir ./JonDoBrowser-de/Contents/Resources
 
-cp -Rf ./buildtmp/profile/ ./JonDoBrowser-en-US/Library/Application\ Support/Firefox/profiles/profile
+#cp -Rf ./buildtmp/profile/ ./JonDoBrowser-en-US/Library/Application\ Support/Firefox/profiles/profile
 
-# Coose the bookmarks for en-US
-mv -f ./JonDoBrowser-en-US/Library/Application\ Support/Firefox/profiles/profile/places.sqlite_en-US ./JonDoBrowser-en-US/Library/Application\ Support/Firefox/profiles/profile/places.sqlite
-rm -f ./JonDoBrowser-en-US/Library/Application\ Support/Firefox/profiles/profile/places.sqlite_de
+# Coose the bookmarks for de - this is probably STILL wrong
+mv -f ./JonDoBrowser/Library/Application\ Support/Firefox/profiles/profile/places.sqlite ./JonDoBrowser-de/Library/Application\ Support/Firefox/profiles/profile/places.sqlite
+rm -f ./JonDoBrowser/Library/Application\ Support/Firefox/profiles/profile/places.sqlite
 
-cp -Rf ./buildtmp/JonDoBrowser.app/ ./JonDoBrowser-en-US/Contents/MacOS/Firefox.app
+cp -Rf ./buildtmp/JonDoBrowser.app/ ./JonDoBrowser-de/Contents/MacOS/Firefox.app
 
-cp ./mac/Info.plist ./JonDoBrowser-en-US/Contents/
-cp ./mac/jondobrowser.icns ./JonDoBrowser-en-US/Contents/Resources/
-cp ./mac/JonDoBrowser_en-US ./JonDoBrowser-en-US/Contents/MacOS/JonDoBrowser
+cp ./mac/Info.plist ./JonDoBrowser-de/Contents/
+cp ./mac/jondobrowser.icns ./JonDoBrowser-de/Contents/Resources/
+cp ./mac/JonDoBrowser_de ./JonDoBrowser-de/Contents/MacOS/JonDoBrowser
 
 # replace search-plugins
-rm ./JonDoBrowser-en-US/Contents/MacOS/Firefox.app/Contents/MacOS/browser/searchplugins/*.xml
-cp searchplugins/common/*.xml ./JonDoBrowser-en-US/Contents/MacOS/Firefox.app/Contents/MacOS/browser/searchplugins/
+rm ./JonDoBrowser-de/Contents/MacOS/Firefox.app/Contents/MacOS/browser/searchplugins/*.xml
+cp searchplugins/de/*.xml ./JonDoBrowser-en-US/Contents/MacOS/Firefox.app/Contents/MacOS/browser/searchplugins/
 
 # Creating JonDoBrowser.app
-mv ./JonDoBrowser-en-US ./JonDoBrowser.app
+mv ./JonDoBrowser-de ./JonDoBrowser.app
 
+
+# Creating JonDoBrowser.app
+mv ./JonDoBrowser-de ./JonDoBrowser.app
+
+# -- added, kgr, for de-version
+profileDir=./JondoBrowser-de/Library/Application\ Support/Firefox/Profiles/profile
+echo $profileDir
+read -p "Press [Enter] key to go on setting de.xpi..."
+cp -f ./buildtmp/de.xpi "$profileDir"/extensions/langpack-de@firefox.mozilla.org.xpi
+
+echo "user_pref(\"extensions.langpack-de@firefox.mozilla.org.update.enabled\", false);" >> "$profileDir"/prefs.js earchengines
+
+# -- end addition
 
 # Preparing background image for final .dmg
 if [ ! -d "JDB" ]; then
       mkdir JDB
       cd JDB && mkdir .background && cd .background
-      cp ../../mac/background-en-US.png ./background.png
+      cp ../../mac/background-de.png ./background.png
       cd ../..
 fi
 
 # Copy JonDoBrowser.app inside JDB
-cp -R ./JonDoBrowser.app ./JDB/
-
+mv ./JonDoBrowser.app ./JDB/
 chmod -Rf go-w ./JDB
 chmod 777 ./JDB/JonDoBrowser.app/Contents/MacOS/JonDoBrowser
 
@@ -109,4 +121,4 @@ arch=$(uname -a)
 [[ $arch == *i386* ]] && arch=$(echo "i386")
 
 # Generate new .dmg
-generateDmgImage $arch en-US
+generateDmgImage $arch de
