@@ -14,7 +14,7 @@ clean:
 	rm buildtmp/firefox_en-US.tar
 	rm buildtmp/firefox_de.tar
 	rm buildtmp/.step-unpack-done
-	rm buildtmp/.step-unpack-done
+	rm buildtmp/.step-patch-done
 
 buildtmp/.step-fetch-done:
 	chmod +x helpers/*.sh
@@ -48,8 +48,6 @@ buildtmp/firefox_de.tar: buildtmp/firefox.tar.bz2
 	cp searchplugins/common/*.xml firefox/browser/searchplugins/
 	cp searchplugins/de/*.xml firefox/browser/searchplugins/
 	chmod -x firefox/browser/searchplugins/*.xml
-	cp buildtmp/de.xpi firefox/browser/extensions/langpack-de@firefox.mozilla.org.xpi
-	chmod -x firefox/browser/extensions/langpack-de@firefox.mozilla.org.xpi
 	rm -r firefox/dictionaries
 	tar -cf buildtmp/firefox_de.tar firefox
 	rm -r firefox
@@ -83,6 +81,8 @@ install: build buildtmp/firefox_de.tar buildtmp/firefox_en-US.tar
 
 	cp -r buildtmp/profile debian/jondobrowser-de/opt/JonDoBrowser/Data/
 	sed -i "s/Arial/Liberation Sans/" debian/jondobrowser-de/opt/JonDoBrowser/Data/profile/prefs.js
+	cp buildtmp/de.xpi debian/jondobrowser-de/opt/JonDoBrowser/Data/profile/extensions/langpack-de@firefox.mozilla.org.xpi
+	chmod -x debian/jondobrowser-de/opt/JonDoBrowser/Data/profile/extensions/langpack-de@firefox.mozilla.org.xpi
 	echo "user_pref(\"extensions.langpack-de@firefox.mozilla.org.update.enabled\", false);" >> debian/jondobrowser-de/opt/JonDoBrowser/Data/profile/prefs.js
 	echo "user_pref(\"spellchecker.dictionary\", \"de_DE\");" >> debian/jondobrowser-de/opt/JonDoBrowser/Data/profile/prefs.js
 	mv -f debian/jondobrowser-de/opt/JonDoBrowser/Data/profile/places.sqlite_de debian/jondobrowser-de/opt/JonDoBrowser/Data/profile/places.sqlite
