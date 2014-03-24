@@ -23,17 +23,24 @@ patch: buildtmp/.step-patch-done
 buildtmp/.step-patch-done: buildtmp/.step-unpack-done
 	helpers/patch-ff-source.sh && touch buildtmp/.step-patch-done
 
-
+# OLD - in SVN and broken
 # Compile Firefox and create a TAR.BZ2 archive
-compile: buildtmp/.step-patch-done
-	helpers/compile-mac.sh
+#compile: buildtmp/.step-patch-done
+#	helpers/compile-mac.sh
 
+compile: buildtmp/firefox.en-US.dmg
+buildtmp/firefox.en-US.dmg: buildtmp/.step-patch-done
+	helpers/compile-mac.sh && touch buildtmp/.step-compile-done
 
 # Build the JDB (en_US) with compiled Firefox
 jdb-en: buildtmp/.step-jdb-en-done
 buildtmp/.step-jdb-en-done: buildtmp/firefox.dmg
 	helpers/pack-jdb-mac-en.sh && touch buildtmp/.step-jdb-en-done
 
+# Build the JDB (de) with compiled Firefox
+jdb-de: buildtmp/.step-jdb-de-done
+buildtmp/.step-jdb-de-done: buildtmp/firefox.dmg
+	helpers/pack-jdb-mac-de.sh && touch buildtmp/.step-jdb-de-done
 
 
 mar-en: buildtmp/.step-mar-en-done
