@@ -3,7 +3,7 @@
 if [ -w "/usr" ]
    then
       echo "Install JonDoBrowser in /opt/JonDoBrowser"
-      if [ -de "/opt/JonDoBrowser" ]
+      if [ -e "/opt/JonDoBrowser" ]
         then
            rm -r /opt/JonDoBrowser
       fi
@@ -18,6 +18,13 @@ if [ -w "/usr" ]
       cp -f misc/jondobrowser.png /usr/local/share/pixmaps/
       install -d /usr/local/share/applications
       cp -f misc/jondobrowser.desktop /usr/local/share/applications/
+
+      if [ -d /usr/share/hunspell ]
+        then
+          echo "Create link for hunspell dictionaries"
+          rm -r /opt/JonDoBrowser/App/firefox/dictionaries
+          ln -s /usr/share/hunspell /opt/JonDoBrowser/App/firefox/dictionaries
+      fi
 
       if [ -x "/usr/bin/update-menus" ]
           then
