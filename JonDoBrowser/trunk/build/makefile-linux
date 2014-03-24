@@ -49,8 +49,6 @@ buildtmp/firefox_de.tar.bz2: buildtmp/firefox.tar.bz2
 	cp searchplugins/common/*.xml firefox/browser/searchplugins/
 	cp searchplugins/de/*.xml firefox/browser/searchplugins/
 	chmod -x firefox/browser/searchplugins/*.xml
-	cp buildtmp/de.xpi firefox/browser/extensions/langpack-de@firefox.mozilla.org.xpi
-	chmod -x firefox/browser/extensions/langpack-de@firefox.mozilla.org.xpi
 	tar -cjf buildtmp/firefox_de.tar.bz2 firefox
 	rm -r firefox
 
@@ -61,6 +59,10 @@ JonDoBrowser-en-US.tar.xz: buildtmp/firefox_en-US.tar.bz2
 	mkdir JonDoBrowser
 	cp linux/start-jondobrowser_en-US.sh JonDoBrowser/start-jondobrowser.sh
 	chmod +x JonDoBrowser/start-jondobrowser.sh
+	cp linux/install-jondobrowser.sh JonDoBrowser/install-jondobrowser.sh
+	chmod +x JonDoBrowser/install-jondobrowser.sh
+	cp linux/uninstall-jondobrowser.sh JonDoBrowser/uninstall-jondobrowser.sh
+	chmod +x JonDoBrowser/uninstall-jondobrowser.sh
 	mkdir JonDoBrowser/App
 	tar -xj --directory JonDoBrowser/App -f buildtmp/firefox_en-US.tar.bz2
 	mkdir JonDoBrowser/Data
@@ -68,6 +70,10 @@ JonDoBrowser-en-US.tar.xz: buildtmp/firefox_en-US.tar.bz2
 	sed -i "s/Arial/Liberation Sans/" JonDoBrowser/Data/profile/prefs.js
 	mv -f JonDoBrowser/Data/profile/places.sqlite_en-US JonDoBrowser/Data/profile/places.sqlite
 	rm -f JonDoBrowser/Data/profile/places.sqlite_de
+	cp linux/jondobrowser.png JonDoBrowser/misc/
+	cp linux/jondobrowser.desktop JonDoBrowser/misc/
+	cp debian/bin-en/jondobrowser JonDoBrowser/misc/
+	chmod +x JonDoBrowser/misc/jondobrowser
 	tar -cf JonDoBrowser-en-US.tar JonDoBrowser
 	xz JonDoBrowser-en-US.tar
 	rm -r JonDoBrowser
@@ -79,15 +85,26 @@ JonDoBrowser-de.tar.xz: buildtmp/firefox_de.tar.bz2
 	mkdir JonDoBrowser 
 	cp linux/start-jondobrowser_de.sh JonDoBrowser/start-jondobrowser.sh
 	chmod +x JonDoBrowser/start-jondobrowser.sh
+	cp linux/install-jondobrowser.sh JonDoBrowser/install-jondobrowser.sh
+	chmod +x JonDoBrowser/install-jondobrowser.sh
+	cp linux/uninstall-jondobrowser.sh JonDoBrowser/uninstall-jondobrowser.sh
+	chmod +x JonDoBrowser/uninstall-jondobrowser.sh
 	mkdir JonDoBrowser/App
 	tar -xj --directory JonDoBrowser/App -f buildtmp/firefox_de.tar.bz2
 	mdir JonDoBrowser/Data
 	cp -r buildtmp/profile JonDoBrowser/Data/
 	sed -i "s/Arial/Liberation Sans/" JonDoBrowser/Data/profile/prefs.js
+	cp buildtmp/de.xpi JonDoBrowser/Data/profile/extensions/langpack-de@firefox.mozilla.org.xpi
+	chmod -x JonDoBrowser/Data/profile/extensions/langpack-de@firefox.mozilla.org.xpi
 	echo "user_pref(\"extensions.langpack-de@firefox.mozilla.org.update.enabled\", false);" >> JonDoBrowser/Data/profile/prefs.js
 	mv -f JonDoBrowser/Data/profile/places.sqlite_de JonDoBrowser/Data/profile/places.sqlite
 	rm -f JonDoBrowser/Data/profile/places.sqlite_en_US
-	tar -cf JonDoBrowser-de.tar JonDoBrowser
+	mkdir JonDoBrowser/misc
+	cp linux/jondobrowser.png JonDoBrowser/misc/
+	cp linux/jondobrowser.desktop JonDoBrowser/misc/
+	cp debian/bin-de/jondobrowser JonDoBrowser/misc/
+	chmod +x JonDoBrowser/misc/jondobrowser
+	tar -cf JonDoBrowser-de.tar JonDoBrowsers
 	xz JonDoBrowser-de.tar
 	rm -r JonDoBrowser
 
