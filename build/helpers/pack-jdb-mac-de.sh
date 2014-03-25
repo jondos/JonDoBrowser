@@ -71,9 +71,9 @@ mkdir ./JonDoBrowser-de/Contents/Resources
 
 #cp -Rf ./buildtmp/profile/ ./JonDoBrowser-en-US/Library/Application\ Support/Firefox/profiles/profile
 
-# Coose the bookmarks for de - this is probably STILL wrong
-mv -f ./JonDoBrowser/Library/Application\ Support/Firefox/profiles/profile/places.sqlite ./JonDoBrowser-de/Library/Application\ Support/Firefox/profiles/profile/places.sqlite
-rm -f ./JonDoBrowser/Library/Application\ Support/Firefox/profiles/profile/places.sqlite
+# Coose the bookmarks for de 
+mv -f ./JonDoBrowser-de/Library/Application\ Support/Firefox/profiles/profile/places.sqlite_de ./JonDoBrowser-en-US/Library/Application\ Support/Firefox/profiles/profile/places.sqlite
+rm -f ./JonDoBrowser-de/Library/Application\ Support/Firefox/profiles/profile/places.sqlite_en-US
 
 cp -Rf ./buildtmp/JonDoBrowser.app/ ./JonDoBrowser-de/Contents/MacOS/Firefox.app
 
