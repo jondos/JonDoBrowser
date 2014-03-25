@@ -83,7 +83,8 @@ cp ./mac/JonDoBrowser_de ./JonDoBrowser-de/Contents/MacOS/JonDoBrowser
 
 # replace search-plugins
 rm ./JonDoBrowser-de/Contents/MacOS/Firefox.app/Contents/MacOS/browser/searchplugins/*.xml
-cp searchplugins/de/*.xml ./JonDoBrowser-en-US/Contents/MacOS/Firefox.app/Contents/MacOS/browser/searchplugins/
+cp searchplugins/common/*.xml ./JonDoBrowser-de/Contents/MacOS/Firefox.app/Contents/MacOS/browser/searchplugins/
+cp searchplugins/de/*.xml ./JonDoBrowser-de/Contents/MacOS/Firefox.app/Contents/MacOS/browser/searchplugins/
 
 # Creating JonDoBrowser.app
 mv ./JonDoBrowser-de ./JonDoBrowser.app
@@ -98,7 +99,7 @@ echo $profileDir
 read -p "Press [Enter] key to go on setting de.xpi..."
 cp -f ./buildtmp/de.xpi "$profileDir"/extensions/langpack-de@firefox.mozilla.org.xpi
 
-echo "user_pref(\"extensions.langpack-de@firefox.mozilla.org.update.enabled\", false);" >> "$profileDir"/prefs.js earchengines
+echo "user_pref(\"extensions.langpack-de@firefox.mozilla.org.update.enabled\", false);" >> "$profileDir"/prefs.js 
 
 # -- end addition
 
