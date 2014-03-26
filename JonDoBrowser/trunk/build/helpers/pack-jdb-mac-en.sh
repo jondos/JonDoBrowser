@@ -58,7 +58,7 @@ generateDmgImage() {
 }
 
 # Unpacking the .dmg
-./buildtmp/mozilla-release/build/package/mac_osx/unpack-diskimage ./buildtmp/firefox.dmg testing buildtmp
+./buildtmp/mozilla-release/build/package/mac_osx/unpack-diskimage ./firefox.en-US.dmg testing buildtmp
 
 mkdir ./JonDoBrowser-en-US
 mkdir ./JonDoBrowser-en-US/Contents
@@ -69,7 +69,11 @@ mkdir ./JonDoBrowser-en-US/Library/Application\ Support/Firefox
 mkdir ./JonDoBrowser-en-US/Library/Application\ Support/Firefox/profiles
 mkdir ./JonDoBrowser-en-US/Contents/Resources
 
+read -p "Proceed with copy ... [Enter]"
 cp -Rf ./buildtmp/profile/ ./JonDoBrowser-en-US/Library/Application\ Support/Firefox/profiles/profile
+read -p "Proceed with copy ... [Enter]"
+
+cp -Rf ./buildtmp/JonDoBrowser.app/ ./JonDoBrowser-en-US/Contents/MacOS/Firefox.app
 
 # Coose the bookmarks for en-US
 mv -f ./JonDoBrowser-en-US/Library/Application\ Support/Firefox/profiles/profile/places.sqlite_en-US ./JonDoBrowser-en-US/Library/Application\ Support/Firefox/profiles/profile/places.sqlite

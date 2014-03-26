@@ -34,12 +34,12 @@ buildtmp/firefox.en-US.dmg: buildtmp/.step-patch-done
 
 # Build the JDB (en_US) with compiled Firefox
 jdb-en: buildtmp/.step-jdb-en-done
-buildtmp/.step-jdb-en-done: buildtmp/firefox.dmg
+buildtmp/.step-jdb-en-done: buildtmp/firefox.en-US.dmg
 	helpers/pack-jdb-mac-en.sh && touch buildtmp/.step-jdb-en-done
 
 # Build the JDB (de) with compiled Firefox
 jdb-de: buildtmp/.step-jdb-de-done
-buildtmp/.step-jdb-de-done: buildtmp/firefox.dmg
+buildtmp/.step-jdb-de-done: buildtmp/firefox.en-US.dmg
 	helpers/pack-jdb-mac-de.sh && touch buildtmp/.step-jdb-de-done
 
 
@@ -58,3 +58,27 @@ clean-compile:
 	rm -r buildtmp/mozilla-release/
 	rm -r buildtmp/.step-patch-done 
 	rm -r buildtmp/.step-unpack-done 
+
+clean-package:
+	rm -Rf JDB
+	rm -Rf JonDoBrowser*.app
+	rm -Rf buildtmp/JonDoBrowser.app
+	rm -f buildtmp/.step-jdb-en-done
+	rm -f buildtmp/.step-jdb-de-done
+	rm -f buildtmp/.VolumeIcon.icns
+
+clean-package-full:
+	rm -Rf JonDoBrowser_*.dmg
+	rm -Rf JonDoBrowser*.app
+	rm -Rf JDB
+	rm -Rf buildtmp/JonDoBrowser.app
+	rm -f buildtmp/.step-jdb-en-done
+	rm -f buildtmp/.step-jdb-de-done
+	rm -f buildtmp/.VolumeIcon.icns
+	rm -f firefox.en-US.dmg
+	rm -f JDB.temp.dmg
+
+	
+fetch-profile:
+	# find out where else this is called
+	helpers/fetch-jdf-profil.sh
