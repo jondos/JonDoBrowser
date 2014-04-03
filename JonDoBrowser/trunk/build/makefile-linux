@@ -26,7 +26,6 @@ buildtmp/.step-patch-done: buildtmp/.step-unpack-done
 # Compile Firefox and create a TAR.BZ2 archive
 compile: buildtmp/firefox.tar.bz2
 buildtmp/firefox.tar.bz2: buildtmp/.step-patch-done
-	cp -f .mozconfig_linux buildtmp/mozilla-release/.mozconfig
 	helpers/compile-linux.sh
 
 
@@ -82,7 +81,7 @@ JonDoBrowser-en-US.tar.xz: buildtmp/firefox_en-US.tar.bz2
 
 # Pack JonDoBrowser de
 jdb-de: JonDoBrowser-de.tar.xz
-JonDoBrowser-de.tar.xz: buildtmp/firefox_de.tar.bz2
+JonDoBrowser-de.tar.xz: buildtmp/firefox_de.tar.bz2 
 	mkdir JonDoBrowser 
 	cp linux/start-jondobrowser_de.sh JonDoBrowser/start-jondobrowser.sh
 	chmod +x JonDoBrowser/start-jondobrowser.sh
@@ -108,6 +107,7 @@ JonDoBrowser-de.tar.xz: buildtmp/firefox_de.tar.bz2
 	tar -cf JonDoBrowser-de.tar JonDoBrowser
 	xz JonDoBrowser-de.tar
 	rm -r JonDoBrowser
+
 
 
 # Build the full mar file

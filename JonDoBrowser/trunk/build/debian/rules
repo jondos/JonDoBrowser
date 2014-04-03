@@ -30,7 +30,6 @@ buildtmp/.step-patch-done: buildtmp/.step-unpack-done
 	helpers/patch-ff-source.sh && touch buildtmp/.step-patch-done
 
 buildtmp/firefox.tar.bz2: buildtmp/.step-patch-done
-	cp -f .mozconfig_debian buildtmp/mozilla-release/.mozconfig
 	helpers/compile-linux.sh
 
 buildtmp/firefox_en-US.tar: buildtmp/firefox.tar.bz2
