@@ -1,6 +1,8 @@
 #!/bin/sh
 
 platform="linux-$(uname -m)"
+
+cp -f .mozconfig_$platform buildtmp/mozilla-release/.mozconfig
  
 cd buildtmp/mozilla-release
 make -f client.mk build
