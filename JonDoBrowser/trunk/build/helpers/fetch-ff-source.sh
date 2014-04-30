@@ -5,7 +5,7 @@
 # --- initialize / export  basic vars ---
 #
 
-jdbVersion="0.14"
+jdbVersion="0.15"
 
 mozKey=5445390EF5D0C2ECFB8A6201057CC3EB15A0A4BC
 export releasePath=http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/latest-esr
@@ -14,8 +14,8 @@ export releasePath=http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/lates
 svnXPI=https://svn.jondos.de/svnpub/JonDoFox_Extension/trunk/xpi/jondofoxBrowser.xpi
 svnProfile=https://svn.jondos.de/svnpub/JonDoFox_Profile/trunk/full/profile
 
-# set $arch if noone else has set it yet
-if [ -n "$arch" ]; then export arch=x85_64; fi;
+# set $arch if none else has set it yet
+if [ -n "$arch" ]; then export arch=x86_64; fi;
 
  
 
