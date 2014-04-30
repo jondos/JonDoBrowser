@@ -1,3 +1,14 @@
+jondobrowser (0.15-beta) unstable; urgency=low
+
+  * update browser to Firefox 24.5.0 
+  * update add-ons 
+  * added patch for websockets DNS leak
+  * added patch for DOMStorage privacy leaks
+  * disabled Mozilla maintainance services at coplilation
+
+ -- JonDos GmbH <info@jondos.de>  Wed, 30 Apr 2014 10:00:00 +0100
+
+
 jondobrowser (0.14-beta) unstable; urgency=low
 
   * update browser to Firefox 24.4.0 
