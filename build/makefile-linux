@@ -150,8 +150,8 @@ JonDoBrowser-live.tar: buildtmp/firefox_de.tar.bz2
 	echo "user_pref(\"extensions.{b9db16a4-6edc-47ec-a1f4-b86292ed211d}.update.enabled\", false);" >> JonDoBrowser/Data/profile/prefs.js
 	echo "user_pref(\"extensions.{d10d0bf8-f5b5-c8b4-a8b2-2b9879e08c5d}.update.enabled\", false);" >> JonDoBrowser/Data/profile/prefs.js
 	echo "user_pref(\"extensions.https-everywhere@eff.org.update.enabled\", false);" >> $profileDir/prefs.js
-        cp JonDoBrowser/Data/profile/prefs.js JonDoBrowser/Data/profile/prefs.js_jondo
-        mv JonDoBrowser/Data/profile/prefs.js JonDoBrowser/Data/profile/prefs.js_ohne
+	cp JonDoBrowser/Data/profile/prefs.js JonDoBrowser/Data/profile/prefs.js_jondo
+	mv JonDoBrowser/Data/profile/prefs.js JonDoBrowser/Data/profile/prefs.js_ohne
 	mv -f JonDoBrowser/Data/profile/places.sqlite_de JonDoBrowser/Data/profile/places.sqlite
 	rm -f JonDoBrowser/Data/profile/places.sqlite_en_US
 	tar -cf JonDoBrowser-live.tar JonDoBrowser
