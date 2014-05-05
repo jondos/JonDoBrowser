@@ -31,7 +31,7 @@
 # Afterwards the browser profiles are prepared and JonDoBrowser for Windows is
 # built.
 
-jdbVersion="0.14"
+jdbVersion="0.15"
 
 svnXPI=https://svn.jondos.de/svnpub/JonDoFox_Extension/trunk/xpi/jondofoxBrowser.xpi
 svnProfile=https://svn.jondos.de/svnpub/JonDoFox_Profile/trunk/full
