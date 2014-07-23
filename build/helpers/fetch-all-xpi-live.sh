@@ -1,6 +1,6 @@
 #!/bin/sh
 
-releasePath=http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/latest-esr
+releasePath=http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/latest-24.0esr
 
 cd buildtmp
 
