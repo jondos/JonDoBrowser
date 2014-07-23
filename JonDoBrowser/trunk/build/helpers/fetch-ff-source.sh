@@ -5,7 +5,7 @@
 # --- initialize / export  basic vars ---
 #
 
-jdbVersion="0.16"
+jdbVersion="0.17"
 
 mozKey=5445390EF5D0C2ECFB8A6201057CC3EB15A0A4BC
 export releasePath=http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/latest-24.0esr
