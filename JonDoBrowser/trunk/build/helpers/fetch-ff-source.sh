@@ -5,10 +5,10 @@
 # --- initialize / export  basic vars ---
 #
 
-jdbVersion="0.17"
+jdbVersion="0.18"
 
 mozKey=5445390EF5D0C2ECFB8A6201057CC3EB15A0A4BC
-export releasePath=http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/latest-24.0esr
+export releasePath=http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/latest-esr
 # bash does set & export vars, no need for: export $releasePath
 
 svnXPI=https://svn.jondos.de/svnpub/JonDoFox_Extension/trunk/xpi/jondofoxBrowser.xpi
